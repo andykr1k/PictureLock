@@ -39,6 +39,8 @@ npm run android
 npm run ios
 ```
 
+***NOTE TO RUN PROGRAM ON MOBILE YOU NEED TO HAVE SIMULATORS OPEN***
+
 ## Backend
 
 ### Setting up Enviroment
