@@ -1,4 +1,5 @@
 # PictureLock
+Unlock the Power of Film with AI: Your Ultimate Social Hub for Movie Enthusiasts.
 
 ## Frontend
 
