@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask import render_template
 from flask_cors import CORS, cross_origin
 import numpy as np
@@ -56,12 +56,14 @@ def train(movies_df):
 
     return similarity
 
-def recommend(similarity, movies_df, film_type, movie, platforms):
+def recommend_movie(similarity, movies_df, film_type, movie, platforms):
     movie_index = movies_df[movies_df['title']==movie].index[0]
     distances = similarity[movie_index]
     movie_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x:x[1])[1:25]
+
     recommends = []
     count = 0
+
     for i in movie_list:
         if count != 5:
             if movies_df.iloc[i[0]].platform in platforms:
@@ -82,13 +84,11 @@ def recommendation_accuracy(recommends, movies_df, type, title, platforms):
             count += 0.5
     return "%.0f%%" % (100 * count/total)
 
-
-def main(film_type, movie, platforms):
-    movies_df = read()
-    similarity = train(movies_df)
-    recommends = recommend(similarity, movies_df, film_type, movie, platforms)
-    acc = recommendation_accuracy(recommends, movies_df, film_type, movie, platforms)
-    return recommends, acc
+def log(film_type, movie, platforms):
+    print("Film Type: " + film_type)
+    print("Movie Title: " + movie)
+    for platform in platforms:
+        print("Platform: " + platform)
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -99,9 +99,22 @@ similarity = train(movies_df)
 @app.route('/')
 @cross_origin()
 def home():
-    film_type = Flask.request.args.get('film_type')
-    movie = Flask.request.args.get('movie')
-    platforms = Flask.request.args.get('platforms')
-    recommends = recommend(similarity, movies_df, film_type, movie, platforms)
-    acc = recommendation_accuracy(recommends, movies_df, film_type, movie, platforms)
-    return recommends, acc
+    return "Welcome to PictureLock's Servers!"
+
+@app.route('/recommend/<film_type>/<movie>/<platforms>')
+@cross_origin()
+def recommend(film_type, movie, platforms):
+    movies_df = read()
+
+    platforms = platforms.split("-")
+    log(film_type, movie, platforms)
+
+    recommends = recommend_movie(similarity, movies_df, str(film_type), str(movie), platforms)
+    acc = recommendation_accuracy(recommends, movies_df, str(film_type), str(movie), platforms)
+
+    response_data = {
+        'recommendations': recommends,
+        'accuracy': acc
+    }
+
+    return jsonify(response_data)
