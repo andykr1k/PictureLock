@@ -26,6 +26,7 @@ export default function App() {
               </a>
             </div>
           </div>
+          <a target='__blank' href="https://picturelock.streamlit.app"class="flex justify-center text-blue-600 hover:text-blue-800 text-sm md:text-xl mt-5">Sneak Peak</a>
         </div>
       </div>
     </div>
