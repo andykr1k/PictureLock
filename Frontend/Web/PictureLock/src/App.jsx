@@ -14,15 +14,9 @@ export default function App() {
           </div>
           <div class="flex flex-wrap mt-10 justify-center">
             <div class="m-3">
-              <a target='_blank' href="https://www.facebook.com/picturelock" title="Quicktoolz On Facebook"
+              <a target='_blank' href="https://www.instagram.com/picturelockapp" title="Quicktoolz On Facebook"
                 class="md:w-32 bg-white tracking-wide text-gray-800 font-bold rounded border-2 border-blue-600 hover:border-blue-600 hover:bg-blue-600 hover:text-white shadow-md py-2 px-6 inline-flex items-center">
                 <span class="mx-auto">Instagram</span>
-              </a>
-            </div>
-            <div class="m-3">
-              <a target='_blank' href="https://twitter.com/picturelock" title="Quicktoolz On Twitter"
-                class="md:w-32 bg-white tracking-wide text-gray-800 font-bold rounded border-2 border-blue-500 hover:border-blue-500 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center">
-                <span class="mx-auto">Twitter</span>
               </a>
             </div>
             <div class="m-3">
