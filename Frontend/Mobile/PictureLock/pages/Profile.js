@@ -176,61 +176,61 @@ function ProfileScreen({ navigation }) {
     },
   };
     return (
-    //   <View style={styles.flexA}>
-    //   <ScrollView contentContainerStyle={styles.base}>
-    //     <View style={styles.userProfile}>
-    //       <View style={styles.userProfileTop}>
-    //         <View style={styles.userProfileTopOverlay} />
-    //         <View style={styles.avatar}>
-    //           <View style={styles.avatarContainer}>
-    //             <Image
-    //               style={styles.avatarImg}
-    //               source={{uri: 'https://images.unsplash.com/photo-1620508115467-aa36a8dcf82d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=640&q=80'}}
-    //             />
-    //           </View>
-    //           <View style={styles.avatarStatus} />
-    //         </View>
-    //         <View style={styles.userProfileInfo}>
-    //           <Text style={styles.userProfileInfoName}>Amelie Stevens</Text>
-    //           <Text style={styles.userProfileInfoJobTitle}>Graphic designer</Text>
-    //         </View>
-    //         <View
-    //           style={[
-    //             styles.userProfileWidget,
-    //             styles.widget,
-    //           ]}
-    //         >
-    //           <View style={styles.widgetItem}>
-    //             <Text style={styles.widgetItemLabel}>FRIENDS</Text>
-    //             <Text style={styles.widgetItemValue}>1589</Text>
-    //           </View>
-    //           <View style={styles.widgetItem}>
-    //             <Text style={styles.widgetItemLabel}>FOLLOWING</Text>
-    //             <Text style={styles.widgetItemValue}>638</Text>
-    //           </View>
-    //           <View style={[styles.widgetItem, styles.widgetItemLast]}>
-    //             <Text style={styles.widgetItemLabel}>FOLLOWERS</Text>
-    //             <Text style={styles.widgetItemValue}>356</Text>
-    //           </View>
-    //         </View>
-    //       </View>
-    //       <View style={styles.userProfileBody}>
-    //         <View style={styles.flexB}>
-    //           <TouchableOpacity style={styles.btnA} activeOpacity={0.8}>
-    //             <Text style={styles.btnTextA} numberOfLines={1}>
-    //               Follow
-    //             </Text>
-    //           </TouchableOpacity>
-    //           <TouchableOpacity style={styles.btnB} activeOpacity={0.8}>
-    //             <Text style={styles.btnTextB} numberOfLines={1}>
-    //               Message
-    //             </Text>
-    //           </TouchableOpacity>
-    //         </View>
-    //       </View>
-    //     </View>
-    //   </ScrollView>
-    // </View>
+      <View style={styles.flexA}>
+      <ScrollView contentContainerStyle={styles.base}>
+        <View style={styles.userProfile}>
+          <View style={styles.userProfileTop}>
+            <View style={styles.userProfileTopOverlay} />
+            <View style={styles.avatar}>
+              <View style={styles.avatarContainer}>
+                <Image
+                  style={styles.avatarImg}
+                  source={{uri: 'https://images.unsplash.com/photo-1620508115467-aa36a8dcf82d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=640&q=80'}}
+                />
+              </View>
+              <View style={styles.avatarStatus} />
+            </View>
+            <View style={styles.userProfileInfo}>
+              <Text style={styles.userProfileInfoName}>Amelie Stevens</Text>
+              <Text style={styles.userProfileInfoJobTitle}>Graphic designer</Text>
+            </View>
+            <View
+              style={[
+                styles.userProfileWidget,
+                styles.widget,
+              ]}
+            >
+              <View style={styles.widgetItem}>
+                <Text style={styles.widgetItemLabel}>FRIENDS</Text>
+                <Text style={styles.widgetItemValue}>1589</Text>
+              </View>
+              <View style={styles.widgetItem}>
+                <Text style={styles.widgetItemLabel}>FOLLOWING</Text>
+                <Text style={styles.widgetItemValue}>638</Text>
+              </View>
+              <View style={[styles.widgetItem, styles.widgetItemLast]}>
+                <Text style={styles.widgetItemLabel}>FOLLOWERS</Text>
+                <Text style={styles.widgetItemValue}>356</Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.userProfileBody}>
+            <View style={styles.flexB}>
+              <TouchableOpacity style={styles.btnA} activeOpacity={0.8}>
+                <Text style={styles.btnTextA} numberOfLines={1}>
+                  Follow
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btnB} activeOpacity={0.8}>
+                <Text style={styles.btnTextB} numberOfLines={1}>
+                  Message
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </ScrollView>
+    </View>
     );
 }
 
