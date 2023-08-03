@@ -15,6 +15,18 @@ function DetailsScreen() {
   );
 }
 
+function ProfileScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Profile screen</Text>
+      <Button
+        title="Go to Details"
+        onPress={() => navigation.navigate('Details')}
+      />
+    </View>
+  );
+}
+
 function HomeScreen({ navigation }) {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -23,6 +35,39 @@ function HomeScreen({ navigation }) {
         title="Go to Details"
         onPress={() => navigation.navigate('Details')}
       />
+    </View>
+  );
+}
+
+function SearchScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Search screen</Text>
+      <Button
+        title="Go to Details"
+        onPress={() => navigation.navigate('Details')}
+      />
+    </View>
+  );
+}
+
+function AIScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>AI screen</Text>
+      <Button
+        title="Go to Details"
+        onPress={() => navigation.navigate('Details')}
+      />
+    </View>
+  );
+}
+
+function NotificationsScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Notifications screen</Text>
+      <Button onPress={() => navigation.goBack()} title="Go back home" />
     </View>
   );
 }
@@ -50,23 +95,48 @@ function HomeStackScreen() {
   );
 }
 
-const SettingsStack = createNativeStackNavigator();
+const SearchStack = createNativeStackNavigator();
 
-function SettingsStackScreen() {
+function SearchStackScreen() {
   return (
-    <SettingsStack.Navigator>
-      <SettingsStack.Screen name="Settings" component={SettingsScreen} />
-      <SettingsStack.Screen name="Details" component={DetailsScreen} />
-    </SettingsStack.Navigator>
+    <SearchStack.Navigator>
+      <SearchStack.Screen name="Search" component={SearchScreen} />
+      <SearchStack.Screen name="Details" component={DetailsScreen} />
+    </SearchStack.Navigator>
+  );
+}
+
+const AIStack = createNativeStackNavigator();
+
+function AIStackScreen() {
+  return (
+    <AIStack.Navigator>
+      <AIStack.Screen name="AI" component={AIScreen} />
+      <AIStack.Screen name="Details" component={DetailsScreen} />
+    </AIStack.Navigator>
+  );
+}
+
+const ProfileStack = createNativeStackNavigator();
+
+function ProfileStackScreen() {
+  return (
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+      <ProfileStack.Screen name="Details" component={DetailsScreen} />
+    </ProfileStack.Navigator>
   );
 }
 
 
-function NotificationsScreen({ navigation }) {
+const NotificationsStack = createNativeStackNavigator();
+
+function NotificationStackScreen() {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button onPress={() => navigation.goBack()} title="Go back home" />
-    </View>
+    <NotificationsStack.Navigator>
+      <NotificationsStack.Screen name="Notifications" component={NotificationsScreen} />
+      <NotificationsStack.Screen name="Details" component={DetailsScreen} />
+    </NotificationsStack.Navigator>
   );
 }
 
@@ -79,9 +149,10 @@ export default function App() {
     <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Tab.Navigator screenOptions={{ headerShown: false }}>
         <Tab.Screen name="Home" component={HomeStackScreen} />
-        <Tab.Screen name="AI" component={SettingsStackScreen} />
-        <Tab.Screen name="Profile" component={SettingsStackScreen} />
-        <Tab.Screen name="Settings" component={SettingsStackScreen} />
+        <Tab.Screen name="Search" component={SearchStackScreen} />
+        <Tab.Screen name="AI" component={AIStackScreen} />
+        <Tab.Screen name="Notifications" component={NotificationStackScreen} />
+        <Tab.Screen name="Profile" component={ProfileStackScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
