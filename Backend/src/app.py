@@ -42,23 +42,29 @@ def read():
 def train(movies_df):
     cv = CountVectorizer(max_features=50000,stop_words='english')
 
-    cv.fit_transform(movies_df['description']).toarray().shape
+    def combine_features(data):
+        features=[]
+        for i in range(0, data.shape[0]):
+            features.append(data['description'][i] + ' ' + data['genres'][i] + ' ' + str(data['release_year'][i]))
+        return features
+    
+    movies_df['combined'] = combine_features(movies_df)
 
-    vectors = cv.fit_transform(movies_df['description']).toarray()
+    # ps = PorterStemmer()
 
-    ps = PorterStemmer()
+    # def stem(text):
+    #     y=[]
+    #     for i in text.split():
+    #         y.append(ps.stem(i))
+    #     return " ".join(y)
 
-    def stem(text):
-        y=[]
-        for i in text.split():
-            y.append(ps.stem(i))
-        return " ".join(y)
+    # movies_df['description'] = movies_df['description'].apply(stem)
 
-    movies_df['description'] = movies_df['description'].apply(stem)
+    vectors = cv.fit_transform(movies_df['combined']).toarray()
 
     similarity = cosine_similarity(vectors)
 
-    sorted(list(enumerate(similarity[0])), reverse=True, key=lambda x:x[1])[1:6]
+    sorted(list(enumerate(similarity[0])), reverse=True, key=lambda x:x[1])[1:25]
 
     return similarity
 
