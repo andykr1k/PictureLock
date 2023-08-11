@@ -1,10 +1,16 @@
-import { Button, Text, View } from 'react-native';
+import { Button, Text, View, useColorScheme } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { styles } from '../styles/styles';
 
 function HomeScreen({ navigation }) {
+  const colorScheme = useColorScheme();
+
+  const themeTextStyle = colorScheme === 'light' ? styles.lightThemeText : styles.darkThemeText;
+  const themeContainerStyle = colorScheme === 'light' ? styles.lightContainer : styles.darkContainer;
+
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Home screen</Text>
+      <View style={[styles.container, themeContainerStyle]}>
+        <Text style={[styles.text, themeTextStyle]}>Home screen</Text>
       </View>
     );
   }

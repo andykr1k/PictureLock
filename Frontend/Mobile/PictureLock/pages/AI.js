@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, useColorScheme } from 'react-native';
 import { Button, Text, LinearGradient, Divider, ButtonGroup, Input } from '@rneui/themed';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Recommendation } from '../functions/Recommendation';
+import { styles } from '../styles/styles';
 
 function AIScreen({ navigation }) {
+  const colorScheme = useColorScheme();
+
+  const buttonStyles = StyleSheet.create({
+    button: {
+      marginBottom: 20
+    }
+  })
+
   const filmtypes = ['TV Show', 'Movie'];
   const platforms = ['Amazon Prime', 'Netflix', 'Hulu', 'Disney Plus', 'Paramount Plus', 'HBO Max'];
   const genres = ['Action', 'Drama', 'Comedy', 'Romance'];
@@ -13,11 +22,12 @@ function AIScreen({ navigation }) {
   const [selectedTypeIndex, setSelectedTypeIndex] = useState();
   const [selectedGenreIndexes, setSelectedGenreIndexes] = useState([]);
   const [selectedPlatformIndexes, setSelectedPlatformIndexes] = useState([]);
-  const buttonStyles = StyleSheet.create({
-    button: {
-      marginBottom: 20
-    }
-  })
+
+  const themeTextStyle = colorScheme === 'light' ? styles.lightThemeText : styles.darkThemeText;
+  const themeContainerStyle = colorScheme === 'light' ? styles.lightContainer : styles.darkContainer;
+  const themeButtonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
+
+
   function recommend(){
     (async () => {
       filmtype = filmtypes[selectedTypeIndex].toUpperCase();
@@ -37,17 +47,17 @@ function AIScreen({ navigation }) {
   }
 
     return (
-      <View style={{ flex: 1, padding:10, gap:4 }}>
-      <Text h4 style={{padding:6}}>Film Type</Text>
+      <View style={[styles.container, themeContainerStyle]}>
+      <Text h4 style={[styles.text, themeTextStyle]}>Film Type</Text>
       <ButtonGroup
         buttons={filmtypes}
         selectedIndex={selectedTypeIndex}
         onPress={(value)=>{
           setSelectedTypeIndex(value);
         }}
-        containerStyle={{marginBottom:20}}
+        containerStyle={[styles.button, themeButtonStyle]}
       />
-      <Text h4 style={{padding:6}}>Streaming Services</Text>
+      <Text h4 style={[styles.text, themeTextStyle]}>Streaming Services</Text>
       <ButtonGroup
         buttons={platforms}
         selectMultiple
@@ -55,9 +65,9 @@ function AIScreen({ navigation }) {
         onPress={(value)=>{
           setSelectedPlatformIndexes(value);
         }}
-        containerStyle={buttonStyles.button}
+        containerStyle={[styles.button, themeButtonStyle]}
       />
-      <Text h4 style={{padding:6}}>Genres</Text>
+      <Text h4 style={[styles.text, themeTextStyle]}>Genres</Text>
       <ButtonGroup
         buttons={genres}
         selectMultiple
@@ -65,9 +75,9 @@ function AIScreen({ navigation }) {
         onPress={(value)=>{
           setSelectedGenreIndexes(value);
         }}
-        containerStyle={{marginBottom:20}}
+        containerStyle={[styles.button, themeButtonStyle]}
       />
-      <Text h4 style={{padding:6}}>Movie</Text>
+      <Text h4 style={[styles.text, themeTextStyle]}>Movie</Text>
       <Input
       placeholder='Similar Movie'
       onChangeText={value => setMovieName(value)}

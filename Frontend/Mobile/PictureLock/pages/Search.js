@@ -1,32 +1,33 @@
-import { Button, Text, View, StyleSheet } from 'react-native';
+import { Button, Text, View, StyleSheet, useColorScheme } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useState } from "react";
 import { SearchBar } from '@rneui/themed';
+import { styles } from '../styles/styles';
 
 
 function SearchScreen({ navigation }) {
+  const colorScheme = useColorScheme();
+
+  const themeTextStyle = colorScheme === 'light' ? styles.lightThemeText : styles.darkThemeText;
+  const themeContainerStyle = colorScheme === 'light' ? styles.lightContainer : styles.darkContainer;
+  const themeButtonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
+
   const [search, setSearch] = useState("");
   const updateSearch = (search) => {
     setSearch(search);
   };
     return (
-      <View style={styles.view}>
+      <View style={[styles.container, themeContainerStyle]}>
         <SearchBar
           platform="ios"
           placeholder="Search"
           onChangeText={updateSearch}
           value={search}
-          containerStyle={{ backgroundColor: '#00000000'  }}
+          containerStyle={[styles.button, themeButtonStyle]}
         />
       </View>
     );
 }
-
-const styles = StyleSheet.create({
-  view: {
-    margin: 10,
-  },
-  });
 
 function DetailsScreen() {
 return (

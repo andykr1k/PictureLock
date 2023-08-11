@@ -1,17 +1,46 @@
 import * as React from 'react';
-import { NavigationContainer  } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme  } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Feathericons from 'react-native-vector-icons/Feather';
 import { HomeStackScreen, SearchStackScreen, AIStackScreen, NotificationStackScreen, ProfileStackScreen } from './pages';
 import { NativeBaseProvider} from "native-base";
+import { StyleSheet, useColorScheme } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {  
+  const colorScheme = useColorScheme();
+
+  const DarkTheme = {
+    dark: true,
+    colors: {
+      primary: 'rgb(255, 45, 85)',
+      background: 'rgb(36, 44, 64)',
+      card: 'rgb(36, 44, 64)',
+      text: 'rgb(250, 251, 255)',
+      border: 'rgb(36, 44, 64)',
+      notification: 'rgb(36, 44, 64)',
+    },
+  };
+
+  const LightTheme = {
+    dark: false,
+    colors: {
+      primary: 'rgb(255, 45, 85)',
+      background: 'rgb(242, 242, 242)',
+      card: 'rgb(255, 255, 255)',
+      text: 'rgb(28, 28, 30)',
+      border: '#ffffff',
+      notification: 'rgb(255, 69, 58)',
+    },
+  };
+
+  const theme = colorScheme === 'light' ? LightTheme : DarkTheme;
+  
   return (
     <NativeBaseProvider>
-    <NavigationContainer>
-      <Tab.Navigator screenOptions={({ route }) => ({
+    <NavigationContainer theme={theme}>
+      <Tab.Navigator theme={theme} screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size }) => {
             let iconName;
 
