@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "PictureLock",
-    "slug": "PictureLock",
+    "slug": "picturelock",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,18 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e1a8d6b4-e99f-4391-8da8-bd7643fb50fb"
+      }
+    },
+    "owner": "andykrik",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/e1a8d6b4-e99f-4391-8da8-bd7643fb50fb"
     }
   }
 }
