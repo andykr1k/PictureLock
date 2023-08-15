@@ -31,11 +31,11 @@ def read():
     movies_df['production_countries'] = movies_df['production_countries'].str.replace(']', '')
     movies_df['production_countries'] = movies_df['production_countries'].str.replace('\'', '')
 
-    movies_df = movies_df[['id', 'title', 'type', 'description', 'genres', 'platform']]
-
+    movies_df = movies_df[['title', 'type', 'description', 'genres','release_year', 'imdb_score', 'tmdb_score', 'platform']]
+    
     movies_df.dropna(inplace=True)
 
-    movies_df = movies_df.groupby(['id', 'title', 'type', 'description', 'genres'])['platform'].apply(', '.join).reset_index()
+    movies_df = movies_df.groupby(['title', 'type', 'description', 'genres', 'release_year', 'tmdb_score', 'imdb_score'])['platform'].apply(', '.join).reset_index()
 
     return movies_df
 
@@ -63,8 +63,6 @@ def train(movies_df):
     vectors = cv.fit_transform(movies_df['combined']).toarray()
 
     similarity = cosine_similarity(vectors)
-
-    sorted(list(enumerate(similarity[0])), reverse=True, key=lambda x:x[1])[1:25]
 
     return similarity
 
