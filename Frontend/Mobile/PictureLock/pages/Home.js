@@ -1,8 +1,9 @@
 import { Text, TouchableOpacity, View, useColorScheme } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { styles } from '../styles/styles';
-import {Post} from '../components';
+import { Post } from '../components';
 import { ScrollView } from 'react-native-gesture-handler';
+import { Button } from 'react-native-paper';
 
 const data = [
   {
@@ -71,14 +72,31 @@ function HomeScreen({ navigation }) {
         <ScrollView showsVerticalScrollIndicator={false}>
         {data.map((item, index) => {
             return(
-            <View key={index}>
-              <Post name={item.name} username={item.username} status={item.status} movie={item.movie} reaction={item.reaction} image={item.image} movieURL={item.movieURL} time={item.time} numberOfComments={item.numberOfComments} numberOfLikes={item.numberOfLikes} impressions={item.impressions}/>
-            </View>
+            <TouchableOpacity onPress={() => navigation.navigate("Details",{item, index})} key={index}>
+                <Post key={index} navigation={navigation} name={item.name} username={item.username} status={item.status} movie={item.movie} reaction={item.reaction} image={item.image} movieURL={item.movieURL} time={item.time} numberOfComments={item.numberOfComments} numberOfLikes={item.numberOfLikes} impressions={item.impressions}/>
+            </TouchableOpacity>
           )})}
         </ScrollView>
       </View>
     );
   }
+
+  function PostDetails({ route, navigation }) {
+    const { item, index } = route.params;
+
+    const colorScheme = useColorScheme();
+  
+    const themeTextStyle = colorScheme === 'light' ? styles.lightThemeText : styles.darkThemeText;
+    const themeContainerStyle = colorScheme === 'light' ? styles.lightContainer : styles.darkContainer;
+
+      return (
+        <ScrollView style={[styles.container, themeContainerStyle]}>
+              <View >
+                <Post key={index} name={item.name} username={item.username} status={item.status} movie={item.movie} reaction={item.reaction} image={item.image} movieURL={item.movieURL} time={item.time} numberOfComments={item.numberOfComments} numberOfLikes={item.numberOfLikes} impressions={item.impressions}/>
+              </View>
+        </ScrollView>
+      );
+    }
 
 const HomeStack = createNativeStackNavigator();
 
@@ -86,6 +104,7 @@ export default function HomeStackScreen() {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen name="PictureLock" component={HomeScreen} />
+      <HomeStack.Screen name="Details" component={PostDetails} />
     </HomeStack.Navigator>
   );
 }

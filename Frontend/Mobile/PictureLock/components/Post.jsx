@@ -8,7 +8,6 @@ export default function Post(props) {
 
   const themeTextStyle = colorScheme === 'light' ? style.lightThemeText : style.darkThemeText;
   const themeContainerStyle = colorScheme === 'light' ? style.lightPost : style.darkPost;
-
     return (
     <View style={[style.container, themeContainerStyle]}>
         <Image source={{uri:props.image}} style={style.userImage} />
@@ -32,11 +31,11 @@ export default function Post(props) {
           {props.movieURL && <Image source={{uri:props.movieURL}}style={style.image} />}
 
           <View style={[style.footer, themeContainerStyle]}>
-            <IconButton icon="comment" text={props.numberOfComments} />
+            <IconButton icon="comment" size={22} text={props.numberOfComments} />
             {/* <IconButton icon="retweet" text={props.numberOfShares} /> */}
-            <IconButton icon="heart" text={props.numberOfLikes} />
-            <IconButton icon="chart" text={props.impressions || 0} />
-            <IconButton icon="share-apple" />
+            <IconButton icon="heart" size={22} text={props.numberOfLikes} />
+            <IconButton icon="chart" size={22} text={props.impressions || 0} />
+            <IconButton icon="share-apple" size={22} />
           </View>
         </View>
     </View>
