@@ -6,11 +6,21 @@ export const styles = StyleSheet.create({
       padding: 10,
       gap: 4
     },
+    post_h: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    post_v: {
+      flex: 1,
+      padding: 0,
+      gap: 0,
+    },
     button: {
         marginBottom: 10
     },
     lightButton: {
-
+      backgroundColor: '#ffffff',
     },
     darkButton: {
       backgroundColor: '#242c40',
@@ -19,6 +29,12 @@ export const styles = StyleSheet.create({
       backgroundColor: '#ffffff',
     },
     darkContainer: {
+      backgroundColor: '#242c40',
+    },
+    lightPost: {
+      backgroundColor: '#ffffff',
+    },
+    darkPost: {
       backgroundColor: '#242c40',
     },
     lightThemeText: {
