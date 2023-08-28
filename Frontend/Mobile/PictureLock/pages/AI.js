@@ -1,9 +1,36 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, useColorScheme } from 'react-native';
-import { Button, Text, LinearGradient, Divider, ButtonGroup, Input } from '@rneui/themed';
+import { View, StyleSheet, useColorScheme, Image, ScrollView } from 'react-native';
+import { Button, Text, Divider, ButtonGroup, Input } from '@rneui/themed';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Recommendation } from '../functions/Recommendation';
 import { styles } from '../styles/styles';
+
+const data = [
+  {
+    movie: 'The Matrix',
+    movieURL: 'https://static.wikia.nocookie.net/matrix/images/5/56/The_Matrix_digital_release_cover.jpg/revision/latest?cb=20210908111245'
+  },
+  {
+    movie: 'Friends',
+    movieURL: 'https://m.media-amazon.com/images/M/MV5BNDVkYjU0MzctMWRmZi00NTkxLTgwZWEtOWVhYjZlYjllYmU4XkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_.jpg'
+  },
+  {
+    movie: 'Barbie',
+    movieURL: 'https://upload.wikimedia.org/wikipedia/en/0/0b/Barbie_2023_poster.jpg'
+  },
+  {
+    movie: 'Game of Thrones',
+    movieURL: 'https://m.media-amazon.com/images/M/MV5BN2IzYzBiOTQtNGZmMi00NDI5LTgxMzMtN2EzZjA1NjhlOGMxXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_FMjpg_UX1000_.jpg'
+  },
+  {
+    movie: 'How I Met Your Mother',
+    movieURL: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/b34jPzmB0wZy7EjUZoleXOl2RRI.jpg'
+  },
+  {
+    movie: 'Elemental',
+    movieURL: 'https://www.themoviedb.org/t/p/w440_and_h660_face/8riWcADI1ekEiBguVB9vkilhiQm.jpg'
+  }
+]
 
 function AIScreen({ navigation }) {
   const colorScheme = useColorScheme();
@@ -15,11 +42,37 @@ function AIScreen({ navigation }) {
   })
 
   const filmtypes = ['TV Show', 'Movie'];
-  const platforms = ['Amazon Prime', 'Netflix', 'Hulu', 'Disney Plus', 'Paramount Plus', 'HBO Max'];
+  // const platforms = [ 
+  //   {
+  //     name:"Amazon Prime",
+  //     image:require('../assets/amazon_logo.jpeg')
+  //   },
+  //   {
+  //     name:"Netflix",
+  //     image:require('../assets/netflix_logo.jpeg')
+  //   },
+  //   {
+  //     name:"Hulu",
+  //     image:require('../assets/hulu_logo.jpeg')
+  //   },
+  //   {
+  //     name:"Disney Plus",
+  //     image:require('../assets/disney_logo.jpeg')
+  //   },
+  //   {
+  //     name:"Paramount Plus",
+  //     image:require('../assets/paramount_logo.jpeg')
+  //   },
+  //   {
+  //     name:"HBO Max",
+  //     image:require('../assets/hbo_logo.jpeg')
+  //   }
+  // ];
+  const platforms = ["Amazon Prime","Netflix","Hulu","Disney Plus","Paramount Plus","HBO Max"];
   const genres = ['Action', 'Drama', 'Comedy', 'Romance'];
   const [recommends, setRecommends] = useState(null);
   const [movieName, setMovieName] = useState('');
-  const [selectedTypeIndex, setSelectedTypeIndex] = useState();
+  const [selectedTypeIndex, setSelectedTypeIndex] = useState(0);
   const [selectedGenreIndexes, setSelectedGenreIndexes] = useState([]);
   const [selectedPlatformIndexes, setSelectedPlatformIndexes] = useState([]);
 
@@ -48,7 +101,7 @@ function AIScreen({ navigation }) {
 
     return (
       <View style={[styles.container, themeContainerStyle]}>
-      <Text h4 style={[styles.text, themeTextStyle]}>Film Type</Text>
+      {/* <Text h4 style={[styles.text, themeTextStyle]}>Film Type</Text> */}
       <ButtonGroup
         buttons={filmtypes}
         selectedIndex={selectedTypeIndex}
@@ -57,7 +110,7 @@ function AIScreen({ navigation }) {
         }}
         containerStyle={[styles.button, themeButtonStyle]}
       />
-      <Text h4 style={[styles.text, themeTextStyle]}>Streaming Services</Text>
+      {/* <Text h4 style={[styles.text, themeTextStyle]}>Streaming Services</Text> */}
       <ButtonGroup
         buttons={platforms}
         selectMultiple
@@ -67,7 +120,24 @@ function AIScreen({ navigation }) {
         }}
         containerStyle={[styles.button, themeButtonStyle]}
       />
-      <Text h4 style={[styles.text, themeTextStyle]}>Genres</Text>
+      {/* <View style={style.post_h}>
+        {platforms.map((item, index) => {
+          return (
+            <Button
+            style={style.logoContainer}
+            key={item.name}         
+            onPress={()=>{
+              setSelectedPlatformIndexes(index);
+            }}
+            >            
+              <Image
+                style={style.logo}
+                source={item.image}>
+                </Image>
+              </Button>
+          )})}
+      </View> */}
+      {/* <Text h4 style={[styles.text, themeTextStyle]}>Genres</Text> */}
       <ButtonGroup
         buttons={genres}
         selectMultiple
@@ -78,10 +148,18 @@ function AIScreen({ navigation }) {
         containerStyle={[styles.button, themeButtonStyle]}
       />
       <Text h4 style={[styles.text, themeTextStyle]}>Movie</Text>
-      <Input
+      {/* <Input
       placeholder='Similar Movie'
       onChangeText={value => setMovieName(value)}
-      />
+      /> */}
+      <View  style={style.gridContainer}>
+        {data.map((item, index) => {
+            return(
+            <View key={index} style={style.gridItem}>
+              <Image source={{uri:item.movieURL}} style={style.image}/>
+            </View>
+          )})}
+      </View>
       <Button 
       onPress={()=>recommend()}
       buttonStyle={{
@@ -135,3 +213,38 @@ export default function AIStackScreen() {
     </AIStack.Navigator>
   );
 }
+
+const style = StyleSheet.create({
+  logoContainer: {
+    width: 40,
+    height: 40,
+    backgroundColor: 'transparent'
+  },
+  logo: {
+    width: 40,
+    height: 40,
+    borderRadius: 25,
+  },
+  post_h: {
+    flex: 1,
+    flexDirection: 'row',
+    height: 60,
+    gap: 2,
+    justifyContent: 'center'
+  },
+  image: {
+    aspectRatio: 2 / 3,
+    marginVertical: 5,
+    borderRadius: 15,
+  },
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginHorizontal: -5,
+  },
+  gridItem: {
+    width: '33.333%',
+    padding: 5,
+  },
+});
