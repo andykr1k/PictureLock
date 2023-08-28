@@ -1,4 +1,4 @@
-import { Button, Text, View, StyleSheet, useColorScheme, Image } from 'react-native';
+import { Button, Text, View, StyleSheet, useColorScheme, Image, TouchableOpacity } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useState } from "react";
 import { SearchBar } from '@rneui/themed';
@@ -56,7 +56,7 @@ function SearchScreen({ navigation }) {
     setSearch(search);
   };
     return (
-      <View style={[styles.container, themeContainerStyle]}>
+      <View style={[style.container, themeContainerStyle]}>
         <SearchBar lightTheme
           platform="ios"
           placeholder="Search for friends and films"
@@ -69,9 +69,9 @@ function SearchScreen({ navigation }) {
           <View  style={style.gridContainer}>
             {data.map((item, index) => {
                 return(
-                <View key={index} style={style.gridItem}>
+                <TouchableOpacity onPress={() => navigation.navigate("Details",{item, index})} key={index} style={style.gridItem}>
                   <Image source={{uri:item.movieURL}} style={style.image}/>
-                </View>
+                </TouchableOpacity>
               )})}
           </View>
         </ScrollView>
@@ -79,12 +79,20 @@ function SearchScreen({ navigation }) {
     );
 }
 
-function DetailsScreen() {
-return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    <Text>Details!</Text>
-    </View>
-);
+function DetailsScreen({ route, navigation }) {
+  const { item, index } = route.params;
+  const colorScheme = useColorScheme();
+
+  const themeTextStyle = colorScheme === 'light' ? style.lightThemeText : style.darkThemeText;
+  const themeContainerStyle = colorScheme === 'light' ? styles.lightContainer : styles.darkContainer;
+  const themeButtonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
+
+  return (
+      <View style={{ flex: 1, alignItems: 'center' }}>
+      <Text style={[style.movieName, themeTextStyle]}>{item.movie}</Text>
+      <Image source={{uri:item.movieURL}} style={style.poster}/>
+      </View>
+  );
 }
 
 const SearchStack = createNativeStackNavigator();
@@ -178,4 +186,13 @@ const style = StyleSheet.create({
     width: '33.333%',
     padding: 5,
   },
+  poster:{
+    width: 200,
+    height: 300,
+    borderRadius: 15,
+  },
+  movieName: {
+    fontSize: 32,
+    padding: 20,
+  }
 });

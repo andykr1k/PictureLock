@@ -100,7 +100,7 @@ function AIScreen({ navigation }) {
   }
 
     return (
-      <View style={[styles.container, themeContainerStyle]}>
+      <View style={[style.container, themeContainerStyle]}>
       {/* <Text h4 style={[styles.text, themeTextStyle]}>Film Type</Text> */}
       <ButtonGroup
         buttons={filmtypes}
@@ -214,7 +214,13 @@ export default function AIStackScreen() {
   );
 }
 
+
 const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 10,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
   logoContainer: {
     width: 40,
     height: 40,

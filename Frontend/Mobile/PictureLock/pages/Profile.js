@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity, useColorScheme, StyleSheet, Image, Text } from 'react-native';
+import { View, ScrollView, TouchableOpacity, useColorScheme, StyleSheet, Image, Text, Button } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { logUserOut } from "../redux/slices/loginSlice";
 import { useDispatch, useSelector } from 'react-redux';
+import { IconButton } from '../components';
+import NotificationStackScreen from './Notifications';
 
 const data = [
   {
@@ -91,12 +93,47 @@ function ProfileScreen({ navigation }) {
   );
 }
 
+
+function SettingsScreen({ navigation }) {
+  const colorScheme = useColorScheme();
+
+  const themeTextStyle = colorScheme === 'light' ? style.lightThemeText : style.darkThemeText;
+  const themeContainerStyle = colorScheme === 'light' ? style.lightPost : style.darkPost;
+  const user = useSelector((state) => state.userState.user);
+  const dispatch = useDispatch();
+
+  return (
+    <ScrollView style={[style.container, themeContainerStyle]}>
+      
+    </ScrollView>
+  );
+}
+
 const ProfileStack = createNativeStackNavigator();
 
-export default function ProfileStackScreen() {
+export default function ProfileStackScreen({ navigation }) {
+  const colorScheme = useColorScheme();
+
   return (
     <ProfileStack.Navigator>
-      <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+      <ProfileStack.Screen name="Profile" component={ProfileScreen} options={{
+          headerRight: () => (
+            <View style={{flexDirection: 'row', gap: 10}}>
+            {/* <TouchableOpacity
+              onPress={() => navigation.navigate("Notifications")}
+            >
+            <IconButton icon="bell" size={28}/>
+            </TouchableOpacity> */}
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Settings")}
+            >
+            <IconButton icon="gear" size={28}/>
+            </TouchableOpacity>
+            </View>
+          ),
+        }}/>
+      <ProfileStack.Screen name="Settings" component={SettingsScreen}/>
+      {/* <ProfileStack.Screen name="Notifications" component={NotificationStackScreen} options={{headerShown: false}}/> */}
     </ProfileStack.Navigator>
   );
 }

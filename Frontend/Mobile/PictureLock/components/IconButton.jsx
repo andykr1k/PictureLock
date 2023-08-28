@@ -1,11 +1,14 @@
-import { View, Text } from 'react-native';
+import { View, Text, useColorScheme } from 'react-native';
 import { EvilIcons } from '@expo/vector-icons';
 
-const IconButton = ({ icon, text }) => {
+const IconButton = ({ icon, text, size }) => {
+  const colorScheme = useColorScheme();
+
+  const themeIconStyle = colorScheme === 'light' ? 'gray' : 'white';
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <EvilIcons name={icon} size={22} color="gray" />
-      <Text style={{ fontSize: 12, color: 'gray' }}>{text}</Text>
+      <EvilIcons name={icon} size={size} color={themeIconStyle} />
+      <Text style={{ fontSize: 12, color: themeIconStyle }}>{text}</Text>
     </View>
   );
 };
