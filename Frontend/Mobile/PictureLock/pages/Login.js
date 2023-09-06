@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, useColorScheme, Button } from "react-native";
 import { useDispatch, useSelector } from 'react-redux'
 import { setUser } from "../redux/slices/loginSlice";
+import LottieView from 'lottie-react-native';
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -19,7 +20,18 @@ export default function Login() {
   const dispatch = useDispatch()
   return (
     <View style={[styles.container, themeContainerStyle]}>
-      <Image style={styles.image} source={require("../assets/icon.png")} /> 
+      {/* <Image style={styles.image} source={require("../assets/icon.png")} />  */}
+      <View>
+      <LottieView 
+        source={require('../assets/animation_lm8vj7gb.json')} 
+        loop={true} 
+        autoPlay
+        style={{
+            width: 100,
+            height: 100,
+          }}
+        />
+      </View>
       <StatusBar style="auto" />
       <View style={styles.inputView}>
         <TextInput

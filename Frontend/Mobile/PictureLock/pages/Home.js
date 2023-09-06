@@ -41,8 +41,8 @@ function HomeScreen({ navigation }) {
         style={{
             flex: 1,
             alignSelf: 'center',
-            width: 50,
-            height: 50,
+            width: 75,
+            height: 75,
           }}
         />
         </View>

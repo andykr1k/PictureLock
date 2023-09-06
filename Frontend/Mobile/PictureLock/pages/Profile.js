@@ -104,13 +104,13 @@ function ProfileScreen({ navigation }) {
         <TouchableOpacity style={style.logoutBtn}>
         <Text style={style.logoutText}>Create A New List</Text>
       </TouchableOpacity>
-      <View style={{flexDirection: 'row', gap: 10}}>
+      <View style={style.settingsContainer}>
             <TouchableOpacity
               onPress={() => navigation.navigate("Settings")}
             >
             <IconButton icon="settings" size={28}/>
             </TouchableOpacity>
-            </View>
+      </View>
     </ScrollView>
   );
 }
@@ -141,7 +141,7 @@ export default function ProfileStackScreen({ navigation }) {
   return (
     <ProfileStack.Navigator>
       <ProfileStack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }}/>
-      <ProfileStack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }}/>
+      <ProfileStack.Screen name="Settings" component={SettingsScreen} />
       {/* <ProfileStack.Screen name="Notifications" component={NotificationStackScreen} options={{headerShown: false}}/> */}
     </ProfileStack.Navigator>
   );
@@ -150,6 +150,12 @@ export default function ProfileStackScreen({ navigation }) {
 const style = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  settingsContainer: {
+    position: 'absolute',
+    marginTop: '15%',
+    right: 20,
+    zIndex: 2,
   },
   profileImage: {
     flexDirection: 'row',
