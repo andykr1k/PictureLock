@@ -5,6 +5,7 @@ import { logUserOut } from "../redux/slices/loginSlice";
 import { useDispatch, useSelector } from 'react-redux';
 import { IconButton } from '../components';
 import NotificationStackScreen from './Notifications';
+import Feathericons from 'react-native-vector-icons/Feather';
 
 const data = [
   {
@@ -48,13 +49,14 @@ const data = [
 function ProfileScreen({ navigation }) {
   const colorScheme = useColorScheme();
 
+  const themeIconStyle = colorScheme === 'light' ? 'black' : 'white';
   const themeTextStyle = colorScheme === 'light' ? style.lightThemeText : style.darkThemeText;
   const themeContainerStyle = colorScheme === 'light' ? style.lightPost : style.darkPost;
   const user = useSelector((state) => state.userState.user);
   const dispatch = useDispatch();
 
   return (
-    <ScrollView style={[style.container, themeContainerStyle]}>
+    <ScrollView showsVerticalScrollIndicator={false} style={[style.container, themeContainerStyle]}>
       <Image source={{ uri: user.image }} style={style.profileImage} />
       <View style={style.userInfoContainer}>
         <Text style={[style.nameText, themeTextStyle]}>{user.name}</Text>
@@ -86,9 +88,29 @@ function ProfileScreen({ navigation }) {
           </View>
         </ScrollView>
       </View>
-      <TouchableOpacity onPress={() => dispatch(logUserOut())} style={style.logoutBtn}>
-        <Text style={style.logoutText}>Logout</Text>
+      <View style={style.section}>
+        <Text style={[style.sectionTitle, themeTextStyle]}>Bookmarks</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View  style={style.gridContainer}>
+            {data.map((item, index) => {
+                return(
+                <View key={index} style={style.gridItem}>
+                  <Image source={{uri:item.movieURL}} style={style.image}/>
+                </View>
+              )})}
+          </View>
+        </ScrollView>
+      </View>
+        <TouchableOpacity style={style.logoutBtn}>
+        <Text style={style.logoutText}>Create A New List</Text>
       </TouchableOpacity>
+      <View style={style.settingsContainer}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Settings")}
+            >
+            <IconButton icon="settings" size={28}/>
+            </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
@@ -104,7 +126,9 @@ function SettingsScreen({ navigation }) {
 
   return (
     <ScrollView style={[style.container, themeContainerStyle]}>
-      
+      <TouchableOpacity onPress={() => dispatch(logUserOut())} style={style.logoutBtn}>
+        <Text style={style.logoutText}>Logout</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -116,23 +140,8 @@ export default function ProfileStackScreen({ navigation }) {
 
   return (
     <ProfileStack.Navigator>
-      <ProfileStack.Screen name="Profile" component={ProfileScreen} options={{
-          headerRight: () => (
-            <View style={{flexDirection: 'row', gap: 10}}>
-            {/* <TouchableOpacity
-              onPress={() => navigation.navigate("Notifications")}
-            >
-            <IconButton icon="bell" size={28}/>
-            </TouchableOpacity> */}
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Settings")}
-            >
-            <IconButton icon="gear" size={28}/>
-            </TouchableOpacity>
-            </View>
-          ),
-        }}/>
-      <ProfileStack.Screen name="Settings" component={SettingsScreen}/>
+      <ProfileStack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }}/>
+      <ProfileStack.Screen name="Settings" component={SettingsScreen} />
       {/* <ProfileStack.Screen name="Notifications" component={NotificationStackScreen} options={{headerShown: false}}/> */}
     </ProfileStack.Navigator>
   );
@@ -142,6 +151,12 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
   },
+  settingsContainer: {
+    position: 'absolute',
+    marginTop: '15%',
+    right: 20,
+    zIndex: 2,
+  },
   profileImage: {
     flexDirection: 'row',
     width: 150,
@@ -150,7 +165,7 @@ const style = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     alignSelf: 'center',
-    marginTop: '5%'
+    marginTop: '15%'
   },
   userInfoContainer: {
     padding: 20,
@@ -163,7 +178,7 @@ const style = StyleSheet.create({
   },
   emailText: {
     fontSize: 16,
-    color: 'gray',
+    color: 'white',
   },
   logoutBtn: {
     width: "80%",
@@ -182,7 +197,7 @@ const style = StyleSheet.create({
   },
   section: {
     marginTop: 20,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   sectionTitle: {
     fontSize: 18,
@@ -190,21 +205,21 @@ const style = StyleSheet.create({
     marginBottom: 10,
   },
   lightButton: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#F5F8FA',
   },
   darkButton: {
-    backgroundColor: '#242c40',
+    backgroundColor: '#141d26',
   },
   lightPost: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#F5F8FA',
     borderColor: 'lightgrey',
   },
   darkPost: {
-    backgroundColor: '#242c40',
+    backgroundColor: '#141d26',
     borderColor: 'grey',
   },
   lightThemeText: {
-    color: '#242c40',
+    color: '#141d26',
   },
   darkThemeText: {
     color: '#d0d0c0',

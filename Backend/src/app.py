@@ -84,6 +84,7 @@ def recommend_movie(similarity, movies_df, film_type, movie, platforms):
             break
     return recommends
 
+# Fix return with 0 in total
 def recommendation_accuracy(recommends, movies_df, type, title, platforms):
     total = len(recommends)
     count = 0
@@ -120,8 +121,8 @@ def recommend(film_type, movie, platforms):
     log(film_type, movie, platforms)
 
     recommends = recommend_movie(similarity, movies_df, str(film_type), str(movie), platforms)
-    acc = recommendation_accuracy(recommends, movies_df, str(film_type), str(movie), platforms)
-
+    # acc = recommendation_accuracy(recommends, movies_df, str(film_type), str(movie), platforms)
+    acc = None
     response_data = {
         'recommendations': recommends,
         'accuracy': acc

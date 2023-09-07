@@ -18,29 +18,50 @@ export const styles = StyleSheet.create({
         marginBottom: 10
     },
     lightButton: {
-      backgroundColor: '#ffffff',
+      backgroundColor: '#F5F8FA',
     },
     darkButton: {
-      backgroundColor: '#242c40',
+      backgroundColor: '#141d26',
     },
     lightContainer: {
-      backgroundColor: '#ffffff',
     },
     darkContainer: {
-      backgroundColor: '#242c40',
+      backgroundColor: '#141d26',
     },
     lightPost: {
-      backgroundColor: '#ffffff',
+      backgroundColor: '#F5F8FA',
     },
     darkPost: {
-      backgroundColor: '#242c40',
+      backgroundColor: '#141d26',
     },
     lightThemeText: {
-      color: '#242c40',
+      color: '#141d26',
       padding: 6
     },
     darkThemeText: {
       color: '#d0d0c0',
       padding: 6
+    },
+    postReactions: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+    },
+    input: {
+      height: 40,
+      borderWidth: 1,
+      padding: 10,
+      marginHorizontal: 10,
+    },
+    lightThemeReactions: {
+      color: 'black',
+      borderRadius: 10,
+      borderColor: 'black'
+    },
+    darkThemeReactions: {
+      color: 'white',
+      borderRadius: 10,
+      borderColor: 'white'
     },
   });

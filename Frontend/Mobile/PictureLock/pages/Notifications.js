@@ -2,6 +2,7 @@ import { Button, Text, View, useColorScheme, ScrollView } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { styles } from '../styles/styles';
 import {Notification} from '../components';
+
 const data = [
   {
     name: 'Andykr1k',
@@ -94,7 +95,7 @@ const NotificationsStack = createNativeStackNavigator();
 export default function NotificationStackScreen() {
   return (
     <NotificationsStack.Navigator>
-      <NotificationsStack.Screen name="Notifications" component={NotificationsScreen} />
+      <NotificationsStack.Screen name="Notifications" component={NotificationsScreen}/>
     </NotificationsStack.Navigator>
   );
 }

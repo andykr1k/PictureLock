@@ -2,8 +2,7 @@ import { Text, View, useColorScheme, Image, StyleSheet } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import IconButton from './IconButton';
 import TimeAgo from '../functions/TimeAgo';
-
-export default function Post(props) {
+export default function Comment(props) {
   const colorScheme = useColorScheme();
 
   const themeTextStyle = colorScheme === 'light' ? style.lightThemeText : style.darkThemeText;
@@ -12,45 +11,22 @@ export default function Post(props) {
     <View style={[style.container, themeContainerStyle]}>
         <Image source={{uri:props.post.author.image}} style={style.userImage} />
         <View style={style.mainContainer}>
-          <View style={{ flex: 1, flexDirection: 'row', flexGrow: 1 }}>
-            <View style={{ flex: 1, flexDirection: 'row', flexGrow: 1  }}>
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row'  }}>
               <Text style={[style.name, themeTextStyle]}>{props.post.author.username}</Text>
-              <Text style={[style.content, themeTextStyle]}>{props.post.movie} · {TimeAgo(props.post.createdAt)}</Text>
+              <Text style={[style.content, themeTextStyle]}>· {TimeAgo(props.post.createdAt)}</Text>
             </View>
+
             <Entypo
               name="dots-three-horizontal"
               size={16}
               color="gray"
               style={{ marginLeft: 'auto' }}
             />
-          </View>
-          <View style={style.postContainer}>
-          <Text style={style.postContent}>{props.post.review}</Text>
-          <View style={style.posterContent}>
-          {props.post.movieURL && <Image source={{uri:props.post.movieURL}} style={style.image} />}
-            <View style={style.stars}>
-                <IconButton icon="star" size={18} />
-                <IconButton icon="star" size={18} />
-                <IconButton icon="star" size={18} />
-                <IconButton icon="star" size={18} />
-                <IconButton icon="star" size={18} />
             </View>
-          </View>
-          </View>
+            <Text style={[style.postContent, themeTextStyle]}>{props.post.content}</Text>
 
-          {
-            props.post.status == 'is watching'
-            ?
-            <></>
-            :
-            <View style={[style.footer, themeContainerStyle]}>
-            <IconButton icon="comment" size={14} text={props.post.comments.length} />
-            <IconButton icon="favorite-outline" size={14} text={props.post.numberOfLikes} />
-            <IconButton icon="bookmark-outline" size={14} />
-            <IconButton icon="ios-share" size={14} />
           </View>
-          }
-        </View>
     </View>
     );
   }
@@ -81,11 +57,9 @@ const style = StyleSheet.create({
   mainContainer: {
     marginLeft: 10,
     flex: 1,
-    flexGrow: 1
   },
   name: {
     fontWeight: '600',
-    fontSize: 12,
   },
   username: {
     color: 'gray',
@@ -93,14 +67,11 @@ const style = StyleSheet.create({
   },
   content: {
     color: 'gray',
-    marginLeft: 3,
-    fontSize: 12,
+    marginLeft: 3
   },
   postContent: {
     color: 'gray',
-    width: '70%',
     fontSize: 12,
-    marginRight: 20
   },
   image: {
     width: '100%',

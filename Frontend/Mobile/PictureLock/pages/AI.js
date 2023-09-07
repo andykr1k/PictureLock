@@ -4,6 +4,7 @@ import { Button, Text, Divider, ButtonGroup, Input } from '@rneui/themed';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Recommendation } from '../functions/Recommendation';
 import { styles } from '../styles/styles';
+import Feathericons from 'react-native-vector-icons/Feather';
 
 const data = [
   {
@@ -76,6 +77,7 @@ function AIScreen({ navigation }) {
   const [selectedGenreIndexes, setSelectedGenreIndexes] = useState([]);
   const [selectedPlatformIndexes, setSelectedPlatformIndexes] = useState([]);
 
+  const themeIconStyle = colorScheme === 'light' ? 'black' : 'white';
   const themeTextStyle = colorScheme === 'light' ? styles.lightThemeText : styles.darkThemeText;
   const themeContainerStyle = colorScheme === 'light' ? styles.lightContainer : styles.darkContainer;
   const themeButtonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
@@ -101,7 +103,7 @@ function AIScreen({ navigation }) {
 
     return (
       <View style={[style.container, themeContainerStyle]}>
-      {/* <Text h4 style={[styles.text, themeTextStyle]}>Film Type</Text> */}
+      <Text h4 style={[styles.text, themeTextStyle]}>Film Type</Text>
       <ButtonGroup
         buttons={filmtypes}
         selectedIndex={selectedTypeIndex}
@@ -110,7 +112,7 @@ function AIScreen({ navigation }) {
         }}
         containerStyle={[styles.button, themeButtonStyle]}
       />
-      {/* <Text h4 style={[styles.text, themeTextStyle]}>Streaming Services</Text> */}
+      <Text h4 style={[styles.text, themeTextStyle]}>Streaming Services</Text>
       <ButtonGroup
         buttons={platforms}
         selectMultiple
@@ -137,7 +139,7 @@ function AIScreen({ navigation }) {
               </Button>
           )})}
       </View> */}
-      {/* <Text h4 style={[styles.text, themeTextStyle]}>Genres</Text> */}
+      <Text h4 style={[styles.text, themeTextStyle]}>Genres</Text>
       <ButtonGroup
         buttons={genres}
         selectMultiple
@@ -148,10 +150,6 @@ function AIScreen({ navigation }) {
         containerStyle={[styles.button, themeButtonStyle]}
       />
       <Text h4 style={[styles.text, themeTextStyle]}>Movie</Text>
-      {/* <Input
-      placeholder='Similar Movie'
-      onChangeText={value => setMovieName(value)}
-      /> */}
       <View  style={style.gridContainer}>
         {data.map((item, index) => {
             return(
@@ -208,8 +206,8 @@ const AIStack = createNativeStackNavigator();
 export default function AIStackScreen() {
   return (
     <AIStack.Navigator>
-      <AIStack.Screen name="PictureLock" component={AIScreen} />
-      <AIStack.Screen name="Details" component={DetailsScreen} />
+      <AIStack.Screen name="PictureLock" component={AIScreen} options={{ headerShown: false }}/>
+      <AIStack.Screen name="Details" component={DetailsScreen} options={{ headerShown: false }}/>
     </AIStack.Navigator>
   );
 }
@@ -218,8 +216,8 @@ export default function AIStackScreen() {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    margin: 10,
+    marginTop: '15%',
   },
   logoContainer: {
     width: 40,
