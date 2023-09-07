@@ -85,19 +85,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF1493",
   },
   lightContainer: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#F5F8FA',
   },
   darkContainer: {
-    backgroundColor: '#242c40',
+    backgroundColor: '#141d26',
   },
   lightPost: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#F5F8FA',
   },
   darkPost: {
-    backgroundColor: '#242c40',
+    backgroundColor: '#141d26',
   },
   lightThemeText: {
-    color: '#242c40',
+    color: '#141d26',
     padding: 6
   },
   darkThemeText: {

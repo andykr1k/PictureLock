@@ -70,21 +70,21 @@ const style = StyleSheet.create({
     justifyContent: 'space-between',
   },
   lightButton: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#F5F8FA',
   },
   darkButton: {
-    backgroundColor: '#242c40',
+    backgroundColor: '#141d26',
   },
   lightPost: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#F5F8FA',
     borderColor: 'lightgrey',
   },
   darkPost: {
-    backgroundColor: '#242c40',
+    backgroundColor: '#141d26',
     borderColor: 'grey',
   },
   lightThemeText: {
-    color: '#242c40',
+    color: '#141d26',
   },
   darkThemeText: {
     color: '#d0d0c0',

@@ -14,11 +14,11 @@ const DarkTheme = {
   dark: true,
   colors: {
     primary: 'rgb(255, 45, 85)',
-    background: 'rgb(36, 44, 64)',
-    card: 'rgb(36, 44, 64)',
+    background: '#141d26',
+    card: '#141d26',
     text: 'rgb(250, 251, 255)',
-    border: 'rgb(36, 44, 64)',
-    notification: 'rgb(36, 44, 64)',
+    border: '#141d26',
+    notification: '#141d26',
   },
 };
 
@@ -26,11 +26,11 @@ const LightTheme = {
   dark: false,
   colors: {
     primary: 'rgb(255, 45, 85)',
-    background: 'rgb(242, 242, 242)',
-    card: 'rgb(255, 255, 255)',
+    background: '#F5F8FA',
+    card: '#F5F8FA',
     text: 'rgb(28, 28, 30)',
-    border: '#ffffff',
-    notification: 'rgb(255, 69, 58)',
+    border: '#F5F8FA',
+    notification: '#F5F8FA',
   },
 };
 
@@ -70,7 +70,10 @@ function HomeTabs() {
       tabBarInactiveTintColor: 'gray',
       tabBarLabelStyle: {
         display: "none",
-      }
+      },
+      tabBarStyle: {
+        backgroundColor: 'transparent',
+      },
     })}>
       <Tab.Screen name="home" component={HomeStackScreen} options={{headerShown: false}}/>
       <Tab.Screen name="search" component={SearchStackScreen} options={{headerShown: false}}/>
@@ -93,7 +96,7 @@ export default function App() {
     <Provider store={store}>
       <NavigationContainer theme={theme}>
       <Stack.Navigator initialRouteName={"HomeTabs"} screenOptions={{headerShown:false}}>
-          <Stack.Screen name="HomeTabs" component={HomeTabs}/>
+          <Stack.Screen name="HomeTabs" component={HomeTabs} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

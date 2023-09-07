@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { SearchBar } from '@rneui/themed';
 import { styles } from '../styles/styles';
 import { ScrollView } from 'react-native-gesture-handler';
+import Feathericons from 'react-native-vector-icons/Feather';
 
 const data = [
   {
@@ -47,6 +48,7 @@ const data = [
 function SearchScreen({ navigation }) {
   const colorScheme = useColorScheme();
 
+  const themeIconStyle = colorScheme === 'light' ? 'black' : 'white';
   const themeTextStyle = colorScheme === 'light' ? styles.lightThemeText : styles.darkThemeText;
   const themeContainerStyle = colorScheme === 'light' ? styles.lightContainer : styles.darkContainer;
   const themeButtonStyle = colorScheme === 'light' ? styles.lightButton : styles.darkButton;
@@ -57,6 +59,9 @@ function SearchScreen({ navigation }) {
   };
     return (
       <View style={[style.container, themeContainerStyle]}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={[{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 20, marginTop: 30}, themeContainerStyle]}>
+        </View>
         <SearchBar lightTheme
           platform="ios"
           placeholder="Search for friends and films"
@@ -65,7 +70,6 @@ function SearchScreen({ navigation }) {
           inputStyle={style.searchBarInput}
           containerStyle={style.searchbar}
         />
-        <ScrollView showsVerticalScrollIndicator={false}>
           <View  style={style.gridContainer}>
             {data.map((item, index) => {
                 return(
@@ -100,8 +104,8 @@ const SearchStack = createNativeStackNavigator();
 export default function SearchStackScreen() {
   return (
     <SearchStack.Navigator>
-      <SearchStack.Screen name="Search" component={SearchScreen} />
-      <SearchStack.Screen name="Details" component={DetailsScreen} />
+      <SearchStack.Screen name="Search" component={SearchScreen} options={{ headerShown: false }}/>
+      <SearchStack.Screen name="Details" component={DetailsScreen}/>
     </SearchStack.Navigator>
   );
 }
@@ -109,17 +113,11 @@ export default function SearchStackScreen() {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   searchbar: {
     zIndex: 2,
-    position: 'absolute', 
-    top: 0,
     backgroundColor: 'transparent',
     alignItems: 'center', // Center horizontally
-    marginTop: 5, // Adjust spacing from the top
-    marginLeft: 20
   },
   searchBarInput: {
     backgroundColor: 'transparent',
@@ -156,21 +154,21 @@ const style = StyleSheet.create({
     justifyContent: 'space-between',
   },
   lightButton: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#F5F8FA',
   },
   darkButton: {
-    backgroundColor: '#242c40',
+    backgroundColor: '#141d26',
   },
   lightPost: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#F5F8FA',
     borderColor: 'lightgrey',
   },
   darkPost: {
-    backgroundColor: '#242c40',
+    backgroundColor: '#141d26',
     borderColor: 'grey',
   },
   lightThemeText: {
-    color: '#242c40',
+    color: '#141d26',
   },
   darkThemeText: {
     color: '#d0d0c0',
@@ -180,7 +178,7 @@ const style = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     marginHorizontal: -5,
-    marginTop: 75
+    padding: 10,
   },
   gridItem: {
     width: '33.333%',
