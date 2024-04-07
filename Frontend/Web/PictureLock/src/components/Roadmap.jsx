@@ -82,7 +82,7 @@ export default function Roadmap() {
           <li>
             <hr />
             <div className="timeline-start timeline-box">
-              IOS App Development
+              App Development
             </div>
             <div className="timeline-middle">
               <svg
