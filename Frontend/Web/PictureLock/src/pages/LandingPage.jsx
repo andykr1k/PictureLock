@@ -1,7 +1,7 @@
 export default function LandingPage() {
   return (
     <div className="flex items-center justify-center h-screen">
-      <div className="container mx-10">
+      <div className="container mx-10 z-50">
         <div className="text-center">
           <h2 className="text-4xl tracking-tight leading-10 font-extrabold text-white sm:text-5xl sm:leading-none md:text-6xl">
             Picture<span className="text-indigo-600">Lock</span>
