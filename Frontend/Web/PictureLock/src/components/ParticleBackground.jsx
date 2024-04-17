@@ -13,7 +13,7 @@ export default function ParticleBackground() {
   }, []);
 
   return (
-    <div className="absolute w-100vw h-100vh overflow-hidden -z-10">
+    <div className="absolute w-100vw h-100vh overflow-hidden">
       <Particles
         id="tsparticles"
         init={particlesInit}
@@ -21,8 +21,11 @@ export default function ParticleBackground() {
         options={{
           background: {
             color: {
-              value: "#2d3748",
+              value: "#FFFFFF",
             },
+            opacity:{
+              values: 1,
+            }
           },
           fpsLimit: 240,
           interactivity: {
@@ -40,7 +43,7 @@ export default function ParticleBackground() {
             },
             modes: {
               push: {
-                quantity: 4,
+                quantity: 1,
               },
               repulse: {
                 distance: 100,
@@ -77,7 +80,7 @@ export default function ParticleBackground() {
                 enable: true,
                 area: 800,
               },
-              value: 100,
+              value: 50,
             },
             opacity: {
               value: 0.5,

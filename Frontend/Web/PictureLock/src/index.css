@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  background: linear-gradient(135deg, #FFB54F, #FF1540);
+  transition: background 0.5s ease;
+}
