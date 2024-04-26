@@ -1,5 +1,4 @@
 export default async function GetMovieDetails(ids) {
-  const api_key = import.meta.env.VITE_TMDB_API_KEY || process.env.VITE_TMDB_API_KEY;
   const access_key = import.meta.env.VITE_TMDB_ACCESS_KEY || process.env.VITE_TMDB_ACCESS_KEY;
 
   let api_url_beg = "https://api.themoviedb.org/3/movie/";
