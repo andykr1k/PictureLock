@@ -1,5 +1,5 @@
 import { Recommend } from "../functions/Recommendation";
-import GetMovieDetails from "../functions/getMovieDetails";
+import GetMovieDetails from "../functions/GetMovieDetails";
 import { useState } from "react";
 
 export default function RecommendationPage() {
