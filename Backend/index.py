@@ -1,39 +1,39 @@
 from flask import Flask, jsonify
 from flask_cors import CORS, cross_origin
-import pandas as pd
+# import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-def read():
-    netflix_movies_df = pd.read_csv('./data/netflix_titles.csv')
-    amazon_movies_df = pd.read_csv('./data/amazon_titles.csv')
-    disney_movies_df = pd.read_csv('./data/disney_titles.csv')
-    hbo_movies_df = pd.read_csv('./data/hbo_titles.csv')
-    hulu_movies_df = pd.read_csv('./data/hulu_titles.csv')
-    paramount_movies_df = pd.read_csv('./data/paramount_titles.csv')
+# def read():
+#     netflix_movies_df = pd.read_csv('./data/netflix_titles.csv')
+#     amazon_movies_df = pd.read_csv('./data/amazon_titles.csv')
+#     disney_movies_df = pd.read_csv('./data/disney_titles.csv')
+#     hbo_movies_df = pd.read_csv('./data/hbo_titles.csv')
+#     hulu_movies_df = pd.read_csv('./data/hulu_titles.csv')
+#     paramount_movies_df = pd.read_csv('./data/paramount_titles.csv')
 
-    netflix_movies_df['platform'] = 'Netflix'
-    disney_movies_df['platform'] = 'Disney Plus'
-    paramount_movies_df['platform'] = 'Paramount Plus'
-    hulu_movies_df['platform'] = 'Hulu'
-    hbo_movies_df['platform'] = 'HBO Max'
-    amazon_movies_df['platform'] = 'Amazon Prime'
+#     netflix_movies_df['platform'] = 'Netflix'
+#     disney_movies_df['platform'] = 'Disney Plus'
+#     paramount_movies_df['platform'] = 'Paramount Plus'
+#     hulu_movies_df['platform'] = 'Hulu'
+#     hbo_movies_df['platform'] = 'HBO Max'
+#     amazon_movies_df['platform'] = 'Amazon Prime'
 
-    movies_df = netflix_movies_df._append(amazon_movies_df, ignore_index = True)._append(hulu_movies_df, ignore_index = True)._append(hbo_movies_df, ignore_index = True)._append(paramount_movies_df, ignore_index = True)._append(disney_movies_df, ignore_index = True)
+#     movies_df = netflix_movies_df._append(amazon_movies_df, ignore_index = True)._append(hulu_movies_df, ignore_index = True)._append(hbo_movies_df, ignore_index = True)._append(paramount_movies_df, ignore_index = True)._append(disney_movies_df, ignore_index = True)
 
-    movies_df = movies_df[movies_df['production_countries'] == '[\'US\']']
+#     movies_df = movies_df[movies_df['production_countries'] == '[\'US\']']
 
-    movies_df['production_countries'] = movies_df['production_countries'].str.replace('[', '')
-    movies_df['production_countries'] = movies_df['production_countries'].str.replace(']', '')
-    movies_df['production_countries'] = movies_df['production_countries'].str.replace('\'', '')
+#     movies_df['production_countries'] = movies_df['production_countries'].str.replace('[', '')
+#     movies_df['production_countries'] = movies_df['production_countries'].str.replace(']', '')
+#     movies_df['production_countries'] = movies_df['production_countries'].str.replace('\'', '')
 
-    movies_df = movies_df[['title', 'type', 'description', 'genres','release_year', 'imdb_score', 'tmdb_score', 'platform']]
+#     movies_df = movies_df[['title', 'type', 'description', 'genres','release_year', 'imdb_score', 'tmdb_score', 'platform']]
     
-    movies_df.dropna(inplace=True)
+#     movies_df.dropna(inplace=True)
 
-    movies_df = movies_df.groupby(['title', 'type', 'description', 'genres', 'release_year', 'tmdb_score', 'imdb_score'])['platform'].apply(', '.join).reset_index()
+#     movies_df = movies_df.groupby(['title', 'type', 'description', 'genres', 'release_year', 'tmdb_score', 'imdb_score'])['platform'].apply(', '.join).reset_index()
 
-    return movies_df
+#     return movies_df
 
 def train(movies_df):
     cv = CountVectorizer(max_features=50000,stop_words='english')
@@ -111,8 +111,8 @@ def home():
 @app.route('/recommend/<film_type>/<movie>/<platforms>')
 @cross_origin()
 def recommend(film_type, movie, platforms):
-    movies_df = read()
-
+    # movies_df = read()
+    movies_df = ""
     platforms = platforms.split("-")
     log(film_type, movie, platforms)
 
