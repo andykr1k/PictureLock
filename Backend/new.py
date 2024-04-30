@@ -106,18 +106,23 @@ indices = pd.Series(df2.index, index=df2['title'])
 
 
 def get_recommendations(title, cosine_sim=cosine_sim2):
-    idx = indices[title]
+    if title in indices.keys():
+        idx = indices[title]
 
-    sim_scores = list(enumerate(cosine_sim[idx]))
+        sim_scores = list(enumerate(cosine_sim[idx]))
 
-    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+        sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
 
-    sim_scores = sim_scores[1:11]
+        sim_scores = sim_scores[1:11]
 
-    movie_indices = [i[0] for i in sim_scores]
+        movie_indices = [i[0] for i in sim_scores]
 
-    return df2['title'].iloc[movie_indices]
-
+        table = str(list(df2['title'].iloc[movie_indices]))
+        
+        return table
+    else:
+        return "Movie Title Not Found"
+    
 @app.route('/')
 @cross_origin()
 def home():
@@ -127,4 +132,4 @@ def home():
 @app.route('/recommend/<name>')
 @cross_origin()
 def recommend(name):
-    return str(get_recommendations(name))
+    return get_recommendations(name)
