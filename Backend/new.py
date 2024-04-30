@@ -16,16 +16,18 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 df1 = pd.read_csv('./data/tmdb_5000_credits.csv')
 df2 = pd.read_csv('./data/tmdb_5000_movies.csv')
 
-URL = 'https://www.themoviedb.org/movie/'
-URL_END = '/watch?language=en-US'
-combined_strings_with_url = []
+def getURLs(df):
+    URL = 'https://www.themoviedb.org/movie/'
+    URL_END = '/watch?language=en-US'
+    combined_strings_with_url = []
 
-for index, row in df2.iterrows():
-    id_str = str(row['id'])
-    title_str = row['title'].lower().replace(' ', '-').replace("'", '-').replace(
-        ':', '').replace(',', '').replace('.', '')
-    combined_string = f"{URL}{id_str}-{title_str}{URL_END}"
-    combined_strings_with_url.append(combined_string)
+    for index, row in df.iterrows():
+        id_str = str(row['id'])
+        title_str = row['title'].lower().replace(' ', '-').replace("'", '-').replace(
+            ':', '').replace(',', '').replace('.', '')
+        combined_string = f"{URL}{id_str}-{title_str}{URL_END}"
+        combined_strings_with_url.append(combined_string)
+    return combined_strings_with_url
 
 df1.columns = ['id', 'tittle', 'cast', 'crew']
 df2 = df2.merge(df1, on='id')
@@ -117,8 +119,7 @@ def get_recommendations(title, cosine_sim=cosine_sim2):
 
         movie_indices = [i[0] for i in sim_scores]
 
-        table = str(list(df2['title'].iloc[movie_indices]))
-        
+        table = df2[['title', 'id']].iloc[movie_indices].values.tolist()
         return table
     else:
         return "Movie Title Not Found"
@@ -132,4 +133,4 @@ def home():
 @app.route('/recommend/<name>')
 @cross_origin()
 def recommend(name):
-    return get_recommendations(name)
+    return jsonify(get_recommendations(name))
