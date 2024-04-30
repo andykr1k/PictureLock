@@ -1,77 +1,98 @@
-import { Text, View, useColorScheme, Image, StyleSheet } from 'react-native';
-import { Entypo } from '@expo/vector-icons';
-import IconButton from './IconButton';
-import TimeAgo from '../functions/TimeAgo';
+import { Text, View, useColorScheme, Image, StyleSheet } from "react-native";
+import { Entypo } from "@expo/vector-icons";
+import IconButton from "./IconButton";
+import TimeAgo from "../functions/TimeAgo";
 
 export default function Post(props) {
   const colorScheme = useColorScheme();
 
-  const themeTextStyle = colorScheme === 'light' ? style.lightThemeText : style.darkThemeText;
-  const themeContainerStyle = colorScheme === 'light' ? style.lightPost : style.darkPost;
-    return (
+  const themeTextStyle =
+    colorScheme === "light" ? style.lightThemeText : style.darkThemeText;
+  const themeContainerStyle =
+    colorScheme === "light" ? style.lightPost : style.darkPost;
+
+  const numStars = Math.floor(Math.random() * 5) + 1;
+
+  const stars = Array.from({ length: numStars }, (_, index) => (
+    <IconButton key={index} icon="star" size={18} />
+  ));
+
+  return (
     <View style={[style.container, themeContainerStyle]}>
-        <Image source={{uri:props.post.author.image}} style={style.userImage} />
-        <View style={style.mainContainer}>
-          <View style={{ flex: 1, flexDirection: 'row', flexGrow: 1 }}>
-            <View style={{ flex: 1, flexDirection: 'row', flexGrow: 1  }}>
-              <Text style={[style.name, themeTextStyle]}>{props.post.author.username}</Text>
-              <Text style={[style.content, themeTextStyle]}>{props.post.movie} · {TimeAgo(props.post.createdAt)}</Text>
-            </View>
-            <Entypo
-              name="dots-three-horizontal"
-              size={16}
-              color="gray"
-              style={{ marginLeft: 'auto' }}
-            />
+      <Image
+        source={{ uri: props.post.author.image }}
+        style={style.userImage}
+      />
+      <View style={style.mainContainer}>
+        <View style={{ flex: 1, flexDirection: "row", flexGrow: 1 }}>
+          <View style={{ flex: 1, flexDirection: "row", flexGrow: 1 }}>
+            <Text style={[style.name, themeTextStyle]}>
+              {props.post.author.username}
+            </Text>
+            <Text style={[style.content, themeTextStyle]}>
+              {props.post.movie} · {TimeAgo(props.post.createdAt)}
+            </Text>
           </View>
-          <View style={style.postContainer}>
+          <Entypo
+            name="dots-three-horizontal"
+            size={16}
+            color="gray"
+            style={{ marginLeft: "auto" }}
+          />
+        </View>
+        <View style={style.postContainer}>
           <Text style={style.postContent}>{props.post.review}</Text>
           <View style={style.posterContent}>
-          {props.post.movieURL && <Image source={{uri:props.post.movieURL}} style={style.image} />}
-            <View style={style.stars}>
-                <IconButton icon="star" size={18} />
-                <IconButton icon="star" size={18} />
-                <IconButton icon="star" size={18} />
-                <IconButton icon="star" size={18} />
-                <IconButton icon="star" size={18} />
-            </View>
+            {props.post.movieURL && (
+              <Image
+                source={{ uri: props.post.movieURL }}
+                style={style.image}
+              />
+            )}
+            <View style={style.stars}>{stars}</View>
           </View>
-          </View>
+        </View>
 
-          {
-            props.post.status == 'is watching'
-            ?
-            <></>
-            :
-            <View style={[style.footer, themeContainerStyle]}>
-            <IconButton icon="comment" size={14} text={props.post.comments.length} />
-            <IconButton icon="favorite-outline" size={14} text={props.post.numberOfLikes} />
+        {props.post.status == "is watching" ? (
+          <></>
+        ) : (
+          <View style={[style.footer, themeContainerStyle]}>
+            <IconButton
+              icon="comment"
+              size={14}
+              text={props.post.comments.length}
+            />
+            <IconButton
+              icon="favorite-outline"
+              size={14}
+              text={props.post.numberOfLikes}
+            />
             <IconButton icon="bookmark-outline" size={14} />
             <IconButton icon="ios-share" size={14} />
           </View>
-          }
-        </View>
+        )}
+      </View>
     </View>
-    );
-  }
+  );
+}
 
 const style = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 10,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   postContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 3,
   },
   posterContent: {
     flex: 1,
-    maxHeight: '100%'
+    maxHeight: "100%",
   },
   stars: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
   },
   userImage: {
     width: 40,
@@ -81,57 +102,57 @@ const style = StyleSheet.create({
   mainContainer: {
     marginLeft: 10,
     flex: 1,
-    flexGrow: 1
+    flexGrow: 1,
   },
   name: {
-    fontWeight: '600',
+    fontWeight: "600",
     fontSize: 12,
   },
   username: {
-    color: 'gray',
-    marginLeft: 3
+    color: "gray",
+    marginLeft: 3,
   },
   content: {
-    color: 'gray',
+    color: "gray",
     marginLeft: 3,
     fontSize: 12,
   },
   postContent: {
-    color: 'gray',
-    width: '70%',
+    color: "gray",
+    width: "70%",
     fontSize: 12,
-    marginRight: 20
+    marginRight: 20,
   },
   image: {
-    width: '100%',
+    width: "100%",
     aspectRatio: 2 / 3,
     marginVertical: 10,
     borderRadius: 15,
   },
   footer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 10,
-    justifyContent: 'space-between',
-    width: '70%'
+    justifyContent: "space-between",
+    width: "70%",
   },
   lightButton: {
-    backgroundColor: '#F5F8FA',
+    backgroundColor: "#F5F8FA",
   },
   darkButton: {
-    backgroundColor: '#141d26',
+    backgroundColor: "#141d26",
   },
   lightPost: {
-    backgroundColor: '#F5F8FA',
-    borderColor: 'lightgrey',
+    backgroundColor: "#F5F8FA",
+    borderColor: "lightgrey",
   },
   darkPost: {
-    backgroundColor: '#141d26',
-    borderColor: 'grey',
+    backgroundColor: "#141d26",
+    borderColor: "grey",
   },
   lightThemeText: {
-    color: '#141d26',
+    color: "#141d26",
   },
   darkThemeText: {
-    color: '#d0d0c0',
+    color: "#d0d0c0",
   },
 });

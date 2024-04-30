@@ -1,11 +1,7 @@
-from flask import Flask, request, jsonify
-from flask import render_template
+from flask import Flask, jsonify
 from flask_cors import CORS, cross_origin
-import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
-import nltk
-from nltk.stem.porter import PorterStemmer
 from sklearn.metrics.pairwise import cosine_similarity
 
 def read():
