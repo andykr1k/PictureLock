@@ -106,7 +106,7 @@ similarity = train(movies_df)
 @app.route('/')
 @cross_origin()
 def home():
-    return "Welcome to PictureLock's Servers!"
+    return "Welcome to PictureLock's API!"
 
 @app.route('/recommend/<film_type>/<movie>/<platforms>')
 @cross_origin()
