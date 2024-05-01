@@ -1,7 +1,7 @@
 export default async function GetMovieDetails(ids) {
   const api_key = import.meta.env.VITE_TMDB_API_KEY || process.env.VITE_TMDB_API_KEY;
   let api_url_beg = "https://api.themoviedb.org/3/movie/";
-  let api_url_mid = "/images?api_key=";
+  let api_url_mid = "?language=en-US";
 
   let urls = [];
 
@@ -31,7 +31,7 @@ export default async function GetMovieDetails(ids) {
       let fetched = [];
       dataArray.forEach((data, index) => {
         fetched.push(
-          "https://image.tmdb.org/t/p/w1280/" + data.posters[0].file_path
+          "https://image.tmdb.org/t/p/w1280/" + data.poster_path
         );
       });
       return fetched;
