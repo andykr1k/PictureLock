@@ -3,7 +3,7 @@ export default async function GetMovieDetails(ids) {
   const access_key = import.meta.env.VITE_TMDB_ACCESS_KEY || process.env.VITE_TMDB_ACCESS_KEY;
 
   let api_url_beg = "https://api.themoviedb.org/3/movie/";
-  let api_url_mid = "?language=en-US";
+  let api_url_end = "?language=en-US";
   const headers = {
     'Authorization': `Bearer ${access_key}`,
     'Content-Type': 'application/json'
@@ -11,7 +11,7 @@ export default async function GetMovieDetails(ids) {
   let urls = [];
 
   for (let i = 0; i < ids.length; i++) {
-    let url = api_url_beg + ids[i][1] + api_url_mid;
+    let url = api_url_beg + ids[i][1] + api_url_end;
     urls.push(url);
   }
 
