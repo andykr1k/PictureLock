@@ -9,7 +9,7 @@ export default async function GetMovieDetails(ids) {
   let urls = [];
 
   for (let i = 0; i < ids.length; i++) {
-    let url = api_url_beg + ids[i][1] + api_url_mid + api_key;
+    let url = api_url_beg + ids[i][1] + api_url_mid;
     urls.push(url);
   }
 
