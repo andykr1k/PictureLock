@@ -1,5 +1,4 @@
-from flask import Flask, request, jsonify
-from flask import render_template
+from flask import Flask, jsonify
 from flask_cors import CORS, cross_origin
 import pandas as pd
 import numpy as np
@@ -7,7 +6,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from ast import literal_eval
-import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -123,7 +121,7 @@ def get_recommendations(title, cosine_sim=cosine_sim2):
         return table
     else:
         return "Movie Title Not Found"
-    
+
 @app.route('/')
 @cross_origin()
 def home():
@@ -134,3 +132,7 @@ def home():
 @cross_origin()
 def recommend(name):
     return jsonify(get_recommendations(name))
+
+if __name__ == "__main__":
+#   app.run(host="0.0.0.0", port=8080, ssl_context=('cert.pem', 'key.pem'))
+  app.run(host="0.0.0.0", port=8080, ssl_context='adhoc')

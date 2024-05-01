@@ -44,13 +44,13 @@ export default function RecommendationPage() {
           </button>
         </label>
         <div className="flex justify-center">
-          <div className="carousel carousel-center p-4 space-x-4 bg-neutral rounded-box z-50">
+          <div className="carousel carousel-vertical p-4 bg-neutral rounded-box z-50">
             {isLoading ? (
               <span className="loading loading-ring loading-lg text-primary text-center"></span>
             ) : (
               <>
                 {movies.map((item, index) => (
-                  <div key={index} className="carousel-item">
+                  <div key={index} className="carousel-item h-96">
                     <img src={item} className="rounded-box w-64" />
                   </div>
                 ))}
