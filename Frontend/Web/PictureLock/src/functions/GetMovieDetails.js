@@ -2,7 +2,10 @@ export default async function GetMovieDetails(ids) {
   const api_key = import.meta.env.VITE_TMDB_API_KEY || process.env.VITE_TMDB_API_KEY;
   let api_url_beg = "https://api.themoviedb.org/3/movie/";
   let api_url_mid = "?language=en-US";
-
+  const headers = {
+    'Authorization': `Bearer ${api_key}`,
+    'Content-Type': 'application/json'
+  };
   let urls = [];
 
   for (let i = 0; i < ids.length; i++) {
@@ -12,7 +15,10 @@ export default async function GetMovieDetails(ids) {
 
   const fetchData = async (url) => {
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: headers
+      });
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
