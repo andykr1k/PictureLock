@@ -3,8 +3,8 @@ import GetMovieDetails from "../functions/GetMovieDetails";
 import { useState } from "react";
 
 export default function RecommendationPage() {
-  const [recommendations, setRecommendations] = useState([])
-  const [search, setSearch] = useState('');
+  const [recommendations, setRecommendations] = useState([]);
+  const [search, setSearch] = useState("");
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -44,19 +44,19 @@ export default function RecommendationPage() {
           </button>
         </label>
         <div className="flex justify-center">
-          <div className="carousel carousel-vertical h-96 bg-neutral rounded-box z-50">
-            {isLoading ? (
+          {isLoading ? (
+            <div className="carousel carousel-vertical p-4 bg-neutral rounded-box z-50">
               <span className="loading loading-ring loading-lg text-primary text-center"></span>
-            ) : (
-              <>
-                {movies.map((item, index) => (
-                  <div key={index} className="carousel-item h-full">
-                    <img src={item} className="rounded-box w-64" />
-                  </div>
-                ))}
-              </>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="carousel carousel-vertical h-96 bg-neutral rounded-box z-50">
+              {movies.map((item, index) => (
+                <div key={index} className="carousel-item h-full">
+                  <img src={item} className="rounded-box w-64" />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
