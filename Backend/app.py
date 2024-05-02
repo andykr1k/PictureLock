@@ -54,6 +54,8 @@ tfidf_matrix = tfidf.fit_transform(df2['overview'])
 
 indices = pd.Series(df2.index, index=df2['title']).drop_duplicates()
 
+genre_indices = pd.Series(df2.index, index=df2['genres']).drop_duplicates()
+
 features = ['cast', 'crew', 'keywords', 'genres']
 for feature in features:
     df2[feature] = df2[feature].apply(literal_eval)
@@ -86,7 +88,7 @@ def clean_data(x):
             return str.lower(x.replace(" ", ""))
         else:
             return ''
-        
+
 features = ['cast', 'keywords', 'director', 'genres']
 
 for feature in features:
@@ -104,12 +106,19 @@ cosine_sim2 = cosine_similarity(count_matrix, count_matrix)
 df2 = df2.reset_index()
 indices = pd.Series(df2.index, index=df2['title'])
 
-
-def get_recommendations(title, cosine_sim=cosine_sim2):
+def get_recommendations(title, genre, cosine_sim=cosine_sim2):
     if title in indices.keys():
         idx = indices[title]
 
-        sim_scores = list(enumerate(cosine_sim[idx]))
+        og = cosine_sim[idx]
+
+        g_indices = genre_indices[genre_indices.index.map(lambda x: genre in x)]
+
+        filtered_cosine_sim = [cosine_sim[i] for i in g_indices]
+
+        filtered_cosine_sim.append(og)
+
+        sim_scores = list(enumerate(filtered_cosine_sim[len(filtered_cosine_sim)-1]))
 
         sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
 
@@ -128,10 +137,10 @@ def home():
     return "Welcome to PictureLock's API!"
 
 
-@app.route('/recommend/<name>')
+@app.route('/recommend/<name>/<genre>')
 @cross_origin()
-def recommend(name):
-    return jsonify(get_recommendations(name))
+def recommend(name, genre):
+    return jsonify(get_recommendations(name, genre))
 
 if __name__ == "__main__":
    app.run(host="0.0.0.0", port=8080, ssl_context=('cert.pem', 'chain.pem'))

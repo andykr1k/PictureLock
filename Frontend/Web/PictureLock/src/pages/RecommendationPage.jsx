@@ -7,11 +7,16 @@ export default function RecommendationPage() {
   const [search, setSearch] = useState("");
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [genre, setGenre] = useState("action");
+
+  const handleGenreChange = (event) => {
+    setGenre(event.target.dataset.title);
+  };
 
   const handleRecommendation = async () => {
     try {
       setIsLoading(true);
-      const recommendationsData = await Recommend(search);
+      const recommendationsData = await Recommend(search, genre);
       setRecommendations(recommendationsData);
       const movieDetails = await GetMovieDetails(recommendationsData);
       setMovies(movieDetails);
@@ -28,6 +33,54 @@ export default function RecommendationPage() {
         <h2 className="text-center text-bold text-lg text-white z-50">
           Recommendation System Beta
         </h2>
+        <div className="relative">
+          <div className="btn-group w-md flex justify-around">
+            <div className="flex flex-col items-center w-[23%]">
+              <h3 className="absolute mt-2.5 pointer-events-none">Action</h3>
+              <input
+                type="radio"
+                name="options"
+                data-title="action"
+                className="btn w-full rounded-full radio"
+                onChange={handleGenreChange}
+                checked={genre === "action"}
+              />
+            </div>
+            <div className="flex flex-col items-center w-[23%]">
+              <h3 className="absolute mt-2.5 pointer-events-none">Comedy</h3>
+              <input
+                type="radio"
+                name="options"
+                data-title="comedy"
+                className="btn w-full rounded-full radio"
+                onChange={handleGenreChange}
+                checked={genre === "comedy"}
+              />
+            </div>
+            <div className="flex flex-col items-center w-[23%]">
+              <h3 className="absolute mt-2.5 pointer-events-none">Drama</h3>
+              <input
+                type="radio"
+                name="options"
+                data-title="drama"
+                className="btn w-full rounded-full radio"
+                onChange={handleGenreChange}
+                checked={genre === "drama"}
+              />
+            </div>
+            <div className="flex flex-col items-center w-[23%]">
+              <h3 className="absolute mt-2.5 pointer-events-none">Thriller</h3>
+              <input
+                type="radio"
+                name="options"
+                data-title="thriller"
+                className="btn w-full rounded-full radio"
+                onChange={handleGenreChange}
+                checked={genre === "thriller"}
+              />
+            </div>
+          </div>
+        </div>
         <label className="input input-bordered flex items-center gap-2 z-50">
           <input
             type="text"

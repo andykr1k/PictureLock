@@ -1,8 +1,8 @@
-export async function Recommend(title) {
+export async function Recommend(title, genre) {
   const url = import.meta.env.VITE_PL_API_URL || process.env.VITE_PL_API_URL;
 
   try {
-    const response = await fetch(url + title);
+    const response = await fetch(url + title + '/' + genre);
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
