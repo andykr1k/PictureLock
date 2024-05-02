@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 import pandas as pd
 import numpy as np
@@ -137,11 +137,12 @@ def home():
     return "Welcome to PictureLock's API!"
 
 
-@app.route('/recommend/<name>/<genre>')
+@app.route('/recommend/<name>')
 @cross_origin()
-def recommend(name, genre):
+def recommend(name):
+    genre = request.args.get('genre', None)
     return jsonify(get_recommendations(name, genre))
 
 if __name__ == "__main__":
-   app.run(host="0.0.0.0", port=8080, ssl_context=('cert.pem', 'chain.pem'))
+   app.run(host="0.0.0.0", port=8080, ssl_context=('cert.pem', 'privkey.pem'))
 #  app.run(host="0.0.0.0", port=8080)
