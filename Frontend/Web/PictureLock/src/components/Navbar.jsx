@@ -2,7 +2,7 @@ export default function Navbar() {
     return (
       <nav className="absolute flex flex-row items-center h-16 px-4 backdrop-filter backdrop-blur-sm/tint-10 justify-between w-full md:px-6 lg:items-stretch lg:flex-row xl:container/width-2 text-white">
         <a
-          className="flex items-center font-semibold hover:text-orange-fruit md:text-lg"
+          className="flex items-center font-semibold md:text-lg"
           href="/"
         >
           PictureLock
