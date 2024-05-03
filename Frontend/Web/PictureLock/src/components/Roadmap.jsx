@@ -3,14 +3,14 @@ export default function Roadmap() {
       <div className="grid place-items-center h-[100dvh]">
         <ul className="timeline timeline-vertical lg:timeline-horizontal">
           <li>
-            <div className="timeline-start timeline-box">
+            <div className="timeline-start timeline-box bg-orange-fruit text-white border-0">
               Birth of Picturelock
             </div>
             <div className="timeline-middle">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
-                fill="currentColor"
+                fill="#FFB54F"
                 className="w-5 h-5 text-primary"
               >
                 <path
@@ -20,15 +20,15 @@ export default function Roadmap() {
                 />
               </svg>
             </div>
-            <hr className="bg-primary" />
+            <hr className="bg-orange-fruit" />
           </li>
           <li>
-            <hr className="bg-primary" />
+            <hr className="bg-orange-fruit" />
             <div className="timeline-middle">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
-                fill="currentColor"
+                fill="#FFB54F"
                 className="w-5 h-5 text-primary"
               >
                 <path
@@ -38,17 +38,21 @@ export default function Roadmap() {
                 />
               </svg>
             </div>
-            <div className="timeline-end timeline-box">Feasibility Tests</div>
-            <hr className="bg-primary" />
+            <div className="timeline-end timeline-box bg-orange-fruit text-white border-0">
+              Feasibility Tests
+            </div>
+            <hr className="bg-orange-fruit" />
           </li>
           <li>
-            <hr className="bg-primary" />
-            <div className="timeline-start timeline-box">Research</div>
+            <hr className="bg-orange-fruit" />
+            <div className="timeline-start timeline-box bg-orange-fruit text-white border-0">
+              Research
+            </div>
             <div className="timeline-middle">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
-                fill="currentColor"
+                fill="#FFB54F"
                 className="w-5 h-5 text-primary"
               >
                 <path
@@ -58,15 +62,15 @@ export default function Roadmap() {
                 />
               </svg>
             </div>
-            <hr className="bg-primary" />
+            <hr className="bg-orange-fruit" />
           </li>
           <li>
-            <hr className="bg-primary" />
+            <hr className="bg-orange-fruit" />
             <div className="timeline-middle">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
-                fill="currentColor"
+                fill="#FFB54F"
                 className="w-5 h-5 text-primary"
               >
                 <path
@@ -76,12 +80,16 @@ export default function Roadmap() {
                 />
               </svg>
             </div>
-            <div className="timeline-end timeline-box">Movie ML Model</div>
-            <hr className="bg-primary" />
+            <div className="timeline-end timeline-box bg-orange-fruit text-white border-0">
+              Movie ML Model
+            </div>
+            <hr className="bg-orange-fruit" />
           </li>
           <li>
-            <hr />
-            <div className="timeline-start timeline-box">App Development</div>
+            <hr className="bg-white" />
+            <div className="timeline-start timeline-box bg-orange-fruit text-white border-0">
+              App Development
+            </div>
             <div className="timeline-middle">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -96,10 +104,10 @@ export default function Roadmap() {
                 />
               </svg>
             </div>
-            <hr />
+            <hr className="bg-white" />
           </li>
           <li>
-            <hr />
+            <hr className="bg-white" />
             <div className="timeline-middle">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -114,7 +122,9 @@ export default function Roadmap() {
                 />
               </svg>
             </div>
-            <div className="timeline-end timeline-box">A/B Tests</div>
+            <div className="timeline-end timeline-box bg-orange-fruit text-white border-0">
+              A/B Tests
+            </div>
           </li>
         </ul>
       </div>

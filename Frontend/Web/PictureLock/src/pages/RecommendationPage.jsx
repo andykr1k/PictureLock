@@ -30,84 +30,84 @@ export default function RecommendationPage() {
   return (
     <div className="grid place-items-center h-[100dvh] z-50">
       <div className="max-w-md space-y-5 z-50">
-        <h2 className="text-center text-bold text-lg text-white z-50">
+        <h2 className="text-center text-bold text-lg text-white z-50 font-bold">
           Recommendation System Beta
         </h2>
-        <div className="relative">
+        {/* <div className="relative">
           <div className="btn-group w-md flex justify-around">
             <div className="flex flex-col items-center w-[23%]">
-              <h3 className="absolute mt-3.5 pointer-events-none text-sm">
+              <h3 className="absolute mt-3.5 pointer-events-none text-sm text-white">
                 Action
               </h3>
               <input
                 type="radio"
                 name="options"
                 data-title="action"
-                className="btn w-full rounded-full radio"
+                className="btn w-full rounded-full radio bg-orange-fruit selection:bg-orange-fruit checked:shadow-orange-fruit"
                 onChange={handleGenreChange}
                 checked={genre === "action"}
               />
             </div>
             <div className="flex flex-col items-center w-[23%]">
-              <h3 className="absolute mt-3.5 pointer-events-none text-sm">
+              <h3 className="absolute mt-3.5 pointer-events-none text-sm text-white">
                 Comedy
               </h3>
               <input
                 type="radio"
                 name="options"
                 data-title="comedy"
-                className="btn w-full rounded-full radio"
+                className="btn w-full rounded-full radio bg-orange-fruit"
                 onChange={handleGenreChange}
                 checked={genre === "comedy"}
               />
             </div>
             <div className="flex flex-col items-center w-[23%]">
-              <h3 className="absolute mt-3.5 pointer-events-none text-sm">
+              <h3 className="absolute mt-3.5 pointer-events-none text-sm text-white">
                 Drama
               </h3>
               <input
                 type="radio"
                 name="options"
                 data-title="drama"
-                className="btn w-full rounded-full radio"
+                className="btn w-full rounded-full radio bg-orange-fruit"
                 onChange={handleGenreChange}
                 checked={genre === "drama"}
               />
             </div>
             <div className="flex flex-col items-center w-[23%]">
-              <h3 className="absolute mt-3.5 pointer-events-none text-sm">
+              <h3 className="absolute mt-3.5 pointer-events-none text-sm text-white">
                 Thriller
               </h3>
               <input
                 type="radio"
                 name="options"
                 data-title="thriller"
-                className="btn w-full rounded-full radio"
+                className="btn w-full rounded-full radio bg-orange-fruit text-white"
                 onChange={handleGenreChange}
                 checked={genre === "thriller"}
               />
             </div>
           </div>
-        </div>
-        <label className="input input-bordered flex items-center gap-2 z-50">
+        </div> */}
+        <label className="input input-bordered flex items-center gap-2 z-50 bg-orange-fruit">
           <input
             type="text"
-            className="grow border-0 outline-0 z-50"
+            className="grow border-0 outline-0 z-50 placeholder:text-white text-white border-transparent focus:border-0 focus:ring-0"
             placeholder="Recently Seen Movie"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           <button
             onClick={handleRecommendation}
-            className="bg-blue-600 text-white p-1 text-sm rounded-md z-50"
+            className="bg-red-apple/60 hover:bg-red-apple text-white p-2 text-sm rounded-md z-50"
           >
             Recommend
           </button>
         </label>
         <div className="flex justify-center">
           {isLoading ? (
-            <div className="carousel carousel-vertical p-4 bg-neutral rounded-box z-50">
-              <span className="loading loading-ring loading-lg text-primary text-center"></span>
+            <div className="carousel carousel-vertical p-4 rounded-box z-50 bg-orange-fruit">
+              <span className="loading loading-ring loading-lg text-primary text-center bg-white"></span>
             </div>
           ) : (
             <div className="carousel carousel-vertical h-96 bg-neutral rounded-box z-50">
