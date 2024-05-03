@@ -8,23 +8,23 @@ export default function Navbar() {
           PictureLock
         </a>
         <nav className="flex items-center gap-4 ml-auto">
-          <a
-            className="flex items-center text-sm font-medium hover:text-orange-fruit md:text-lg"
-            href="/"
-          >
-            Home
+          <a className="group relative" href="/">
+            <span className="relative inline-block items-center text-sm font-medium hover:text-orange-fruit md:text-lg">
+              Home
+            </span>
+            <span className="absolute bottom-0 left-0 h-[2px] w-0 transition-all duration-300 group-hover:w-full bg-orange-fruit" />
           </a>
-          <a
-            className="flex items-center text-sm font-medium hover:text-orange-fruit md:text-lg"
-            href="/recommend"
-          >
-            Beta
+          <a className="group relative" href="/recommend">
+            <span className="relative inline-block items-center text-sm font-medium hover:text-orange-fruit md:text-lg">
+              Beta
+            </span>
+            <span className="absolute bottom-0 left-0 h-[2px] w-0 transition-all duration-300 group-hover:w-full bg-orange-fruit" />
           </a>
-          <a
-            className="flex items-center text-sm font-medium hover:text-orange-fruit md:text-lg"
-            href="/roadmap"
-          >
-            Roadmap
+          <a className="group relative" href="/roadmap">
+            <span className="relative inline-block items-center text-sm font-medium hover:text-orange-fruit md:text-lg">
+              Roadmap
+            </span>
+            <span className="absolute bottom-0 left-0 h-[2px] w-0 transition-all duration-300 group-hover:w-full bg-orange-fruit" />
           </a>
         </nav>
       </nav>
