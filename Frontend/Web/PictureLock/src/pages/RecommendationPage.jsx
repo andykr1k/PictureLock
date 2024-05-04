@@ -28,7 +28,7 @@ export default function RecommendationPage() {
   };
 
   return (
-    <div className="grid place-items-center h-screen z-50">
+    <div className="grid place-items-center h-[100dvh] z-50">
       <div className="max-w-md space-y-5 z-50">
         <h2 className="text-center text-bold text-lg text-white z-50">
           Recommendation System Beta

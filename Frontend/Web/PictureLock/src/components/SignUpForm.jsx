@@ -6,7 +6,7 @@ export default function SignUpForm() {
   function handleSubmit() {}
 
   return (
-    <div className="grid place-items-center h-screen">
+    <div className="grid place-items-center h-[100dvh]">
       <div class="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-lg text-center">
           <h1 class="text-2xl font-bold sm:text-3xl">Get started today!</h1>

@@ -1,6 +1,6 @@
 export default function Roadmap() {
     return (
-      <div className="grid place-items-center h-screen">
+      <div className="grid place-items-center h-[100dvh]">
         <ul className="timeline timeline-vertical lg:timeline-horizontal">
           <li>
             <div className="timeline-start timeline-box">
@@ -81,9 +81,7 @@ export default function Roadmap() {
           </li>
           <li>
             <hr />
-            <div className="timeline-start timeline-box">
-              App Development
-            </div>
+            <div className="timeline-start timeline-box">App Development</div>
             <div className="timeline-middle">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
