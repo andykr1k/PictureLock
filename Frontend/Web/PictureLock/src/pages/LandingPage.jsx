@@ -7,8 +7,7 @@ export default function LandingPage() {
             Picture<span className="text-indigo-600">Lock</span>
           </h2>
           <p className="text-md md:text-xl mt-10 text-white">
-            Unlock the Power of Film with AI: Your Ultimate Social Hub for Movie
-            Enthusiasts.
+            Discover what to watch in an instant. A social platform for all cinema and television consumers.
           </p>
         </div>
         <div className="flex flex-wrap mt-4 justify-center">
