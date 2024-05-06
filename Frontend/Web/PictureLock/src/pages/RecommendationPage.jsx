@@ -36,7 +36,9 @@ export default function RecommendationPage() {
         <div className="relative">
           <div className="btn-group w-md flex justify-around">
             <div className="flex flex-col items-center w-[23%]">
-              <h3 className="absolute mt-2.5 pointer-events-none">Action</h3>
+              <h3 className="absolute mt-3.5 pointer-events-none text-sm">
+                Action
+              </h3>
               <input
                 type="radio"
                 name="options"
@@ -47,7 +49,9 @@ export default function RecommendationPage() {
               />
             </div>
             <div className="flex flex-col items-center w-[23%]">
-              <h3 className="absolute mt-2.5 pointer-events-none">Comedy</h3>
+              <h3 className="absolute mt-3.5 pointer-events-none text-sm">
+                Comedy
+              </h3>
               <input
                 type="radio"
                 name="options"
@@ -58,7 +62,9 @@ export default function RecommendationPage() {
               />
             </div>
             <div className="flex flex-col items-center w-[23%]">
-              <h3 className="absolute mt-2.5 pointer-events-none">Drama</h3>
+              <h3 className="absolute mt-3.5 pointer-events-none text-sm">
+                Drama
+              </h3>
               <input
                 type="radio"
                 name="options"
@@ -69,7 +75,9 @@ export default function RecommendationPage() {
               />
             </div>
             <div className="flex flex-col items-center w-[23%]">
-              <h3 className="absolute mt-2.5 pointer-events-none">Thriller</h3>
+              <h3 className="absolute mt-3.5 pointer-events-none text-sm">
+                Thriller
+              </h3>
               <input
                 type="radio"
                 name="options"

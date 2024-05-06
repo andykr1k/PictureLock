@@ -3,11 +3,15 @@ export default function LandingPage() {
     <div className="flex items-center justify-center h-screen">
       <div className="container mx-10 z-50">
         <div className="text-center">
+          <div className="flex justify-center">
+            <img className="w-48" src="./logo.png" />
+          </div>
           <h2 className="text-4xl tracking-tight leading-10 font-extrabold text-white sm:text-5xl sm:leading-none md:text-6xl">
-            Picture<span className="text-indigo-600">Lock</span>
+            PictureLock
           </h2>
           <p className="text-md md:text-xl mt-10 text-white">
-            Discover what to watch in an instant. A social platform for all cinema and television consumers.
+            Discover what to watch in an instant. A social platform for all
+            cinema and television consumers.
           </p>
         </div>
         <div className="flex flex-wrap mt-4 justify-center">
@@ -16,7 +20,7 @@ export default function LandingPage() {
               target="_blank"
               href="https://www.instagram.com/picturelockapp"
               title="Quicktoolz On Facebook"
-              className="md:w-32 tracking-wide text-white font-bold rounded border-2 border-blue-600 hover:border-blue-600 hover:bg-blue-600 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
+              className="md:w-32 tracking-wide text-white font-bold rounded border-2 border-blue-600 hover:border-blue-600 hover:bg-blue-600 hover:text-white shadow-md py-2 px-4 inline-flex items-center"
             >
               <span className="mx-auto">Instagram</span>
             </a>
