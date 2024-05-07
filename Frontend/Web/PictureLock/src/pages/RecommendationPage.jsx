@@ -152,9 +152,7 @@ export default function RecommendationPage() {
         </div>
         <div className="flex justify-center">
           {isLoading ? (
-            <div className="carousel carousel-vertical p-4 rounded-box z-40 bg-orange-fruit">
-              <span className="loading loading-ring loading-lg text-primary text-center bg-white"></span>
-            </div>
+            <></>
           ) : movies && movies.length !== 0 ? (
             <div className="carousel carousel-vertical h-96 bg-neutral rounded-box z-40">
               {movies.map((item, index) => (
