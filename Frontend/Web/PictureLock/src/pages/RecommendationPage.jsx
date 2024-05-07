@@ -13,12 +13,15 @@ export default function RecommendationPage() {
   const [suggestionclicked, setSuggestionclicked] = useState(false)
 
   useEffect(() => {
-    setSuggestionclicked(false);
     const filteredTitles = titles.filter((title) =>
       title.toLowerCase().includes(search.toLowerCase())
     );
     setSuggestions(filteredTitles);
   }, [search]);
+
+  useEffect(() => {
+    setSuggestionclicked(false);
+  }, [suggestions]);
 
   const handleGenreChange = (event) => {
     setGenre(event.target.dataset.title);
@@ -113,7 +116,7 @@ export default function RecommendationPage() {
           <label className="input input-bordered flex items-center gap-2 z-50 bg-orange-fruit">
             <input
               type="text"
-              className="grow border-0 outline-0 z-50 placeholder:text-white text-white border-transparent focus:border-0 focus:ring-0"
+              className="grow border-0 outline-0 z-50 placeholder:text-white text-white border-transparent focus:border-0 focus:ring-0 pl-0"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               autoFocus
