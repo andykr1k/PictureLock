@@ -170,8 +170,8 @@ export default function RecommendationPage() {
                   <RobotAnimation/>
                 </div>
                 <h3 className="text-white text-sm">
-                  Oops...you found a movie we haven't trained on yet. Try
-                  another movie!
+                  Oops...we haven't trained on that movie yet. Try
+                  another one!
                 </h3>
               </div>
             </div>
