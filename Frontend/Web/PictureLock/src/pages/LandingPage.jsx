@@ -3,9 +3,6 @@ export default function LandingPage() {
     <div className="flex items-center justify-center h-[100dvh]">
       <div className="container mx-10 z-50">
         <div className="text-center">
-          <video autoPlay loop muted>
-            <source src={'./blackandwhiteslate.mov'} type="video/mp4"></source>
-          </video>
           <div className="flex justify-center">
             <img className="w-48" src="./logo.png" />
           </div>
