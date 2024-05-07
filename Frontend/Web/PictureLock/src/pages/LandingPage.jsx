@@ -3,11 +3,14 @@ export default function LandingPage() {
     <div className="flex items-center justify-center h-[100dvh]">
       <div className="container mx-10 z-50">
         <div className="text-center">
+          <video autoPlay loop muted>
+            <source src={'./blackandwhiteslate.mov'} type="video/mp4"></source>
+          </video>
           <div className="flex justify-center">
             <img className="w-48" src="./logo.png" />
           </div>
           <h2 className="text-4xl tracking-tight leading-10 font-extrabold text-white sm:text-5xl sm:leading-none md:text-6xl">
-            PictureLock
+            Picturelock
           </h2>
           <p className="text-md md:text-xl mt-10 text-white">
             Discover what to watch in an instant. A social platform for all
