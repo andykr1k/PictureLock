@@ -1,6 +1,7 @@
 import { Recommend } from "../functions/Recommendation";
 import GetMovieDetails from "../functions/GetMovieDetails";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import titles from "../assets/titles.json";
 
 export default function RecommendationPage() {
   const [recommendations, setRecommendations] = useState([]);
@@ -8,9 +9,22 @@ export default function RecommendationPage() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [genre, setGenre] = useState("action");
+  const [suggestions, setSuggestions] = useState([]);
+
+  useEffect(() => {
+    const filteredTitles = titles.filter((title) =>
+      title.toLowerCase().includes(search.toLowerCase())
+    );
+    setSuggestions(filteredTitles);
+  }, [search]);
 
   const handleGenreChange = (event) => {
     setGenre(event.target.dataset.title);
+  };
+
+  const handleSelectSuggestion = (suggestion) => {
+    setSearch(suggestion);
+    setSuggestions([]);
   };
 
   const handleRecommendation = async () => {
@@ -29,8 +43,8 @@ export default function RecommendationPage() {
 
   return (
     <div className="grid place-items-center h-[100dvh] z-50">
-      <div className="max-w-md space-y-5 z-50">
-        <h2 className="text-center text-bold text-lg text-white z-50 font-bold">
+      <div className="max-w-sm md:max-w-md space-y-5 z-50">
+        <h2 className="text-center text-bold text-xl text-white z-50 font-bold">
           Recommendation System Beta
         </h2>
         {/* <div className="relative">
@@ -89,24 +103,42 @@ export default function RecommendationPage() {
             </div>
           </div>
         </div> */}
-        <label className="input input-bordered flex items-center gap-2 z-50 bg-orange-fruit">
-          <input
-            type="text"
-            className="grow border-0 outline-0 z-50 placeholder:text-white text-white border-transparent focus:border-0 focus:ring-0"
-            placeholder="Recently Seen Movie"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <button
-            onClick={handleRecommendation}
-            className="bg-red-apple/60 hover:bg-red-apple text-white p-2 text-sm rounded-md z-50"
-          >
-            Recommend
-          </button>
-        </label>
+        <h3 className="text-white m-10 flex justify-center text-center">
+          Enter a movie title similar to what you’re seeking to watch.
+        </h3>
+        <div className="space-y-1">
+          <label className="input input-bordered flex items-center gap-2 z-50 bg-orange-fruit">
+            <input
+              type="text"
+              className="grow border-0 outline-0 z-50 placeholder:text-white text-white border-transparent focus:border-0 focus:ring-0"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              autoFocus
+            />
+            <button
+              onClick={handleRecommendation}
+              className="bg-red-apple/60 hover:bg-red-apple text-white p-2 text-sm rounded-md z-50"
+            >
+              Recommend
+            </button>
+          </label>
+          {suggestions.length < 5 && suggestions.length > 1 && (
+            <ul className="absolute w-full max-w-sm md:max-w-md bg-orange-fruit shadow-md z-50 rounded-md text-white">
+              {suggestions.map((suggestion, index) => (
+                <li
+                  key={index}
+                  onClick={() => handleSelectSuggestion(suggestion)}
+                  className="cursor-pointer py-1 px-3 hover:bg-red-apple/20 rounded-md"
+                >
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
         <div className="flex justify-center">
           {isLoading ? (
-            <div className="carousel carousel-vertical p-4 rounded-box z-50 bg-orange-fruit">
+            <div className="carousel carousel-vertical p-4 rounded-box z-40 bg-orange-fruit">
               <span className="loading loading-ring loading-lg text-primary text-center bg-white"></span>
             </div>
           ) : (
