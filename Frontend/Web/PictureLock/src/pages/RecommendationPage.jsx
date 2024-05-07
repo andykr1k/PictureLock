@@ -34,9 +34,13 @@ export default function RecommendationPage() {
     try {
       setIsLoading(true);
       const recommendationsData = await Recommend(search, genre);
-      setRecommendations(recommendationsData);
-      const movieDetails = await GetMovieDetails(recommendationsData);
-      setMovies(movieDetails);
+      if (recommendationsData !== null){
+        setRecommendations(recommendationsData);
+        const movieDetails = await GetMovieDetails(recommendationsData);
+        if (movieDetails !== null){
+          setMovies(movieDetails);
+        }
+      }
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching recommendations:", error);
@@ -149,7 +153,7 @@ export default function RecommendationPage() {
             <div className="carousel carousel-vertical p-4 rounded-box z-40 bg-orange-fruit">
               <span className="loading loading-ring loading-lg text-primary text-center bg-white"></span>
             </div>
-          ) : movies.length !== 0 ? (
+          ) : movies && movies.length !== 0 ? (
             <div className="carousel carousel-vertical h-96 bg-neutral rounded-box z-40">
               {movies.map((item, index) => (
                 <div key={index} className="carousel-item h-full">
