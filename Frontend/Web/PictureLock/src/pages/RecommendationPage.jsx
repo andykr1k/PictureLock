@@ -13,6 +13,7 @@ export default function RecommendationPage() {
   const [suggestionclicked, setSuggestionclicked] = useState(false)
 
   useEffect(() => {
+    setSuggestionclicked(false);
     const filteredTitles = titles.filter((title) =>
       title.toLowerCase().includes(search.toLowerCase())
     );
@@ -37,11 +38,9 @@ export default function RecommendationPage() {
       const movieDetails = await GetMovieDetails(recommendationsData);
       setMovies(movieDetails);
       setIsLoading(false);
-      setSuggestionclicked(false);
     } catch (error) {
       console.error("Error fetching recommendations:", error);
       setIsLoading(false);
-      setSuggestionclicked(false);
     }
   };
 
