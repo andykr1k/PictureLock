@@ -5,7 +5,7 @@ export default function Navbar() {
           className="flex items-center font-semibold md:text-lg"
           href="/"
         >
-          PictureLock
+          Picturelock
         </a>
         <nav className="flex items-center gap-4 ml-auto">
           <a className="group relative" href="/">
