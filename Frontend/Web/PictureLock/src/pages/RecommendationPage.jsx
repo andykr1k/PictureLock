@@ -19,10 +19,6 @@ export default function RecommendationPage() {
     setSuggestions(filteredTitles);
   }, [search]);
 
-  useEffect(() => {
-    setSuggestionclicked(false);
-  }, [suggestions]);
-
   const handleGenreChange = (event) => {
     setGenre(event.target.dataset.title);
   };
@@ -45,6 +41,11 @@ export default function RecommendationPage() {
       console.error("Error fetching recommendations:", error);
       setIsLoading(false);
     }
+  };
+
+  const handleSearchValueChange = (e) => {
+    setSearch(e.target.value);
+    setSuggestionclicked(false);
   };
 
   return (
@@ -118,7 +119,7 @@ export default function RecommendationPage() {
               type="text"
               className="grow border-0 outline-0 z-50 placeholder:text-white text-white border-transparent focus:border-0 focus:ring-0 pl-0"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={handleSearchValueChange}
               autoFocus
             />
             <button
