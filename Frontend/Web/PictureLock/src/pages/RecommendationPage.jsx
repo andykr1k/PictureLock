@@ -2,6 +2,7 @@ import { Recommend } from "../functions/Recommendation";
 import GetMovieDetails from "../functions/GetMovieDetails";
 import { useState, useEffect } from "react";
 import titles from "../assets/titles.json";
+import RobotAnimation from "../components/RobotAnimation";
 
 export default function RecommendationPage() {
   const [recommendations, setRecommendations] = useState([]);
@@ -10,7 +11,7 @@ export default function RecommendationPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [genre, setGenre] = useState("action");
   const [suggestions, setSuggestions] = useState([]);
-  const [suggestionclicked, setSuggestionclicked] = useState(false)
+  const [suggestionclicked, setSuggestionclicked] = useState(false);
 
   useEffect(() => {
     const filteredTitles = titles.filter((title) =>
@@ -148,13 +149,25 @@ export default function RecommendationPage() {
             <div className="carousel carousel-vertical p-4 rounded-box z-40 bg-orange-fruit">
               <span className="loading loading-ring loading-lg text-primary text-center bg-white"></span>
             </div>
-          ) : (
+          ) : movies.length !== 0 ? (
             <div className="carousel carousel-vertical h-96 bg-neutral rounded-box z-40">
               {movies.map((item, index) => (
                 <div key={index} className="carousel-item h-full">
                   <img src={item} className="rounded-box w-64" />
                 </div>
               ))}
+            </div>
+          ) : (
+            <div className="flex object-center justify-center items-center text-center">
+              <div className="space-y-3">
+                <div className="flex justify-center">
+                  <RobotAnimation/>
+                </div>
+                <h3 className="text-white text-sm">
+                  Oops...you found a movie we haven't trained on yet. Try
+                  another movie!
+                </h3>
+              </div>
             </div>
           )}
         </div>
