@@ -37,7 +37,7 @@ export default async function GetMovieDetails(ids) {
     .then((dataArray) => {
       let fetched = [];
       dataArray.forEach((data, index) => {
-        if (data.poster_path.includes('.')) {
+        if (data.poster_path !== null) {
           fetched.push("https://image.tmdb.org/t/p/w1280/" + data.poster_path);
         }
       });
