@@ -10,6 +10,7 @@ export default function RecommendationPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [genre, setGenre] = useState("action");
   const [suggestions, setSuggestions] = useState([]);
+  const [suggestionclicked, setSuggestionclicked] = useState(false)
 
   useEffect(() => {
     const filteredTitles = titles.filter((title) =>
@@ -24,6 +25,7 @@ export default function RecommendationPage() {
 
   const handleSelectSuggestion = (suggestion) => {
     setSearch(suggestion);
+    setSuggestionclicked(true);
     setSuggestions([]);
   };
 
@@ -35,9 +37,11 @@ export default function RecommendationPage() {
       const movieDetails = await GetMovieDetails(recommendationsData);
       setMovies(movieDetails);
       setIsLoading(false);
+      setSuggestionclicked(false);
     } catch (error) {
       console.error("Error fetching recommendations:", error);
       setIsLoading(false);
+      setSuggestionclicked(false);
     }
   };
 
@@ -122,7 +126,7 @@ export default function RecommendationPage() {
               Recommend
             </button>
           </label>
-          {suggestions.length < 5 && suggestions.length > 1 && (
+          {suggestions.length < 5 && suggestionclicked === false && (
             <ul className="absolute w-full max-w-sm md:max-w-md bg-orange-fruit shadow-md z-50 rounded-md text-white">
               {suggestions.map((suggestion, index) => (
                 <li
@@ -142,7 +146,7 @@ export default function RecommendationPage() {
               <span className="loading loading-ring loading-lg text-primary text-center bg-white"></span>
             </div>
           ) : (
-            <div className="carousel carousel-vertical h-96 bg-neutral rounded-box z-50">
+            <div className="carousel carousel-vertical h-96 bg-neutral rounded-box z-40">
               {movies.map((item, index) => (
                 <div key={index} className="carousel-item h-full">
                   <img src={item} className="rounded-box w-64" />
