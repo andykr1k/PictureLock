@@ -32,6 +32,8 @@ export default function RecommendationPage() {
 
   const handleRecommendation = async () => {
     try {
+      setRecommendations([])
+      setMovies([])
       setIsLoading(true);
       const recommendationsData = await Recommend(search, genre);
       if (recommendationsData !== null){
