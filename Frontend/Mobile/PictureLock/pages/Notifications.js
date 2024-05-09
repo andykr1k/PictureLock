@@ -1,6 +1,5 @@
-import { Button, Text, View, useColorScheme, ScrollView } from 'react-native';
+import { View, ScrollView, Text } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { styles } from '../styles/styles';
 import {Notification} from '../components';
 
 const data = [
@@ -73,18 +72,22 @@ const data = [
 
 function NotificationsScreen({ navigation }) {
 
-  const colorScheme = useColorScheme();
-
-  const themeTextStyle = colorScheme === 'light' ? styles.lightThemeText : styles.darkThemeText;
-  const themeContainerStyle = colorScheme === 'light' ? styles.lightContainer : styles.darkContainer;
-
     return (
-      <View style={[styles.container, themeContainerStyle]}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-        {data.map((item, index) => {
-            return(
-            <Notification key={index} name={item.name} status={item.status} image={item.image}/> 
-          )})}
+      <View className="mt-10 p-5 space-y-2">
+        <Text className="dark:text-white font-bold text-3xl">
+          Notifications
+        </Text>
+        <ScrollView showsVerticalScrollIndicator={false} className="h-full">
+          {data.map((item, index) => {
+            return (
+              <Notification
+                key={index}
+                name={item.name}
+                status={item.status}
+                image={item.image}
+              />
+            );
+          })}
         </ScrollView>
       </View>
     );
@@ -94,8 +97,17 @@ const NotificationsStack = createNativeStackNavigator();
 
 export default function NotificationStackScreen() {
   return (
-    <NotificationsStack.Navigator>
-      <NotificationsStack.Screen name="Notifications" component={NotificationsScreen}/>
+    <NotificationsStack.Navigator
+      screenOptions={{
+        headerTintColor: "#FFB54F",
+        headerTitleStyle: { color: "white" },
+      }}
+    >
+      <NotificationsStack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{ headerShown: false }}
+      />
     </NotificationsStack.Navigator>
   );
 }

@@ -39,49 +39,68 @@ function HomeTabs() {
 
   const colorScheme = useColorScheme();
   
-  const theme = colorScheme === 'light' ? LightTheme : DarkTheme;
-
   const status = useSelector(
     (state) => state.userState.status
   )
 
   return (
     <>
-    {
-      status === false 
-      ?
-      <Login />
-      :
-      <Tab.Navigator theme={theme} initialRouteName={"home"} screenOptions={({ route }) => ({
-      tabBarIcon: ({ color, size }) => {
-        let iconName;
-        iconName = route.name
-        
-        if (iconName === 'ai') {
-          iconName = 'film';
-        } else if (iconName === 'notifications') {
-          iconName = 'bell';
-        } else if (iconName === 'profile') {
-          iconName = 'user';
-        }
-        return <Feathericons name={iconName} size={size} color={color} />;
-      },
-      tabBarActiveTintColor: 'red',
-      tabBarInactiveTintColor: 'gray',
-      tabBarLabelStyle: {
-        display: "none",
-      },
-      tabBarStyle: {
-        backgroundColor: 'transparent',
-      },
-    })}>
-      <Tab.Screen name="home" component={HomeStackScreen} options={{headerShown: false}}/>
-      <Tab.Screen name="search" component={SearchStackScreen} options={{headerShown: false}}/>
-      <Tab.Screen name="ai" component={AIStackScreen} options={{headerShown: false}} />
-      <Tab.Screen name="notifications" component={NotificationStackScreen} options={{headerShown: false}}/>
-      <Tab.Screen name="profile" component={ProfileStackScreen} options={{headerShown: false}}/>
-    </Tab.Navigator>
-    }
+      {status === false ? (
+        <Login />
+      ) : (
+        <Tab.Navigator
+          initialRouteName={"home"}
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ color, size }) => {
+              let iconName;
+              iconName = route.name;
+
+              if (iconName === "ai") {
+                iconName = "film";
+              } else if (iconName === "notifications") {
+                iconName = "bell";
+              } else if (iconName === "profile") {
+                iconName = "user";
+              }
+              return <Feathericons name={iconName} size={size} color={color} />;
+            },
+            tabBarActiveTintColor: "#FFB54F",
+            tabBarInactiveTintColor: "gray",
+            tabBarLabelStyle: {
+              display: "none",
+            },
+            tabBarStyle: {
+              backgroundColor: "transparent",
+            },
+          })}
+        >
+          <Tab.Screen
+            name="home"
+            component={HomeStackScreen}
+            options={{ headerShown: false }}
+          />
+          <Tab.Screen
+            name="search"
+            component={SearchStackScreen}
+            options={{ headerShown: false }}
+          />
+          <Tab.Screen
+            name="ai"
+            component={AIStackScreen}
+            options={{ headerShown: false }}
+          />
+          <Tab.Screen
+            name="notifications"
+            component={NotificationStackScreen}
+            options={{ headerShown: false }}
+          />
+          <Tab.Screen
+            name="profile"
+            component={ProfileStackScreen}
+            options={{ headerShown: false }}
+          />
+        </Tab.Navigator>
+      )}
     </>
   );
 }
