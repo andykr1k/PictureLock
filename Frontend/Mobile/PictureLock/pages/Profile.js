@@ -73,16 +73,16 @@ function ProfileScreen({ navigation }) {
         </TouchableOpacity>
       </View>
       <ScrollView showsVerticalScrollIndicator={false} className="h-full">
-        <View className="flex flex-row items-end">
+        <View className="flex flex-row items-center justify-around">
           <Image
             source={{ uri: user.image }}
-            className="w-12 h-12 rounded-xl"
+            className="w-20 h-20 rounded-xl"
           />
-          <View className="ml-2">
-            <Text className="dark:text-white font-bold text-md">
+          <View>
+            <Text className="dark:text-white font-bold text-md text-center">
               {user.name}
             </Text>
-            <View className="flex flex-row space-x-2">
+            <View className="flex flex-row justify-center space-x-2">
               <Text className="dark:text-white">Followers: 10</Text>
               <Text className="dark:text-white">Following: 10</Text>
             </View>
@@ -97,6 +97,7 @@ function ProfileScreen({ navigation }) {
               {data.map((item, index) => {
                 return (
                   <Image
+                    key={index}
                     source={{ uri: item.movieURL }}
                     className="w-20 h-32 rounded-md mt-2"
                   />
@@ -114,6 +115,7 @@ function ProfileScreen({ navigation }) {
               {data.map((item, index) => {
                 return (
                   <Image
+                    key={index}
                     source={{ uri: item.movieURL }}
                     className="w-20 h-32 rounded-md mt-2"
                   />
@@ -129,6 +131,7 @@ function ProfileScreen({ navigation }) {
               {data.map((item, index) => {
                 return (
                   <Image
+                    key={index}
                     source={{ uri: item.movieURL }}
                     className="w-20 h-32 rounded-md mt-2"
                   />

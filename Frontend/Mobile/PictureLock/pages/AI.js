@@ -152,9 +152,8 @@ function AIScreen({ navigation }) {
         <View className="flex flex-row flex-wrap">
           {data.map((item, index) => {
             return (
-              <TouchableOpacity className="w-1/4 p-1">
+              <TouchableOpacity className="w-1/4 p-1" key={index}>
                 <Image
-                  key={index}
                   source={{ uri: item.movieURL }}
                   className="w-full h-40 rounded-md"
                 />
