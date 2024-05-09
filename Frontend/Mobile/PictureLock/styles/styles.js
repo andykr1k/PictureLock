@@ -15,7 +15,9 @@ export const styles = StyleSheet.create({
       gap: 0,
     },
     button: {
-        marginBottom: 10
+        marginBottom: 10,
+        borderWidth: 0,
+        borderColor: 'transparent'
     },
     lightButton: {
       backgroundColor: '#F5F8FA',

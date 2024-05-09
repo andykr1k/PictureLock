@@ -43,33 +43,32 @@ function AIScreen({ navigation }) {
   })
 
   const filmtypes = ['TV Show', 'Movie'];
-  // const platforms = [ 
-  //   {
-  //     name:"Amazon Prime",
-  //     image:require('../assets/amazon_logo.jpeg')
-  //   },
-  //   {
-  //     name:"Netflix",
-  //     image:require('../assets/netflix_logo.jpeg')
-  //   },
-  //   {
-  //     name:"Hulu",
-  //     image:require('../assets/hulu_logo.jpeg')
-  //   },
-  //   {
-  //     name:"Disney Plus",
-  //     image:require('../assets/disney_logo.jpeg')
-  //   },
-  //   {
-  //     name:"Paramount Plus",
-  //     image:require('../assets/paramount_logo.jpeg')
-  //   },
-  //   {
-  //     name:"HBO Max",
-  //     image:require('../assets/hbo_logo.jpeg')
-  //   }
-  // ];
-  const platforms = ["Amazon Prime","Netflix","Hulu","Disney Plus","Paramount Plus","HBO Max"];
+  const platforms = [ 
+    {
+      name:"Amazon Prime",
+      image:require('../assets/amazon_logo.jpeg')
+    },
+    {
+      name:"Netflix",
+      image:require('../assets/netflix_logo.jpeg')
+    },
+    {
+      name:"Hulu",
+      image:require('../assets/hulu_logo.jpeg')
+    },
+    {
+      name:"Disney Plus",
+      image:require('../assets/disney_logo.jpeg')
+    },
+    {
+      name:"Paramount Plus",
+      image:require('../assets/paramount_logo.jpeg')
+    },
+    {
+      name:"HBO Max",
+      image:require('../assets/hbo_logo.jpeg')
+    }
+  ];
   const genres = ['Action', 'Drama', 'Comedy', 'Romance'];
   const [recommends, setRecommends] = useState(null);
   const [movieName, setMovieName] = useState('');
@@ -103,17 +102,22 @@ function AIScreen({ navigation }) {
 
     return (
       <View style={[style.container, themeContainerStyle]}>
-      <Text h4 style={[styles.text, themeTextStyle]}>Film Type</Text>
-      <ButtonGroup
-        buttons={filmtypes}
-        selectedIndex={selectedTypeIndex}
-        onPress={(value)=>{
-          setSelectedTypeIndex(value);
-        }}
-        containerStyle={[styles.button, themeButtonStyle]}
-      />
-      <Text h4 style={[styles.text, themeTextStyle]}>Streaming Services</Text>
-      <ButtonGroup
+        <Text h4 style={[styles.text, themeTextStyle]}>
+          Film Type
+        </Text>
+        <ButtonGroup
+          buttons={filmtypes}
+          selectedIndex={selectedTypeIndex}
+          onPress={(value) => {
+            setSelectedTypeIndex(value);
+          }}
+          buttonStyle={style.toggleButtonStyle}
+          containerStyle={[styles.button, themeButtonStyle]}
+        />
+        <Text h4 style={[styles.text, themeTextStyle]}>
+          Streaming Services
+        </Text>
+        {/* <ButtonGroup
         buttons={platforms}
         selectMultiple
         selectedIndexes={selectedPlatformIndexes}
@@ -121,66 +125,77 @@ function AIScreen({ navigation }) {
           setSelectedPlatformIndexes(value);
         }}
         containerStyle={[styles.button, themeButtonStyle]}
-      />
-      {/* <View style={style.post_h}>
-        {platforms.map((item, index) => {
-          return (
-            <Button
-            style={style.logoContainer}
-            key={item.name}         
-            onPress={()=>{
-              setSelectedPlatformIndexes(index);
-            }}
-            >            
-              <Image
-                style={style.logo}
-                source={item.image}>
-                </Image>
+      /> */}
+        <View style={style.post_h}>
+          {platforms.map((item, index) => {
+            return (
+              <Button
+                buttonStyle={style.logoContainer}
+                key={item.name}
+                onPress={() => {
+                  setSelectedPlatformIndexes(index);
+                }}
+              >
+                <Image style={style.logo} source={item.image}></Image>
               </Button>
-          )})}
-      </View> */}
-      <Text h4 style={[styles.text, themeTextStyle]}>Genres</Text>
-      <ButtonGroup
-        buttons={genres}
-        selectMultiple
-        selectedIndexes={selectedGenreIndexes}
-        onPress={(value)=>{
-          setSelectedGenreIndexes(value);
-        }}
-        containerStyle={[styles.button, themeButtonStyle]}
-      />
-      <Text h4 style={[styles.text, themeTextStyle]}>Movie</Text>
-      <View  style={style.gridContainer}>
-        {data.map((item, index) => {
-            return(
-            <View key={index} style={style.gridItem}>
-              <Image source={{uri:item.movieURL}} style={style.image}/>
-            </View>
-          )})}
-      </View>
-      <Button 
-      onPress={()=>recommend()}
-      buttonStyle={{
-        borderWidth: 2,
-        borderRadius: 30,
-      }}
-      containerStyle={{
-        marginHorizontal: 2,
-        marginVertical: 2,
-      }}
-      titleStyle={{ fontWeight: 'bold' }}
-      >
-        Recommend
-      </Button>
-      {recommends != null && (
-        <View>
-        <Text h4 style={{padding:6}}>Recommendations</Text>
-        <Divider inset={true} insetType="right" style={{marginBottom:4}} />
-          {recommends.map((item, index) => (
-            <Text h5 key={item}>{index+1}. {item}</Text>
-          ))}
+            );
+          })}
         </View>
-      )}
+        <Text h4 style={[styles.text, themeTextStyle]}>
+          Genres
+        </Text>
+        <ButtonGroup
+          buttons={genres}
+          selectMultiple
+          selectedIndexes={selectedGenreIndexes}
+          onPress={(value) => {
+            setSelectedGenreIndexes(value);
+          }}
+          containerStyle={[styles.button, themeButtonStyle]}
+        />
+        <Text h4 style={[styles.text, themeTextStyle]}>
+          Movie
+        </Text>
+        <View style={style.gridContainer}>
+          {data.map((item, index) => {
+            return (
+              <View key={index} style={style.gridItem}>
+                <Image source={{ uri: item.movieURL }} style={style.image} />
+              </View>
+            );
+          })}
+        </View>
+        <Button
+          onPress={() => recommend()}
+          buttonStyle={{
+            borderWidth: 2,
+            borderRadius: 30,
+          }}
+          containerStyle={{
+            marginHorizontal: 2,
+            marginVertical: 2,
+          }}
+          titleStyle={{ fontWeight: "bold" }}
+        >
+          Recommend
+        </Button>
+        {recommends != null && (
+          <View>
+            <Text h4 style={{ padding: 6 }}>
+              Recommendations
+            </Text>
+            <Divider
+              inset={true}
+              insetType="right"
+              style={{ marginBottom: 4 }}
+            />
+            {recommends.map((item, index) => (
+              <Text h5 key={item}>
+                {index + 1}. {item}
+              </Text>
+            ))}
+          </View>
+        )}
       </View>
     );
   }
@@ -217,24 +232,25 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     margin: 10,
-    marginTop: '15%',
+    marginTop: "15%",
   },
   logoContainer: {
-    width: 40,
-    height: 40,
-    backgroundColor: 'transparent'
+    padding: 0,
+    margin: 0,
+    paddingHorizontal: 0,
+    borderRadius: 12
   },
   logo: {
-    width: 40,
+    width: 60,
     height: 40,
-    borderRadius: 25,
+    borderRadius: 10,
   },
   post_h: {
-    flex: 1,
-    flexDirection: 'row',
-    height: 60,
-    gap: 2,
-    justifyContent: 'center'
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    padding: 4,
+
   },
   image: {
     aspectRatio: 2 / 3,
@@ -242,13 +258,17 @@ const style = StyleSheet.create({
     borderRadius: 15,
   },
   gridContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
     marginHorizontal: -5,
   },
   gridItem: {
-    width: '33.333%',
+    width: "33.333%",
     padding: 5,
   },
+  toggleButtonStyle: {
+    border: 0,
+    fontStyle: 'bold',
+  }
 });
