@@ -1,4 +1,4 @@
-import { TouchableOpacity, View, Text } from "react-native";
+import { TouchableOpacity, View, Text, useColorScheme } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Post, Comment } from "../components";
 import { RefreshControl, ScrollView } from "react-native-gesture-handler";
@@ -70,11 +70,12 @@ function PostDetails({ route, navigation }) {
 const HomeStack = createNativeStackNavigator();
 
 export default function HomeStackScreen() {
+  const colorScheme = useColorScheme();
   return (
     <HomeStack.Navigator
       screenOptions={{
         headerTintColor: "#FFB54F",
-        headerTitleStyle: { color: "white" },
+        headerTitleStyle: { color: colorScheme === 'dark' ? "white" : "black" },
       }}
     >
       <HomeStack.Screen

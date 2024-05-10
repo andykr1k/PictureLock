@@ -13,14 +13,9 @@ import { Recommendation } from "../functions/Recommendation";
 
 const data = [
   {
-    movie: "The Matrix",
-    movieURL:
-      "https://static.wikia.nocookie.net/matrix/images/5/56/The_Matrix_digital_release_cover.jpg/revision/latest?cb=20210908111245",
-  },
-  {
     movie: "Friends",
     movieURL:
-      "https://m.media-amazon.com/images/M/MV5BNDVkYjU0MzctMWRmZi00NTkxLTgwZWEtOWVhYjZlYjllYmU4XkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_.jpg",
+      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/2koX1xLkpTQM4IZebYvKysFW1Nh.jpg",
   },
   {
     movie: "Barbie",
@@ -30,7 +25,7 @@ const data = [
   {
     movie: "Game of Thrones",
     movieURL:
-      "https://m.media-amazon.com/images/M/MV5BN2IzYzBiOTQtNGZmMi00NDI5LTgxMzMtN2EzZjA1NjhlOGMxXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_FMjpg_UX1000_.jpg",
+      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg",
   },
   {
     movie: "How I Met Your Mother",
@@ -42,6 +37,21 @@ const data = [
     movieURL:
       "https://www.themoviedb.org/t/p/w440_and_h660_face/8riWcADI1ekEiBguVB9vkilhiQm.jpg",
   },
+  {
+    movie: "Flash",
+    movieURL:
+      "https://www.themoviedb.org/t/p/w440_and_h660_face/rktDFPbfHfUbArZ6OOOKsXcv0Bm.jpg",
+  },
+  {
+    movie: "Fast X",
+    movieURL:
+      "https://www.themoviedb.org/t/p/w440_and_h660_face/fiVW06jE7z9YnO4trhaMEdclSiC.jpg",
+  },
+  {
+    movie: "Avatar",
+    movieURL:
+      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/kyeqWdyUXW608qlYkRqosgbbJyK.jpg",
+  }
 ];
 
 function AIScreen({ navigation }) {

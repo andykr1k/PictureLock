@@ -3,7 +3,8 @@ import {
   View,
   Image,
   TouchableOpacity,
-  TextInput
+  TextInput,
+  useColorScheme
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React, { useState } from "react";
@@ -14,7 +15,7 @@ const data = [
   {
     movie: "Friends",
     movieURL:
-      "https://m.media-amazon.com/images/M/MV5BNDVkYjU0MzctMWRmZi00NTkxLTgwZWEtOWVhYjZlYjllYmU4XkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_.jpg",
+      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/2koX1xLkpTQM4IZebYvKysFW1Nh.jpg",
   },
   {
     movie: "Barbie",
@@ -24,7 +25,7 @@ const data = [
   {
     movie: "Game of Thrones",
     movieURL:
-      "https://m.media-amazon.com/images/M/MV5BN2IzYzBiOTQtNGZmMi00NDI5LTgxMzMtN2EzZjA1NjhlOGMxXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_FMjpg_UX1000_.jpg",
+      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg",
   },
   {
     movie: "How I Met Your Mother",
@@ -37,11 +38,6 @@ const data = [
       "https://www.themoviedb.org/t/p/w440_and_h660_face/8riWcADI1ekEiBguVB9vkilhiQm.jpg",
   },
   {
-    movie: "Heart of Stone",
-    movieURL:
-      "https://www.themoviedb.org/t/p/w440_and_h660_face/vB8o2p4ETnrfiWEgVxHmHWP9yRl.jpg",
-  },
-  {
     movie: "Flash",
     movieURL:
       "https://www.themoviedb.org/t/p/w440_and_h660_face/rktDFPbfHfUbArZ6OOOKsXcv0Bm.jpg",
@@ -52,9 +48,14 @@ const data = [
       "https://www.themoviedb.org/t/p/w440_and_h660_face/fiVW06jE7z9YnO4trhaMEdclSiC.jpg",
   },
   {
-    movie: "The Matrix",
+    movie: "Avatar",
     movieURL:
-      "https://static.wikia.nocookie.net/matrix/images/5/56/The_Matrix_digital_release_cover.jpg/revision/latest?cb=20210908111245",
+      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/kyeqWdyUXW608qlYkRqosgbbJyK.jpg",
+  },
+  {
+    movie: "Kingdom of the Planet of the Apes",
+    movieURL:
+      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/gKkl37BQuKTanygYQG1pyYgLVgf.jpg",
   },
 ];
 
@@ -98,9 +99,9 @@ function DetailsScreen({ route, navigation }) {
   const { item, index } = route.params;
 
   return (
-    <View className=" flex justify-center items-center p-3">
-      <Image source={{ uri: item.movieURL }} className="w-40 h-60 rounded-md" />
-      <Text className="font-bold text-lg dark:text-white">{item.movie}</Text>
+    <View className=" flex justify-center items-center p-3 space-y-2">
+      <Image source={{ uri: item.movieURL }} className="w-60 h-96 rounded-md" />
+      <Text className="font-bold text-xl dark:text-white">{item.movie}</Text>
     </View>
   );
 }
@@ -108,12 +109,13 @@ function DetailsScreen({ route, navigation }) {
 const SearchStack = createNativeStackNavigator();
 
 export default function SearchStackScreen() {
+  const colorScheme = useColorScheme();
   return (
     <SearchStack.Navigator
-      screenOptions={{
-        headerTintColor: "#FFB54F",
-        headerTitleStyle: { color: "white" },
-      }}
+    screenOptions={{
+      headerTintColor: "#FFB54F",
+      headerTitleStyle: { color: colorScheme === 'dark' ? "white" : "black" },
+    }}
     >
       <SearchStack.Screen
         name="Search"

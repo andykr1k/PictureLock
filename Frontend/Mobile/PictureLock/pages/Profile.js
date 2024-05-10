@@ -16,7 +16,7 @@ const data = [
   {
     movie: "Friends",
     movieURL:
-      "https://m.media-amazon.com/images/M/MV5BNDVkYjU0MzctMWRmZi00NTkxLTgwZWEtOWVhYjZlYjllYmU4XkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_.jpg",
+      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/2koX1xLkpTQM4IZebYvKysFW1Nh.jpg",
   },
   {
     movie: "Barbie",
@@ -26,7 +26,7 @@ const data = [
   {
     movie: "Game of Thrones",
     movieURL:
-      "https://m.media-amazon.com/images/M/MV5BN2IzYzBiOTQtNGZmMi00NDI5LTgxMzMtN2EzZjA1NjhlOGMxXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_FMjpg_UX1000_.jpg",
+      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg",
   },
   {
     movie: "How I Met Your Mother",
@@ -39,11 +39,6 @@ const data = [
       "https://www.themoviedb.org/t/p/w440_and_h660_face/8riWcADI1ekEiBguVB9vkilhiQm.jpg",
   },
   {
-    movie: "Heart of Stone",
-    movieURL:
-      "https://www.themoviedb.org/t/p/w440_and_h660_face/vB8o2p4ETnrfiWEgVxHmHWP9yRl.jpg",
-  },
-  {
     movie: "Flash",
     movieURL:
       "https://www.themoviedb.org/t/p/w440_and_h660_face/rktDFPbfHfUbArZ6OOOKsXcv0Bm.jpg",
@@ -54,9 +49,14 @@ const data = [
       "https://www.themoviedb.org/t/p/w440_and_h660_face/fiVW06jE7z9YnO4trhaMEdclSiC.jpg",
   },
   {
-    movie: "The Matrix",
+    movie: "Avatar",
     movieURL:
-      "https://static.wikia.nocookie.net/matrix/images/5/56/The_Matrix_digital_release_cover.jpg/revision/latest?cb=20210908111245",
+      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/kyeqWdyUXW608qlYkRqosgbbJyK.jpg",
+  },
+  {
+    movie: "Kingdom of the Planet of the Apes",
+    movieURL:
+      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/gKkl37BQuKTanygYQG1pyYgLVgf.jpg",
   },
 ];
 
@@ -67,22 +67,24 @@ function ProfileScreen({ navigation }) {
   return (
     <View className="p-5 mt-10">
       <View className="flex flex-row items-center justify-between ">
-        <Text className="dark:text-white font-bold text-3xl mb-2">Profile</Text>
+        <Text className="dark:text-white font-bold text-3xl mb-2">@akrik</Text>
         <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
           <IconButton icon="settings" size={28} />
         </TouchableOpacity>
       </View>
       <ScrollView showsVerticalScrollIndicator={false} className="h-full">
-        <View className="flex flex-row items-center justify-around">
+        <View className="flex-1 space-y-2 items-center">
           <Image
             source={{ uri: user.image }}
-            className="w-20 h-20 rounded-xl"
+            className="w-28 h-28 rounded-full"
           />
-          <View>
-            <Text className="dark:text-white font-bold text-md text-center">
-              {user.name}
-            </Text>
-            <View className="flex flex-row justify-center space-x-2">
+          <View className="space-y-1">
+            <View className="flex flex-row space-x-1 justify-center">
+              <Text className="dark:text-white font-bold text-lg">
+                {user.name}
+              </Text>
+            </View>
+            <View className="flex flex-row space-x-2 justify-center">
               <Text className="dark:text-white">Followers: 10</Text>
               <Text className="dark:text-white">Following: 10</Text>
             </View>
@@ -110,22 +112,6 @@ function ProfileScreen({ navigation }) {
           <Text className="dark:text-white font-bold text-md">
             Recently Watched Movies & Shows
           </Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <View className="flex flex-row space-x-2">
-              {data.map((item, index) => {
-                return (
-                  <Image
-                    key={index}
-                    source={{ uri: item.movieURL }}
-                    className="w-20 h-32 rounded-md mt-2"
-                  />
-                );
-              })}
-            </View>
-          </ScrollView>
-        </View>
-        <View className="mt-4">
-          <Text className="dark:text-white font-bold text-md">Bookmarks</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View className="flex flex-row space-x-2">
               {data.map((item, index) => {
@@ -173,7 +159,7 @@ export default function ProfileStackScreen({ navigation }) {
     <ProfileStack.Navigator
       screenOptions={{
         headerTintColor: "#FFB54F",
-        headerTitleStyle: { color: "white" },
+        headerTitleStyle: { color: colorScheme === 'dark' ? "white" : "black" },
       }}
     >
       <ProfileStack.Screen
