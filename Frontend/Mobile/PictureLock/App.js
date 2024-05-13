@@ -9,9 +9,9 @@ import {
   AIStackScreen,
   NotificationStackScreen,
   ProfileStackScreen,
+  LogInScreen
 } from "./pages";
 import { useColorScheme } from "react-native";
-import Login from "./pages/Login";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import { useSelector } from "react-redux";
@@ -50,7 +50,7 @@ function HomeTabs() {
   return (
     <>
       {status === false ? (
-        <Login />
+        <LogInScreen />
       ) : (
         <Tab.Navigator
           initialRouteName={"home"}
