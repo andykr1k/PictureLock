@@ -20,11 +20,11 @@ const DarkTheme = {
   dark: true,
   colors: {
     primary: "rgb(255, 45, 85)",
-    background: "#454A45",
-    card: "#454A45",
+    background: "#1A1A1A",
+    card: "#1A1A1A",
     text: "white",
-    border: "#454A45",
-    notification: "#454A45",
+    border: "#1A1A1A",
+    notification: "#1A1A1A",
   },
 };
 
@@ -74,7 +74,7 @@ function HomeTabs() {
               display: "none",
             },
             tabBarStyle: {
-              backgroundColor: "transparent",
+              backgroundColor: "#FFFFFF00",
               borderTopWidth: 0,
               position: "absolute",
               elevation: 0,

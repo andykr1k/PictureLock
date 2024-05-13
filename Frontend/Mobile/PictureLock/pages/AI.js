@@ -108,7 +108,7 @@ function AIScreen({ navigation }) {
   }
 
   return (
-    <View className="mt-10 p-5 space-y-2">
+    <View className="mt-10 p-5 space-y-3">
       <Text className="dark:text-white font-bold text-3xl">Recommendation</Text>
       <View className="space-y-2">
         <Text h4 className="dark:text-white font-bold text-lg">
@@ -117,8 +117,8 @@ function AIScreen({ navigation }) {
         <View className="flex flex-row space-x-2">
           {filmtypes.map((type, index) => (
             <TouchableOpacity key={index}>
-              <View className="p-3 rounded-lg dark:bg-dark-btn bg-black/10">
-                <Text className="font-bold">{type}</Text>
+              <View className="p-3 rounded-lg dark:bg-dark-btn/20 bg-black/10">
+                <Text className="font-bold dark:text-white">{type}</Text>
               </View>
             </TouchableOpacity>
           ))}
@@ -148,8 +148,8 @@ function AIScreen({ navigation }) {
         <View className="flex flex-row space-x-2">
           {genres.map((genre, index) => (
             <TouchableOpacity key={index}>
-              <View className="p-3 rounded-lg dark:bg-dark-btn bg-black/10">
-                <Text className="font-bold">{genre}</Text>
+              <View className="p-3 rounded-lg dark:bg-dark-btn/20 bg-black/10">
+                <Text className="font-bold dark:text-white">{genre}</Text>
               </View>
             </TouchableOpacity>
           ))}
@@ -173,10 +173,10 @@ function AIScreen({ navigation }) {
         </View>
       </View>
       <TouchableOpacity
-        className="dark:bg-dark-btn bg-black/10 p-3 rounded-md"
+        className="dark:bg-dark-btn/20 bg-black/10 p-3 rounded-md"
         onPress={() => recommend()}
       >
-        <Text className="font-bold text-center">Recommend</Text>
+        <Text className="font-bold text-center dark:text-white">Recommend</Text>
       </TouchableOpacity>
       {recommends != null && (
         <View>

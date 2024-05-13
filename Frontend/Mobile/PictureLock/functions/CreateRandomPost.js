@@ -52,7 +52,7 @@ const data = [
 export default function CreateRandomPost() {
     const author = CreateRandomUser()
     const mention = CreateRandomUser()
-    const movie = data[0]
+    const movie = data[Math.floor(Math.random() * 9)];
     
     return {
     id: faker.string.uuid(),

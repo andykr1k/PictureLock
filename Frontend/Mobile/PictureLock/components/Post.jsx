@@ -1,17 +1,18 @@
-import { Text, View, useColorScheme, Image, StyleSheet } from "react-native";
+import { Text, View, Image } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import IconButton from "./IconButton";
 import TimeAgo from "../functions/TimeAgo";
+import { memo } from "react";
 
-export default function Post(props) {
+function Post(props) {
   const numStars = Math.floor(Math.random() * 5) + 1;
 
   const stars = Array.from({ length: numStars }, (_, index) => (
-    <IconButton key={index} icon="star" size={18} />
+    <IconButton key={index} icon="star" size={14} />
   ));
 
   return (
-    <View className="w-full mb-3">
+    <View className="w-full mb-3 border-b-[1px] border-black/10 dark:border-white/10 pb-3">
       <View className="flex flex-row space-x-2 w-full">
         <View className="flex w-1/10">
           <Image
@@ -20,7 +21,7 @@ export default function Post(props) {
           />
         </View>
         <View className="flex-1 w-8/10">
-          <View className="flex flex-row justify-between">
+          <View className="flex flex-row justify-between mb-1">
             <View className="flex flex-row">
               <Text className="font-bold dark:text-white">
                 {props.post.author.username}
@@ -33,8 +34,10 @@ export default function Post(props) {
           </View>
           <View className="flex flex-row w-full justify-between">
             <View className="flex justify-between w-2/3">
-              <Text className="dark:text-white text-xs pr-1">{props.post.review}</Text>
-              <View className="">
+              <Text className="dark:text-white text-xs pr-1">
+                {props.post.review}
+              </Text>
+              <View>
                 {props.post.status == "is watching" ? (
                   <></>
                 ) : (
@@ -63,7 +66,9 @@ export default function Post(props) {
                     className="w-full h-40 rounded-md"
                   />
                 )}
-                <View className="flex flex-row justify-center mt-1">{stars}</View>
+                <View className="flex flex-row justify-center mt-2">
+                  {stars}
+                </View>
               </View>
             </View>
           </View>
@@ -72,3 +77,5 @@ export default function Post(props) {
     </View>
   );
 }
+
+export default memo(Post);

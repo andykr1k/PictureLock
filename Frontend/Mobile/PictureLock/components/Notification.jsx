@@ -1,6 +1,7 @@
 import { Button, Text, View, useColorScheme, Image } from "react-native";
+import { memo } from "react";
 
-export default function Notification(props) {
+function Notification(props) {
   const colorScheme = useColorScheme();
 
   return (
@@ -17,3 +18,5 @@ export default function Notification(props) {
     </View>
   );
 }
+
+export default memo(Notification);

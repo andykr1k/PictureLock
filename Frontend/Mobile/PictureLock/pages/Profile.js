@@ -127,7 +127,9 @@ function ProfileScreen({ navigation }) {
           </ScrollView>
         </View>
         <TouchableOpacity className="w-full dark:bg-dark-btn bg-black/10 mt-4 p-4 rounded-md">
-          <Text className="font-bold text-center">Create A New List</Text>
+          <Text className="font-bold text-center dark:text-white">
+            Create A New List
+          </Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
@@ -144,7 +146,7 @@ function SettingsScreen({ navigation }) {
         onPress={() => dispatch(logUserOut())}
         className="w-full dark:bg-dark-btn bg-black/10 mt-4 p-4 rounded-md"
       >
-        <Text className="font-bold text-center">Logout</Text>
+        <Text className="font-bold text-center dark:text-white">Logout</Text>
       </TouchableOpacity>
     </ScrollView>
   );

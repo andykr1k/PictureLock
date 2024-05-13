@@ -1,6 +1,8 @@
 import { Text, View, useColorScheme, Image } from "react-native";
 import TimeAgo from "../functions/TimeAgo";
-export default function Comment(props) {
+import { memo } from "react";
+
+function Comment(props) {
   const colorScheme = useColorScheme();
 
   return (
@@ -25,3 +27,5 @@ export default function Comment(props) {
     </View>
   );
 }
+
+export default memo(Comment);

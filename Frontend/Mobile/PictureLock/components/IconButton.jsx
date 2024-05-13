@@ -1,5 +1,6 @@
 import { View, Text, useColorScheme } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { memo } from 'react';
 
 const IconButton = ({ icon, text, size }) => {
   const colorScheme = useColorScheme();
@@ -13,4 +14,4 @@ const IconButton = ({ icon, text, size }) => {
   );
 };
 
-export default IconButton;
+export default memo(IconButton);

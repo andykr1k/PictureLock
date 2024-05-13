@@ -20,7 +20,7 @@ function HomeScreen({ navigation }) {
     }, 100);
   }
   return (
-    <View className="mt-10 p-5 space-y-2">
+    <View className="mt-10 p-5 space-y-3">
       <Text className="dark:text-white font-bold text-3xl">Home</Text>
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -56,7 +56,7 @@ function PostDetails({ route, navigation }) {
 
   const comments = item.comments;
   return (
-    <View className="p-5 h-full">
+    <View className="p-5 pt-2 h-full">
       <Post key={index} post={item} />
       <ScrollView className="">
         {comments.map((item, index) => {

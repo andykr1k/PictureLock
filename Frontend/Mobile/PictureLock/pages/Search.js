@@ -66,7 +66,7 @@ function SearchScreen({ navigation }) {
     setSearch(search);
   };
   return (
-    <View className="mt-10 p-5 space-y-2">
+    <View className="mt-10 p-5 space-y-3">
       <Text className="dark:text-white font-bold text-3xl">Search</Text>
       <TextInput
         placeholder="Search for friends and films"

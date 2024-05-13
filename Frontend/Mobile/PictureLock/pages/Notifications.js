@@ -73,7 +73,7 @@ const data = [
 function NotificationsScreen({ navigation }) {
 
     return (
-      <View className="mt-10 p-5 space-y-2">
+      <View className="mt-10 p-5 space-y-3">
         <Text className="dark:text-white font-bold text-3xl">
           Notifications
         </Text>

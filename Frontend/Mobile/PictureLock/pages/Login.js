@@ -19,7 +19,7 @@ export default function LogInScreen() {
   const dispatch = useDispatch();
   return (
     <View
-      className="flex-1 p-3 space-y-5 bg-orange-fruit"
+      className="flex-1 p-5 space-y-5 bg-orange-fruit"
     >
       <View className="flex items-center mt-20">
         <Image
