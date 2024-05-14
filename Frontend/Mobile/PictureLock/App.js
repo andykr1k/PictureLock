@@ -20,11 +20,11 @@ const DarkTheme = {
   dark: true,
   colors: {
     primary: "rgb(255, 45, 85)",
-    background: "#1A1A1A",
-    card: "#1A1A1A",
+    background: "#454A45",
+    card: "#454A45",
     text: "white",
-    border: "#1A1A1A",
-    notification: "#1A1A1A",
+    border: "#454A45",
+    notification: "#454A45",
   },
 };
 

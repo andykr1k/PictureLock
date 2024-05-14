@@ -126,7 +126,7 @@ function ProfileScreen({ navigation }) {
             </View>
           </ScrollView>
         </View>
-        <TouchableOpacity className="w-full bg-orange-fruit mt-4 p-4 rounded-md">
+        <TouchableOpacity className="w-full dark:bg-dark-btn bg-black/10 mt-4 p-4 rounded-md">
           <Text className="font-bold text-center">Create A New List</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -142,7 +142,7 @@ function SettingsScreen({ navigation }) {
     <ScrollView className="p-3">
       <TouchableOpacity
         onPress={() => dispatch(logUserOut())}
-        className="w-full bg-orange-fruit mt-4 p-4 rounded-md"
+        className="w-full dark:bg-dark-btn bg-black/10 mt-4 p-4 rounded-md"
       >
         <Text className="font-bold text-center">Logout</Text>
       </TouchableOpacity>

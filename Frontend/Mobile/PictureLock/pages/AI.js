@@ -117,7 +117,7 @@ function AIScreen({ navigation }) {
         <View className="flex flex-row space-x-2">
           {filmtypes.map((type, index) => (
             <TouchableOpacity key={index}>
-              <View className="p-3 rounded-lg bg-orange-fruit">
+              <View className="p-3 rounded-lg dark:bg-dark-btn bg-black/10">
                 <Text className="font-bold">{type}</Text>
               </View>
             </TouchableOpacity>
@@ -148,7 +148,7 @@ function AIScreen({ navigation }) {
         <View className="flex flex-row space-x-2">
           {genres.map((genre, index) => (
             <TouchableOpacity key={index}>
-              <View className="p-3 rounded-lg bg-orange-fruit">
+              <View className="p-3 rounded-lg dark:bg-dark-btn bg-black/10">
                 <Text className="font-bold">{genre}</Text>
               </View>
             </TouchableOpacity>
@@ -173,7 +173,7 @@ function AIScreen({ navigation }) {
         </View>
       </View>
       <TouchableOpacity
-        className="bg-orange-fruit p-3 rounded-md"
+        className="dark:bg-dark-btn bg-black/10 p-3 rounded-md"
         onPress={() => recommend()}
       >
         <Text className="font-bold text-center">Recommend</Text>

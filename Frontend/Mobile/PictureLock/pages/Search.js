@@ -71,7 +71,7 @@ function SearchScreen({ navigation }) {
       <TextInput
         placeholder="Search for friends and films"
         onChangeText={updateSearch}
-        className="bg-orange-fruit/20 p-3 dark:text-white font-bold rounded-md"
+        className="bg-black/10 dark:bg-dark-btn/20 p-3 font-bold rounded-md"
       ></TextInput>
       <ScrollView showsVerticalScrollIndicator={false} className="h-full">
         <View className="flex flex-row flex-wrap">
