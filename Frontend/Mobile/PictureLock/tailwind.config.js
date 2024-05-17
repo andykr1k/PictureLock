@@ -16,10 +16,9 @@ module.exports = {
         "dark-btn": "#DCE1E9",
         "tooltips": "#565554",
         "dark-bg": "#454A45",
-        "light-bg": "#EDEDED"
+        "light-bg": "#EDEDED",
       },
     },
   },
   plugins: [],
 };
-

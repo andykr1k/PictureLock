@@ -31,7 +31,7 @@ export default function SignUpScreen() {
       <View className="space-y-1">
         <Text className="font-bold text-white">Create a username</Text>
         <TextInput
-          className="flex-1 justify-center items-center bg-red-apple/10 p-5 rounded-md"
+          className="flex-1 justify-center items-center bg-red-apple/10 p-3 rounded-md"
           placeholderTextColor="#003f5c"
           onChangeText={(email) => setEmail(email)}
         />
@@ -39,7 +39,7 @@ export default function SignUpScreen() {
       <View className="space-y-1">
         <Text className="font-bold text-white">Enter your Email</Text>
         <TextInput
-          className="flex-1 justify-center items-center bg-red-apple/10 p-5 rounded-md"
+          className="flex-1 justify-center items-center bg-red-apple/10 p-3 rounded-md"
           placeholderTextColor="#003f5c"
           onChangeText={(email) => setEmail(email)}
         />
@@ -47,7 +47,7 @@ export default function SignUpScreen() {
       <View className="space-y-1">
         <Text className="font-bold text-white">Create a Password</Text>
         <TextInput
-          className="flex-1 justify-center items-center bg-red-apple/10 p-5 rounded-md"
+          className="flex-1 justify-center items-center bg-red-apple/10 p-3 rounded-md"
           placeholderTextColor="#003f5c"
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
@@ -56,7 +56,7 @@ export default function SignUpScreen() {
       <View className="space-y-1">
         <Text className="font-bold text-white">Verify Password</Text>
         <TextInput
-          className="flex-1 justify-center items-center bg-red-apple/10 p-5 rounded-md"
+          className="flex-1 justify-center items-center bg-red-apple/10 p-3 rounded-md"
           placeholderTextColor="#003f5c"
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}

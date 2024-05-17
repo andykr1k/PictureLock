@@ -51,7 +51,7 @@ const data = [
     movie: "Avatar",
     movieURL:
       "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/kyeqWdyUXW608qlYkRqosgbbJyK.jpg",
-  }
+  },
 ];
 
 function AIScreen({ navigation }) {
@@ -59,27 +59,27 @@ function AIScreen({ navigation }) {
   const platforms = [
     {
       name: "Amazon Prime",
-      image: require("../assets/amazon_logo.jpeg"),
+      image: require("../assets/amazon_logo.png"),
     },
     {
       name: "Netflix",
-      image: require("../assets/netflix_logo.jpeg"),
+      image: require("../assets/netflix_logo.png"),
     },
     {
       name: "Hulu",
-      image: require("../assets/hulu_logo.jpeg"),
+      image: require("../assets/hulu_logo.png"),
     },
     {
       name: "Disney Plus",
-      image: require("../assets/disney_logo.jpeg"),
+      image: require("../assets/disney_logo.png"),
     },
     {
       name: "Paramount Plus",
-      image: require("../assets/paramount_logo.jpeg"),
+      image: require("../assets/paramount_logo.png"),
     },
     {
       name: "HBO Max",
-      image: require("../assets/hbo_logo.jpeg"),
+      image: require("../assets/hbo_logo.png"),
     },
   ];
   const genres = ["Action", "Drama", "Comedy", "Romance"];
@@ -88,6 +88,26 @@ function AIScreen({ navigation }) {
   const [selectedTypeIndex, setSelectedTypeIndex] = useState(0);
   const [selectedGenreIndexes, setSelectedGenreIndexes] = useState([]);
   const [selectedPlatformIndexes, setSelectedPlatformIndexes] = useState([]);
+
+  const togglePlatformSelection = (index) => {
+    setSelectedPlatformIndexes((prevIndexes) => {
+      if (prevIndexes.includes(index)) {
+        return prevIndexes.filter((i) => i !== index);
+      } else {
+        return [...prevIndexes, index];
+      }
+    });
+  };
+
+  const toggleGenreSelection = (index) => {
+    setSelectedGenreIndexes((prevIndexes) => {
+      if (prevIndexes.includes(index)) {
+        return prevIndexes.filter((i) => i !== index);
+      } else {
+        return [...prevIndexes, index];
+      }
+    });
+  };
 
   function recommend() {
     (async () => {
@@ -108,16 +128,25 @@ function AIScreen({ navigation }) {
   }
 
   return (
-    <View className="mt-10 p-5 space-y-3">
-      <Text className="dark:text-white font-bold text-3xl">Recommendation</Text>
+    <View className="mt-10 p-3 space-y-3">
+      <Text className="dark:text-white font-bold text-3xl">The Slate</Text>
       <View className="space-y-2">
         <Text h4 className="dark:text-white font-bold text-lg">
           Film Type
         </Text>
         <View className="flex flex-row space-x-2">
           {filmtypes.map((type, index) => (
-            <TouchableOpacity key={index}>
-              <View className="p-3 rounded-lg dark:bg-dark-btn/20 bg-black/10">
+            <TouchableOpacity
+              key={index}
+              onPress={() => setSelectedTypeIndex(index)}
+            >
+              <View
+                className={`p-3 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
+                  selectedTypeIndex === index
+                    ? "border-orange-500"
+                    : "border-transparent"
+                }`}
+              >
                 <Text className="font-bold dark:text-white">{type}</Text>
               </View>
             </TouchableOpacity>
@@ -128,18 +157,31 @@ function AIScreen({ navigation }) {
         <Text h4 className="dark:text-white font-bold text-lg">
           Streaming Services
         </Text>
-        <View className="flex flex-row space-x-2">
+        <ScrollView
+          className="space-x-2"
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
           {platforms.map((item, index) => (
-            <TouchableOpacity key={index}>
-              <View className="rounded-lg">
+            <TouchableOpacity
+              key={index}
+              onPress={() => togglePlatformSelection(index)}
+            >
+              <View
+                className={`rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
+                  selectedPlatformIndexes.includes(index)
+                    ? "border-orange-500"
+                    : "border-transparent"
+                }`}
+              >
                 <Image
                   source={item.image}
-                  className="w-14 h-10 rounded-lg"
+                  className="object-cover w-20 h-10 rounded-xl"
                 ></Image>
               </View>
             </TouchableOpacity>
           ))}
-        </View>
+        </ScrollView>
       </View>
       <View className="space-y-2">
         <Text h4 className="dark:text-white font-bold text-lg">
@@ -147,8 +189,17 @@ function AIScreen({ navigation }) {
         </Text>
         <View className="flex flex-row space-x-2">
           {genres.map((genre, index) => (
-            <TouchableOpacity key={index}>
-              <View className="p-3 rounded-lg dark:bg-dark-btn/20 bg-black/10">
+            <TouchableOpacity
+              key={index}
+              onPress={() => toggleGenreSelection(index)}
+            >
+              <View
+                className={`p-3 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
+                  selectedGenreIndexes.includes(index)
+                    ? "border-orange-500"
+                    : "border-transparent"
+                }`}
+              >
                 <Text className="font-bold dark:text-white">{genre}</Text>
               </View>
             </TouchableOpacity>
@@ -173,7 +224,7 @@ function AIScreen({ navigation }) {
         </View>
       </View>
       <TouchableOpacity
-        className="dark:bg-dark-btn/20 bg-black/10 p-3 rounded-md"
+        className="bg-black/10 dark:bg-white/10 p-3 rounded-2xl"
         onPress={() => recommend()}
       >
         <Text className="font-bold text-center dark:text-white">Recommend</Text>
@@ -197,9 +248,7 @@ function DetailsScreen() {
     <View>
       {recommends != null && (
         <View>
-          <Text>
-            Recommendations
-          </Text>
+          <Text>Recommendations</Text>
           {recommends.map((item, index) => (
             <Text h5 key={item}>
               {index + 1}. {item}

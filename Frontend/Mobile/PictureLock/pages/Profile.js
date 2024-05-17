@@ -65,7 +65,7 @@ function ProfileScreen({ navigation }) {
   const dispatch = useDispatch();
 
   return (
-    <View className="p-5 mt-10">
+    <View className="p-2 mt-10">
       <View className="flex flex-row items-center justify-between ">
         <Text className="dark:text-white font-bold text-3xl mb-2">@akrik</Text>
         <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
@@ -126,7 +126,7 @@ function ProfileScreen({ navigation }) {
             </View>
           </ScrollView>
         </View>
-        <TouchableOpacity className="w-full dark:bg-dark-btn bg-black/10 mt-4 p-4 rounded-md">
+        <TouchableOpacity className="w-full bg-black/10 dark:bg-white/10 mt-4 p-4 rounded-md">
           <Text className="font-bold text-center dark:text-white">
             Create A New List
           </Text>
@@ -144,7 +144,7 @@ function SettingsScreen({ navigation }) {
     <ScrollView className="p-3">
       <TouchableOpacity
         onPress={() => dispatch(logUserOut())}
-        className="w-full dark:bg-dark-btn bg-black/10 mt-4 p-4 rounded-md"
+        className="w-full bg-black/10 dark:bg-white/10 mt-4 p-4 rounded-md"
       >
         <Text className="font-bold text-center dark:text-white">Logout</Text>
       </TouchableOpacity>

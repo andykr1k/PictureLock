@@ -1,4 +1,12 @@
-import { TouchableOpacity, View, Text, useColorScheme } from "react-native";
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  useColorScheme,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Post, Comment } from "../components";
 import { RefreshControl, ScrollView } from "react-native-gesture-handler";
@@ -20,7 +28,7 @@ function HomeScreen({ navigation }) {
     }, 100);
   }
   return (
-    <View className="mt-10 p-5 space-y-3">
+    <View className="mt-10 p-3 space-y-3">
       <Text className="dark:text-white font-bold text-3xl">Home</Text>
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -52,18 +60,29 @@ function HomeScreen({ navigation }) {
 function PostDetails({ route, navigation }) {
   const { item, index } = route.params;
 
-  const [text, onChangeText] = React.useState("Comment");
+  const [text, onChangeText] = React.useState("");
 
   const comments = item.comments;
   return (
-    <View className="p-5 pt-2 h-full">
-      <Post key={index} post={item} />
-      <ScrollView className="">
-        {comments.map((item, index) => {
-          return <Comment key={index} post={item} />;
-        })}
-      </ScrollView>
-    </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <View className="p-2 pt-2 h-full">
+        <Post key={index} post={item} />
+        <ScrollView className="">
+          {comments.map((item, index) => (
+            <Comment key={index} post={item} />
+          ))}
+        </ScrollView>
+        <TextInput
+          placeholder="Comment"
+          value={text}
+          onChangeText={onChangeText}
+          className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md mb-24"
+        />
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -75,7 +94,7 @@ export default function HomeStackScreen() {
     <HomeStack.Navigator
       screenOptions={{
         headerTintColor: "#FFB54F",
-        headerTitleStyle: { color: colorScheme === 'dark' ? "white" : "black" },
+        headerTitleStyle: { color: colorScheme === "dark" ? "white" : "black" },
       }}
     >
       <HomeStack.Screen

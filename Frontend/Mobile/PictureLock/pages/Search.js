@@ -4,7 +4,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  useColorScheme
+  useColorScheme,
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React, { useState } from "react";
@@ -60,18 +60,17 @@ const data = [
 ];
 
 function SearchScreen({ navigation }) {
-
   const [search, setSearch] = useState("");
   const updateSearch = (search) => {
     setSearch(search);
   };
   return (
-    <View className="mt-10 p-5 space-y-3">
+    <View className="mt-10 p-3 space-y-3">
       <Text className="dark:text-white font-bold text-3xl">Search</Text>
       <TextInput
         placeholder="Search for friends and films"
         onChangeText={updateSearch}
-        className="bg-black/10 dark:bg-dark-btn/20 p-3 font-bold rounded-md"
+        className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md"
       ></TextInput>
       <ScrollView showsVerticalScrollIndicator={false} className="h-full">
         <View className="flex flex-row flex-wrap">
@@ -99,9 +98,9 @@ function DetailsScreen({ route, navigation }) {
   const { item, index } = route.params;
 
   return (
-    <View className=" flex justify-center items-center p-3 space-y-2">
+    <View className="flex justify-center items-center p-3 space-y-2">
+      <Text className="dark:text-white font-bold text-3xl">{item.movie}</Text>
       <Image source={{ uri: item.movieURL }} className="w-60 h-96 rounded-md" />
-      <Text className="font-bold text-xl dark:text-white">{item.movie}</Text>
     </View>
   );
 }
@@ -112,17 +111,21 @@ export default function SearchStackScreen() {
   const colorScheme = useColorScheme();
   return (
     <SearchStack.Navigator
-    screenOptions={{
-      headerTintColor: "#FFB54F",
-      headerTitleStyle: { color: colorScheme === 'dark' ? "white" : "black" },
-    }}
+      screenOptions={{
+        headerTintColor: "#FFB54F",
+        headerTitleStyle: { color: colorScheme === "dark" ? "white" : "black" },
+      }}
     >
       <SearchStack.Screen
         name="Search"
         component={SearchScreen}
         options={{ headerShown: false }}
       />
-      <SearchStack.Screen name="Details" component={DetailsScreen} />
+      <SearchStack.Screen
+        options={{ headerTitle: "" }}
+        name="Details"
+        component={DetailsScreen}
+      />
     </SearchStack.Navigator>
   );
 }

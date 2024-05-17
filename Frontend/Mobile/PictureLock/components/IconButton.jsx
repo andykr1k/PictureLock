@@ -3,9 +3,11 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { memo } from 'react';
 
 const IconButton = ({ icon, text, size }) => {
-  const colorScheme = useColorScheme();
 
+  const colorScheme = useColorScheme();
+  
   const themeIconStyle = colorScheme === 'light' ? 'gray' : 'white';
+  
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <MaterialIcons name={icon} size={size} color={themeIconStyle} />

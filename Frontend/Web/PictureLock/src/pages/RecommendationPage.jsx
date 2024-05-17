@@ -32,14 +32,14 @@ export default function RecommendationPage() {
 
   const handleRecommendation = async () => {
     try {
-      setRecommendations([])
-      setMovies([])
+      setRecommendations([]);
+      setMovies([]);
       setIsLoading(true);
       const recommendationsData = await Recommend(search, genre);
-      if (recommendationsData !== null){
+      if (recommendationsData !== null) {
         setRecommendations(recommendationsData);
         const movieDetails = await GetMovieDetails(recommendationsData);
-        if (movieDetails !== null){
+        if (movieDetails !== null) {
           setMovies(movieDetails);
         }
       }
@@ -131,7 +131,7 @@ export default function RecommendationPage() {
             />
             <button
               onClick={handleRecommendation}
-              className="bg-red-apple/60 hover:bg-red-apple text-white p-2 text-sm rounded-md z-50"
+              className="bg-red-apple/60 hover:bg-red-apple text-white p-3 text-sm rounded-md z-50"
             >
               Recommend
             </button>
@@ -165,11 +165,10 @@ export default function RecommendationPage() {
             <div className="flex object-center justify-center items-center text-center">
               <div className="space-y-3">
                 <div className="flex justify-center">
-                  <RobotAnimation/>
+                  <RobotAnimation />
                 </div>
                 <h3 className="text-white text-sm">
-                  Oops...we haven't trained on that movie yet. Try
-                  another one!
+                  Oops...we haven't trained on that movie yet. Try another one!
                 </h3>
               </div>
             </div>

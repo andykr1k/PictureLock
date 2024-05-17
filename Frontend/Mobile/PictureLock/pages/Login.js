@@ -18,9 +18,7 @@ export default function LogInScreen() {
   const user = useSelector((state) => state.userState.user);
   const dispatch = useDispatch();
   return (
-    <View
-      className="flex-1 p-5 space-y-5 bg-orange-fruit"
-    >
+    <View className="flex-1 p-3 space-y-5 bg-orange-fruit">
       <View className="flex items-center mt-20">
         <Image
           className="w-40 h-40 justify-center items-center"
@@ -33,7 +31,7 @@ export default function LogInScreen() {
       <View className="space-y-1">
         <Text className="font-bold text-white">Username/Email</Text>
         <TextInput
-          className="flex-1 justify-center items-center bg-red-apple/10 p-5 rounded-md"
+          className="flex-1 justify-center items-center bg-red-apple/10 p-3 rounded-md"
           placeholderTextColor="#003f5c"
           onChangeText={(email) => setEmail(email)}
         />
@@ -41,7 +39,7 @@ export default function LogInScreen() {
       <View className="space-y-1">
         <Text className="font-bold text-white">Password</Text>
         <TextInput
-          className="flex-1 justify-center items-center bg-red-apple/10 p-5 rounded-md"
+          className="flex-1 justify-center items-center bg-red-apple/10 p-3 rounded-md"
           placeholderTextColor="#003f5c"
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
