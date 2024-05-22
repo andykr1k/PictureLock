@@ -9,9 +9,9 @@ import {
   AIStackScreen,
   NotificationStackScreen,
   ProfileStackScreen,
-  LogInScreen
+  LogInScreen,
 } from "./pages";
-import { useColorScheme } from "react-native";
+import { useColorScheme, StatusBar } from "react-native";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import { useSelector } from "react-redux";
@@ -121,6 +121,10 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer theme={theme}>
+      <StatusBar
+          barStyle={colorScheme === 'light' ? 'dark-content' : 'light-content'}
+          backgroundColor={theme.colors.background}
+        />
         <Stack.Navigator
           initialRouteName={"HomeTabs"}
           screenOptions={{ headerShown: false }}

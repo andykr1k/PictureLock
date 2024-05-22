@@ -9,7 +9,7 @@ export default function LandingPage() {
           <h2 className="text-4xl tracking-tight leading-10 font-extrabold text-white sm:text-5xl sm:leading-none md:text-6xl">
             Picturelock
           </h2>
-          <p className="text-md md:text-xl mt-10 text-white">
+          <p className="text-md md:text-xl ios:mt-10 text-white">
             Discover what to watch in an instant. A social platform for all
             cinema and television consumers.
           </p>

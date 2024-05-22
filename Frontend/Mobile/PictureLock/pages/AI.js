@@ -7,52 +7,13 @@ import {
   Text,
   TouchableOpacity,
   Button,
+  TextInput,
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Recommendation } from "../functions/Recommendation";
-
-const data = [
-  {
-    movie: "Friends",
-    movieURL:
-      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/2koX1xLkpTQM4IZebYvKysFW1Nh.jpg",
-  },
-  {
-    movie: "Barbie",
-    movieURL:
-      "https://upload.wikimedia.org/wikipedia/en/0/0b/Barbie_2023_poster.jpg",
-  },
-  {
-    movie: "Game of Thrones",
-    movieURL:
-      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg",
-  },
-  {
-    movie: "How I Met Your Mother",
-    movieURL:
-      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/b34jPzmB0wZy7EjUZoleXOl2RRI.jpg",
-  },
-  {
-    movie: "Elemental",
-    movieURL:
-      "https://www.themoviedb.org/t/p/w440_and_h660_face/8riWcADI1ekEiBguVB9vkilhiQm.jpg",
-  },
-  {
-    movie: "Flash",
-    movieURL:
-      "https://www.themoviedb.org/t/p/w440_and_h660_face/rktDFPbfHfUbArZ6OOOKsXcv0Bm.jpg",
-  },
-  {
-    movie: "Fast X",
-    movieURL:
-      "https://www.themoviedb.org/t/p/w440_and_h660_face/fiVW06jE7z9YnO4trhaMEdclSiC.jpg",
-  },
-  {
-    movie: "Avatar",
-    movieURL:
-      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/kyeqWdyUXW608qlYkRqosgbbJyK.jpg",
-  },
-];
+import Recommend from "../functions/Recommendation";
+import GetMovieDetails from "../functions/GetMovieDetails";
+import titles from "../assets/titles_and_ids.json";
+import { MoviePoster } from "../components";
 
 function AIScreen({ navigation }) {
   const filmtypes = ["TV Show", "Movie"];
@@ -88,6 +49,10 @@ function AIScreen({ navigation }) {
   const [selectedTypeIndex, setSelectedTypeIndex] = useState(0);
   const [selectedGenreIndexes, setSelectedGenreIndexes] = useState([]);
   const [selectedPlatformIndexes, setSelectedPlatformIndexes] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
+  const [search, setSearch] = useState("");
+  const [movies, setMovies] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
 
   const togglePlatformSelection = (index) => {
     setSelectedPlatformIndexes((prevIndexes) => {
@@ -109,153 +74,209 @@ function AIScreen({ navigation }) {
     });
   };
 
-  function recommend() {
-    (async () => {
-      filmtype = filmtypes[selectedTypeIndex].toUpperCase();
-      platforms_string = "";
-      for (i = 0; i < selectedPlatformIndexes.length; i++) {
-        platforms_string += platforms[selectedPlatformIndexes[i]];
-        if (i < selectedPlatformIndexes.length - 1) {
-          platforms_string += "-";
+  const handleRecommendation = async () => {
+    try {
+      genre = "Drama";
+      const recommendationsData = await Recommend(movieName, genre);
+      if (recommendationsData !== null) {
+        await setRecommendations(recommendationsData);
+        const movieDetails = await GetMovieDetails(recommendationsData);
+        if (movieDetails !== null) {
+          await setMovies(movieDetails);
         }
       }
-      console.log("Film Type: " + filmtype);
-      console.log("Film Name: " + movieName);
-      console.log("Platform String: " + platforms_string);
-      const res = await Recommendation(filmtype, movieName, platforms_string);
-      setRecommends(res);
-    })();
-  }
+      await navigation.navigate("Recommendations", { movies, recommendations });
+    } catch (error) {
+      console.error("Error fetching recommendations:", error);
+    }
+  };
+
+  const handleSearchValueChange = (e) => {
+    setSearch(e);
+    const filteredTitles = titles.filter((movie) =>
+      movie.title.toLowerCase().includes(search.toLowerCase())
+    );
+    setSuggestions(filteredTitles.slice(0, 8));
+  };
+
+  const handleMovieNameChange = async (e) => {
+    try {
+      await setRecommendations([]);
+      await setMovies([]);
+      await setMovieName(e);
+    } catch (error) {
+      console.error("Error handling movie name change:", error);
+    }
+  };
 
   return (
-    <View className="mt-10 p-3 space-y-3">
+    <View className="ios:mt-10 p-3 space-y-3">
       <Text className="dark:text-white font-bold text-3xl">The Slate</Text>
-      <View className="space-y-2">
-        <Text h4 className="dark:text-white font-bold text-lg">
-          Film Type
-        </Text>
-        <View className="flex flex-row space-x-2">
-          {filmtypes.map((type, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => setSelectedTypeIndex(index)}
-            >
-              <View
-                className={`p-3 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
-                  selectedTypeIndex === index
-                    ? "border-orange-500"
-                    : "border-transparent"
-                }`}
+      <ScrollView>
+        <View className="space-y-2">
+          <Text h4 className="dark:text-white font-bold text-lg">
+            Film Type
+          </Text>
+          <View className="flex flex-row space-x-2">
+            {filmtypes.map((type, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => setSelectedTypeIndex(index)}
               >
-                <Text className="font-bold dark:text-white">{type}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
-      <View className="space-y-2">
-        <Text h4 className="dark:text-white font-bold text-lg">
-          Streaming Services
-        </Text>
-        <ScrollView
-          className="space-x-2"
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        >
-          {platforms.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => togglePlatformSelection(index)}
-            >
-              <View
-                className={`rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
-                  selectedPlatformIndexes.includes(index)
-                    ? "border-orange-500"
-                    : "border-transparent"
-                }`}
-              >
-                <Image
-                  source={item.image}
-                  className="object-cover w-20 h-10 rounded-xl"
-                ></Image>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
-      <View className="space-y-2">
-        <Text h4 className="dark:text-white font-bold text-lg">
-          Genres
-        </Text>
-        <View className="flex flex-row space-x-2">
-          {genres.map((genre, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => toggleGenreSelection(index)}
-            >
-              <View
-                className={`p-3 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
-                  selectedGenreIndexes.includes(index)
-                    ? "border-orange-500"
-                    : "border-transparent"
-                }`}
-              >
-                <Text className="font-bold dark:text-white">{genre}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
-      <View className="space-y-2">
-        <Text h4 className="dark:text-white font-bold text-lg">
-          Movie
-        </Text>
-        <View className="flex flex-row flex-wrap">
-          {data.map((item, index) => {
-            return (
-              <TouchableOpacity className="w-1/4 p-1" key={index}>
-                <Image
-                  source={{ uri: item.movieURL }}
-                  className="w-full h-40 rounded-md"
-                />
+                <View
+                  className={`p-3 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
+                    selectedTypeIndex === index
+                      ? "border-orange-500"
+                      : "border-transparent"
+                  }`}
+                >
+                  <Text className="font-bold dark:text-white">{type}</Text>
+                </View>
               </TouchableOpacity>
-            );
-          })}
+            ))}
+          </View>
         </View>
-      </View>
-      <TouchableOpacity
-        className="bg-black/10 dark:bg-white/10 p-3 rounded-2xl"
-        onPress={() => recommend()}
-      >
-        <Text className="font-bold text-center dark:text-white">Recommend</Text>
-      </TouchableOpacity>
-      {recommends != null && (
-        <View>
-          <Text>Recommendations</Text>
-          {recommends.map((item, index) => (
-            <Text key={item}>
-              {index + 1}. {item}
-            </Text>
-          ))}
+        <View className="space-y-2">
+          <Text h4 className="dark:text-white font-bold text-lg">
+            Streaming Services
+          </Text>
+          <ScrollView
+            className="space-x-2"
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          >
+            {platforms.map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => togglePlatformSelection(index)}
+              >
+                <View
+                  className={`rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
+                    selectedPlatformIndexes.includes(index)
+                      ? "border-orange-500"
+                      : "border-transparent"
+                  }`}
+                >
+                  <Image
+                    source={item.image}
+                    className="object-cover w-20 h-10 rounded-xl"
+                  ></Image>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
-      )}
+        <View className="space-y-2">
+          <Text h4 className="dark:text-white font-bold text-lg">
+            Genres
+          </Text>
+          <View className="flex flex-row space-x-2">
+            {genres.map((genre, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => toggleGenreSelection(index)}
+              >
+                <View
+                  className={`p-3 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
+                    selectedGenreIndexes.includes(index)
+                      ? "border-orange-500"
+                      : "border-transparent"
+                  }`}
+                >
+                  <Text className="font-bold dark:text-white">{genre}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+        <View className="space-y-2">
+          <Text h4 className="dark:text-white font-bold text-lg">
+            Film
+          </Text>
+          <TextInput
+            placeholder="Search for films"
+            className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
+            onChangeText={handleSearchValueChange}
+          ></TextInput>
+          <View className="flex flex-row flex-wrap">
+            {(suggestions !== null) & (search.length > 3)
+              ? suggestions.map((item, index) => (
+                  <TouchableOpacity
+                    className="w-1/4 p-1"
+                    key={index}
+                    onPress={() => handleMovieNameChange(item.title)}
+                  >
+                    <View
+                      className={`border-2 rounded-md ${
+                        movieName === item.title
+                          ? "border-orange-500"
+                          : "border-transparent"
+                      }`}
+                    >
+                      <MoviePoster item={item} />
+                    </View>
+                  </TouchableOpacity>
+                ))
+              : titles.slice(0, 8).map((movie, index) => (
+                  <TouchableOpacity
+                    className="w-1/4 p-1"
+                    key={index}
+                    onPress={() => handleMovieNameChange(movie.title)}
+                  >
+                    <View
+                      className={`border-2 rounded-md ${
+                        movieName === movie.title
+                          ? "border-orange-500"
+                          : "border-transparent"
+                      }`}
+                    >
+                      <MoviePoster item={movie} />
+                    </View>
+                  </TouchableOpacity>
+                ))}
+          </View>
+        </View>
+        <TouchableOpacity
+          className=" bg-black/10 dark:bg-white/10 p-3 rounded-2xl mb-20"
+          onPress={handleRecommendation}
+        >
+          <Text className="font-bold text-center dark:text-white">
+            Recommend
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }
 
-function DetailsScreen() {
+function DetailsScreen({ route, navigation }) {
+  const { movies, recommendations } = route.params;
+
   return (
-    <View>
-      {recommends != null && (
-        <View>
-          <Text>Recommendations</Text>
-          {recommends.map((item, index) => (
-            <Text h5 key={item}>
-              {index + 1}. {item}
+    <View className="p-2 ios:mt-10">
+      <Text className="dark:text-white font-bold text-3xl mb-2">
+        Recommendations
+      </Text>
+      <View>
+        {movies && movies.length !== 0 ? (
+          <View className="flex flex-row flex-wrap">
+            {movies.map((item, index) => (
+              <View className="w-1/4 p-1" key={index}>
+                <Image
+                  source={{ uri: item }}
+                  className="w-full h-40 rounded-md"
+                />
+              </View>
+            ))}
+          </View>
+        ) : (
+          <View>
+            <Text className="text-white text-sm">
+              Oops...we haven't trained on that movie yet. Try another one!
             </Text>
-          ))}
-        </View>
-      )}
+          </View>
+        )}
+      </View>
     </View>
   );
 }
@@ -271,7 +292,7 @@ export default function AIStackScreen() {
         options={{ headerShown: false }}
       />
       <AIStack.Screen
-        name="Details"
+        name="Recommendations"
         component={DetailsScreen}
         options={{ headerShown: false }}
       />

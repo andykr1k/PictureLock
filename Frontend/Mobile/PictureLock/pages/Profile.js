@@ -65,7 +65,7 @@ function ProfileScreen({ navigation }) {
   const dispatch = useDispatch();
 
   return (
-    <View className="p-2 mt-10">
+    <View className="p-2 ios:mt-10">
       <View className="flex flex-row items-center justify-between ">
         <Text className="dark:text-white font-bold text-3xl mb-2">@akrik</Text>
         <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
@@ -161,7 +161,7 @@ export default function ProfileStackScreen({ navigation }) {
     <ProfileStack.Navigator
       screenOptions={{
         headerTintColor: "#FFB54F",
-        headerTitleStyle: { color: colorScheme === 'dark' ? "white" : "black" },
+        headerTitleStyle: { color: colorScheme === "dark" ? "white" : "black" },
       }}
     >
       <ProfileStack.Screen

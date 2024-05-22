@@ -8,86 +8,58 @@ import {
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React, { useState } from "react";
-import { SearchBar } from "@rneui/themed";
 import { ScrollView } from "react-native-gesture-handler";
-
-const data = [
-  {
-    movie: "Friends",
-    movieURL:
-      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/2koX1xLkpTQM4IZebYvKysFW1Nh.jpg",
-  },
-  {
-    movie: "Barbie",
-    movieURL:
-      "https://upload.wikimedia.org/wikipedia/en/0/0b/Barbie_2023_poster.jpg",
-  },
-  {
-    movie: "Game of Thrones",
-    movieURL:
-      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg",
-  },
-  {
-    movie: "How I Met Your Mother",
-    movieURL:
-      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/b34jPzmB0wZy7EjUZoleXOl2RRI.jpg",
-  },
-  {
-    movie: "Elemental",
-    movieURL:
-      "https://www.themoviedb.org/t/p/w440_and_h660_face/8riWcADI1ekEiBguVB9vkilhiQm.jpg",
-  },
-  {
-    movie: "Flash",
-    movieURL:
-      "https://www.themoviedb.org/t/p/w440_and_h660_face/rktDFPbfHfUbArZ6OOOKsXcv0Bm.jpg",
-  },
-  {
-    movie: "Fast X",
-    movieURL:
-      "https://www.themoviedb.org/t/p/w440_and_h660_face/fiVW06jE7z9YnO4trhaMEdclSiC.jpg",
-  },
-  {
-    movie: "Avatar",
-    movieURL:
-      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/kyeqWdyUXW608qlYkRqosgbbJyK.jpg",
-  },
-  {
-    movie: "Kingdom of the Planet of the Apes",
-    movieURL:
-      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/gKkl37BQuKTanygYQG1pyYgLVgf.jpg",
-  },
-];
+import titles from "../assets/titles_and_ids.json";
+import { MoviePoster } from "../components";
 
 function SearchScreen({ navigation }) {
   const [search, setSearch] = useState("");
-  const updateSearch = (search) => {
-    setSearch(search);
+  const [suggestions, setSuggestions] = useState([]);
+
+  const handleSearchValueChange = (e) => {
+    setSearch(e);
+    const filteredTitles = titles.filter((movie) =>
+      movie.title.toLowerCase().includes(search.toLowerCase())
+    );
+    setSuggestions(filteredTitles.slice(0, 16));
   };
   return (
-    <View className="mt-10 p-3 space-y-3">
+    <View className="ios:mt-10 p-3 space-y-3">
       <Text className="dark:text-white font-bold text-3xl">Search</Text>
       <TextInput
-        placeholder="Search for friends and films"
-        onChangeText={updateSearch}
-        className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md"
+        placeholder="Search for films"
+        onChangeText={handleSearchValueChange}
+        className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
       ></TextInput>
       <ScrollView showsVerticalScrollIndicator={false} className="h-full">
         <View className="flex flex-row flex-wrap">
-          {data.map((item, index) => {
-            return (
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Details", { item, index })}
-                key={index}
-                className="w-1/4 p-1"
-              >
-                <Image
-                  source={{ uri: item.movieURL }}
-                  className="w-full h-48 rounded-md"
-                />
-              </TouchableOpacity>
-            );
-          })}
+          {search.length > 2
+            ? suggestions.map((item, index) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("Details", { item, index })
+                    }
+                    key={index}
+                    className="w-1/4 p-1"
+                  >
+                    <MoviePoster item={item} />
+                  </TouchableOpacity>
+                );
+              })
+            : titles.slice(0,16).map((item, index) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("Details", { item, index })
+                    }
+                    key={index}
+                    className="w-1/4 p-1"
+                  >
+                    <MoviePoster item={item} />
+                  </TouchableOpacity>
+                );
+              })}
         </View>
       </ScrollView>
     </View>
@@ -98,9 +70,9 @@ function DetailsScreen({ route, navigation }) {
   const { item, index } = route.params;
 
   return (
-    <View className="flex justify-center items-center p-3 space-y-2">
-      <Text className="dark:text-white font-bold text-3xl">{item.movie}</Text>
-      <Image source={{ uri: item.movieURL }} className="w-60 h-96 rounded-md" />
+    <View className="ios:mt-10 flex justify-center items-center p-3 space-y-2">
+      <Text className="dark:text-white font-bold text-3xl">{item.title}</Text>
+      {/* <Image source={{ uri: item.movieURL }} className="w-60 h-96 rounded-md" /> */}
     </View>
   );
 }
@@ -122,7 +94,7 @@ export default function SearchStackScreen() {
         options={{ headerShown: false }}
       />
       <SearchStack.Screen
-        options={{ headerTitle: "" }}
+        options={{ headerShown: false }}
         name="Details"
         component={DetailsScreen}
       />

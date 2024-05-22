@@ -28,7 +28,7 @@ function HomeScreen({ navigation }) {
     }, 100);
   }
   return (
-    <View className="mt-10 p-3 space-y-3">
+    <View className="ios:ios:mt-10 p-3 space-y-3">
       <Text className="dark:text-white font-bold text-3xl">Home</Text>
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -68,19 +68,19 @@ function PostDetails({ route, navigation }) {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
-      <View className="p-2 pt-2 h-full">
+      <View className="ios:mt-16 p-2 pt-2 h-full">
         <Post key={index} post={item} />
-        <ScrollView className="">
+        <ScrollView className="h-1/2">
           {comments.map((item, index) => (
             <Comment key={index} post={item} />
           ))}
         </ScrollView>
-        <TextInput
+        {/* <TextInput
           placeholder="Comment"
           value={text}
           onChangeText={onChangeText}
-          className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md mb-24"
-        />
+          className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md"
+        /> */}
       </View>
     </KeyboardAvoidingView>
   );
@@ -102,7 +102,11 @@ export default function HomeStackScreen() {
         component={HomeScreen}
         options={{ headerShown: false }}
       />
-      <HomeStack.Screen name="Details" component={PostDetails} />
+      <HomeStack.Screen
+        name="Details"
+        component={PostDetails}
+        options={{ headerShown: false }}
+      />
     </HomeStack.Navigator>
   );
 }

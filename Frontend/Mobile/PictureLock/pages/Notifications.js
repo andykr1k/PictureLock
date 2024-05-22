@@ -72,7 +72,7 @@ const data = [
 
 function NotificationsScreen({ navigation }) {
   return (
-    <View className="mt-10 p-3 space-y-3">
+    <View className="ios:mt-10 p-3 space-y-3">
       <Text className="dark:text-white font-bold text-3xl">Notifications</Text>
       <ScrollView showsVerticalScrollIndicator={false} className="h-full">
         {data.map((item, index) => {

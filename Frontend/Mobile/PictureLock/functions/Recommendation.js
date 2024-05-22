@@ -1,10 +1,15 @@
-import axios from 'axios';
+export default async function Recommend(title, genre) {
+    const url = "https://api.picturelock.app:8080/recommend/";
 
-export async function Recommendation(film_type, movie, platforms) {
-    const base = 'http://ec2-3-145-200-102.us-east-2.compute.amazonaws.com:8080/recommend/'
-    const url = base + film_type +'/' + movie + '/' + platforms
-    var r = await axios.get(url)
-        .catch(error=>console.log(error))
-        .then(function (response) {return response.data.recommendations;})
-    return r;
-}
+    try {
+      const response = await fetch(url + title + '?genre=' + genre);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+      return null;
+    }
+  }
