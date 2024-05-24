@@ -5,18 +5,59 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  useColorScheme,
   Image,
+  Alert,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../redux/slices/loginSlice";
+import { supabase } from "../lib/supabase";
+import SwitchSelector from "react-native-switch-selector";
+
+const switchoptions = [
+  { label: "Log in", value: true },
+  { label: "Sign up", value: false },
+];
 
 export default function LogInScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [login, setLogin] = useState(true);
 
-  const user = useSelector((state) => state.userState.user);
-  const dispatch = useDispatch();
+  async function signInWithEmail() {
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
+    if (error) Alert.alert(error.message);
+  }
+
+  async function signUpWithEmail() {
+    if (password === confirm) {
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+      });
+      if (error) {
+        Alert.alert(error.message);
+      } else {
+        console.log(session.user.id);
+        const { error: insertError } = await supabase.from("Users").insert({
+          unique_id: session.user.id,
+        });
+
+        if (insertError) {
+          Alert.alert(insertError.message);
+        } else {
+          Alert.alert("Please check your inbox for email verification!");
+        }
+      }
+    } else {
+      Alert.alert("Please make sure your passwords match!");
+    }
+  }
+
   return (
     <View className="flex-1 p-3 space-y-5 bg-orange-fruit">
       <View className="flex items-center mt-20">
@@ -28,39 +69,58 @@ export default function LogInScreen() {
         />
         <Text className="font-bold text-xl text-white">Picturelock</Text>
       </View>
+      <SwitchSelector
+        buttonColor="orange"
+        selectedColor="white"
+        borderColor="blue"
+        textColor="black"
+        fontSize={16}
+        options={switchoptions}
+        initial={0}
+        onPress={setLogin}
+      />
       <View className="space-y-1">
-        <Text className="font-bold text-white">Username/Email</Text>
+        <Text className="font-bold text-white">Email</Text>
         <TextInput
-          className="flex-1 justify-center items-center bg-red-apple/10 p-3 rounded-md"
-          placeholderTextColor="#003f5c"
-          onChangeText={(email) => setEmail(email)}
+          className="flex-1 justify-center items-center bg-red-apple/10 p-5 rounded-md text-white"
+          onChangeText={setEmail}
+          placeholder="Enter your email"
+          placeholderTextColor="rgba(255, 255, 255, 0.6)"
         />
       </View>
       <View className="space-y-1">
         <Text className="font-bold text-white">Password</Text>
         <TextInput
-          className="flex-1 justify-center items-center bg-red-apple/10 p-3 rounded-md"
-          placeholderTextColor="#003f5c"
+          className="flex-1 justify-center items-center bg-red-apple/10 p-5 rounded-md dark:text-white"
           secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        />
+          onChangeText={setPassword}
+          placeholder="Enter your password"
+          placeholderTextColor="rgba(255, 255, 255, 0.6)"
+        ></TextInput>
       </View>
-      <TouchableOpacity
-        onPress={() =>
-          dispatch(
-            setUser({
-              name: "Andrew Krikorian",
-              email: "akrikorian12@gmail.com",
-              password: password,
-              image: "https://randomuser.me/api/portraits/men/47.jpg",
-            })
-          )
-        }
-      >
-        <View className=" justify-center items-center bg-red-apple/10 rounded-md p-3">
-          <Text className="font-bold text-white text-lg">Login</Text>
+      {!login && (
+        <View className="space-y-1">
+          <Text className="font-bold text-white">Confirm Password</Text>
+          <TextInput
+            className="flex-1 justify-center items-center bg-red-apple/10 p-5 rounded-md dark:text-white"
+            secureTextEntry={true}
+            onChangeText={setConfirm}
+            placeholder="Enter your password"
+            placeholderTextColor="rgba(255, 255, 255, 0.6)"
+          ></TextInput>
         </View>
-      </TouchableOpacity>
+      )}
+      <View className=" justify-center items-center bg-red-apple/10 rounded-md p-3">
+        {!login ? (
+          <TouchableOpacity onPress={signUpWithEmail}>
+            <Text className="font-bold text-white text-lg">Sign up</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={signInWithEmail}>
+            <Text className="font-bold text-white text-lg">Log in</Text>
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 }

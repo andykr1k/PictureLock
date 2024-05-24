@@ -1,4 +1,5 @@
 import * as React from "react";
+import "react-native-url-polyfill/auto";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -12,9 +13,7 @@ import {
   LogInScreen,
 } from "./pages";
 import { useColorScheme, StatusBar } from "react-native";
-import { Provider } from "react-redux";
-import { store } from "./redux/store";
-import { useSelector } from "react-redux";
+import { UserProvider, useUser } from "./lib/UserContext";
 
 const DarkTheme = {
   dark: true,
@@ -41,74 +40,72 @@ const LightTheme = {
 };
 
 function HomeTabs() {
+  const data = useUser();
+
   const Tab = createBottomTabNavigator();
 
   const colorScheme = useColorScheme();
 
-  const status = useSelector((state) => state.userState.status);
+  if (!data.session) {
+    return <LogInScreen />;
+  }
 
   return (
-    <>
-      {status === false ? (
-        <LogInScreen />
-      ) : (
-        <Tab.Navigator
-          initialRouteName={"home"}
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ color, size }) => {
-              let iconName;
-              iconName = route.name;
+    <Tab.Navigator
+      initialRouteName={"home"}
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          let iconName;
+          iconName = route.name;
 
-              if (iconName === "ai") {
-                iconName = "film";
-              } else if (iconName === "notifications") {
-                iconName = "bell";
-              } else if (iconName === "profile") {
-                iconName = "user";
-              }
-              return <Feathericons name={iconName} size={size} color={color} />;
-            },
-            tabBarActiveTintColor: "#FFB54F",
-            tabBarInactiveTintColor: "gray",
-            tabBarLabelStyle: {
-              display: "none",
-            },
-            tabBarStyle: {
-              backgroundColor: "#FFFFFF00",
-              borderTopWidth: 0,
-              position: "absolute",
-              elevation: 0,
-            },
-          })}
-        >
-          <Tab.Screen
-            name="home"
-            component={HomeStackScreen}
-            options={{ headerShown: false }}
-          />
-          <Tab.Screen
-            name="search"
-            component={SearchStackScreen}
-            options={{ headerShown: false }}
-          />
-          <Tab.Screen
-            name="ai"
-            component={AIStackScreen}
-            options={{ headerShown: false }}
-          />
-          <Tab.Screen
-            name="notifications"
-            component={NotificationStackScreen}
-            options={{ headerShown: false }}
-          />
-          <Tab.Screen
-            name="profile"
-            component={ProfileStackScreen}
-            options={{ headerShown: false }}
-          />
-        </Tab.Navigator>
-      )}
-    </>
+          if (iconName === "ai") {
+            iconName = "film";
+          } else if (iconName === "notifications") {
+            iconName = "bell";
+          } else if (iconName === "profile") {
+            iconName = "user";
+          }
+          return <Feathericons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: "#FFB54F",
+        tabBarInactiveTintColor: "gray",
+        tabBarLabelStyle: {
+          display: "none",
+        },
+        tabBarStyle: {
+          backgroundColor: "#FFFFFF00",
+          borderTopWidth: 0,
+          position: "absolute",
+          elevation: 0,
+        },
+      })}
+    >
+      <Tab.Screen
+        name="home"
+        component={HomeStackScreen}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="search"
+        component={SearchStackScreen}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="ai"
+        component={AIStackScreen}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="notifications"
+        component={NotificationStackScreen}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="profile"
+        component={ProfileStackScreen}
+        options={{ headerShown: false }}
+      />
+    </Tab.Navigator>
   );
 }
 
@@ -119,10 +116,10 @@ export default function App() {
 
   const theme = colorScheme === "light" ? LightTheme : DarkTheme;
   return (
-    <Provider store={store}>
+    <UserProvider>
       <NavigationContainer theme={theme}>
-      <StatusBar
-          barStyle={colorScheme === 'light' ? 'dark-content' : 'light-content'}
+        <StatusBar
+          barStyle={colorScheme === "light" ? "dark-content" : "light-content"}
           backgroundColor={theme.colors.background}
         />
         <Stack.Navigator
@@ -132,6 +129,6 @@ export default function App() {
           <Stack.Screen name="HomeTabs" component={HomeTabs} />
         </Stack.Navigator>
       </NavigationContainer>
-    </Provider>
+    </UserProvider>
   );
 }
