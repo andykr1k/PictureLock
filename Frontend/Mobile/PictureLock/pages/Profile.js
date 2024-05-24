@@ -12,7 +12,7 @@ import {
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { IconButton } from "../components";
 import { useUser } from "../lib/UserContext";
-import { supabase } from "../lib/supabase";
+import { handleFirstnameUpdate, handleLastnameUpdate, handleLogOut, handleUploadProfilePicture, handleUsernameUpdate, getProfilePictureUrl } from "../lib/supabaseUtils";
 import * as ImagePicker from "expo-image-picker";
 
 function ProfileScreen({ navigation }) {
@@ -117,14 +117,6 @@ function SettingsScreen({ navigation }) {
     fetchProfileImage();
   }, []);
 
-  const getProfilePictureUrl = async (id) => {
-    const { publicURL } = await supabase.storage
-      .from("profile-pictures")
-      .getPublicUrl(id);
-
-    setPic(publicURL);
-  };
-
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -136,73 +128,6 @@ function SettingsScreen({ navigation }) {
       setProfileImage(result.assets[0].uri);
     }
   };
-
-  const handleUploadProfilePicture = async () => {
-    if (profileImage) {
-      const response = await fetch(profileImage);
-      const blob = await response.blob();
-      const file = new File([blob], "profile.jpg", { type: "image/jpeg" });
-
-      const url = await uploadProfilePicture(file);
-      if (url) {
-        console.log("Profile picture uploaded:", url);
-      }
-    }
-  };
-
-  const uploadProfilePicture = async (file) => {
-    const fileName = data.session.user.id;
-  
-    let { error } = await supabase.storage
-      .from("profile-pictures")
-      .upload(fileName, file, {
-        cacheControl: "3600",
-        upsert: true,
-      });
-
-    if (error) {
-      console.error("Error uploading file:", error);
-      return null;
-    }
-  };
-
-  const handleFirstnameUpdate = async () => {
-    const { error } = await supabase
-      .from("Users")
-      .update({ first_name: first })
-      .eq("unique_id", data.session.user.id);
-    if (error) {
-      console.log(error);
-    }
-  };
-
-  const handleLastnameUpdate = async () => {
-    const { error } = await supabase
-      .from("Users")
-      .update({ last_name: last })
-      .eq("unique_id", data.session.user.id);
-    if (error) {
-      console.log(error);
-    }
-  };
-
-  const handleUsernameUpdate = async () => {
-    const { error } = await supabase
-      .from("Users")
-      .update({ username: username })
-      .eq("unique_id", data.session.user.id);
-    if (error) {
-      console.log(error);
-    }
-  };
-
-  const handleLogOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <ScrollView className="p-3 space-y-1">
       <Text className="dark:text-white font-bold text-xl">Profile Picture</Text>
