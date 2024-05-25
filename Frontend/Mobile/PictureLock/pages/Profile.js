@@ -7,7 +7,8 @@ import {
   Image,
   Text,
   TextInput,
-  Button
+  Button,
+  FlatList
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { IconButton } from "../components";
@@ -52,42 +53,6 @@ function ProfileScreen({ navigation }) {
               <Text className="dark:text-white">Following: 10</Text>
             </View>
           </View>
-        </View>
-        <View className="mt-4">
-          <Text className="dark:text-white font-bold text-md">
-            Favorite Movies & Shows
-          </Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <View className="flex flex-row space-x-2">
-              {/* {data.map((item, index) => {
-                return (
-                  <Image
-                    key={index}
-                    source={{ uri: item.movieURL }}
-                    className="w-20 h-32 rounded-md mt-2"
-                  />
-                );
-              })} */}
-            </View>
-          </ScrollView>
-        </View>
-        <View className="mt-4">
-          <Text className="dark:text-white font-bold text-md">
-            Recently Watched Movies & Shows
-          </Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <View className="flex flex-row space-x-2">
-              {/* {data.map((item, index) => {
-                return (
-                  <Image
-                    key={index}
-                    source={{ uri: item.movieURL }}
-                    className="w-20 h-32 rounded-md mt-2"
-                  />
-                );
-              })} */}
-            </View>
-          </ScrollView>
         </View>
         <TouchableOpacity className="w-full bg-black/10 dark:bg-white/10 mt-4 p-4 rounded-md">
           <Text className="font-bold text-center dark:text-white">

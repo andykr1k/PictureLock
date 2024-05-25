@@ -1,7 +1,6 @@
 import {
   Text,
   View,
-  Image,
   TouchableOpacity,
   TextInput,
   useColorScheme,
@@ -11,6 +10,7 @@ import React, { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import titles from "../assets/titles_and_ids.json";
 import { MoviePoster } from "../components";
+import MovieDetails from "../components/MovieDetails";
 
 function SearchScreen({ navigation }) {
   const [search, setSearch] = useState("");
@@ -31,35 +31,32 @@ function SearchScreen({ navigation }) {
         onChangeText={handleSearchValueChange}
         className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
       ></TextInput>
-      <ScrollView showsVerticalScrollIndicator={false} className="h-full">
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View className="flex flex-row flex-wrap">
           {search.length > 2
             ? suggestions.map((item, index) => {
                 return (
                   <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("Details", { item, index })
-                    }
+                    onPress={() => navigation.navigate("Details", { item })}
                     key={index}
-                    className="w-1/4 p-1"
+                    className="w-1/4 h-36 p-1"
                   >
                     <MoviePoster item={item} />
                   </TouchableOpacity>
                 );
               })
-            : titles.slice(0,16).map((item, index) => {
+            : titles.slice(0, 32).map((item, index) => {
                 return (
                   <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("Details", { item, index })
-                    }
+                    onPress={() => navigation.navigate("Details", { item })}
                     key={index}
-                    className="w-1/4 p-1"
+                    className="w-1/4 h-36 p-1"
                   >
                     <MoviePoster item={item} />
                   </TouchableOpacity>
                 );
               })}
+          <View className="p-12"></View>
         </View>
       </ScrollView>
     </View>
@@ -67,13 +64,10 @@ function SearchScreen({ navigation }) {
 }
 
 function DetailsScreen({ route, navigation }) {
-  const { item, index } = route.params;
+  const { item } = route.params;
 
   return (
-    <View className="ios:mt-10 flex justify-center items-center p-3 space-y-2">
-      <Text className="dark:text-white font-bold text-3xl">{item.title}</Text>
-      {/* <Image source={{ uri: item.movieURL }} className="w-60 h-96 rounded-md" /> */}
-    </View>
+    <MovieDetails item={item} navigation={navigation} />
   );
 }
 

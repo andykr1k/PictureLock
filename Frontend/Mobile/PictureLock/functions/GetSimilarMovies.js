@@ -1,8 +1,8 @@
 import { access_key } from "@env";
 
-export default async function GetPoster(movie) {
-  let url =
-    "https://api.themoviedb.org/3/movie/" + movie.id + "?language=en-US";
+export default async function GetSimilarMovies(movie) {
+  let url = "https://api.themoviedb.org/3/movie/" + movie.id + "/similar";
+
   const headers = {
     Authorization: `Bearer ${access_key}`,
     "Content-Type": "application/json",
@@ -14,11 +14,10 @@ export default async function GetPoster(movie) {
       throw new Error("Network response was not ok");
     }
     const data = await response.json();
-    if (data.poster_path) {
-      const posterUrl = `https://image.tmdb.org/t/p/w1280/${data.poster_path}`;
-      return posterUrl;
+    if (data) {
+      return data;
     } else {
-      console.log("No poster found for this movie");
+      console.log("No similar movies found for this movie");
       return null;
     }
   } catch (error) {

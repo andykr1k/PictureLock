@@ -202,7 +202,7 @@ function AIScreen({ navigation }) {
             {(suggestions !== null) & (search.length > 3)
               ? suggestions.map((item, index) => (
                   <TouchableOpacity
-                    className="w-1/4 p-1"
+                    className="w-1/4 h-36 p-1"
                     key={index}
                     onPress={() => handleMovieNameChange(item.title)}
                   >
@@ -219,7 +219,7 @@ function AIScreen({ navigation }) {
                 ))
               : titles.slice(0, 8).map((movie, index) => (
                   <TouchableOpacity
-                    className="w-1/4 p-1"
+                    className="w-1/4 h-36 p-1"
                     key={index}
                     onPress={() => handleMovieNameChange(movie.title)}
                   >

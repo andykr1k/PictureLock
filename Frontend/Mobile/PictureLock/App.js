@@ -44,8 +44,6 @@ function HomeTabs() {
 
   const Tab = createBottomTabNavigator();
 
-  const colorScheme = useColorScheme();
-
   if (!data.session) {
     return <LogInScreen />;
   }

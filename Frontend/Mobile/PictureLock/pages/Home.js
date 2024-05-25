@@ -3,7 +3,6 @@ import {
   View,
   Text,
   useColorScheme,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
@@ -52,6 +51,7 @@ function HomeScreen({ navigation }) {
             </TouchableOpacity>
           );
         })}
+        <View className="p-12"></View>
       </ScrollView>
     </View>
   );
