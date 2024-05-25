@@ -20,7 +20,7 @@ function ProfileScreen({ navigation }) {
 
   return (
     <View className="p-2 ios:mt-10">
-      <View className="flex flex-row items-center justify-between ">
+      <View className="flex flex-row items-center justify-between">
         <Text className="dark:text-white font-bold text-3xl mb-2">
           {user.username}
         </Text>
@@ -100,105 +100,120 @@ function ProfileScreen({ navigation }) {
 }
 
 function SettingsScreen({ navigation }) {
-  const data = useUser();
+  const { session, user, pic, refreshUserData } = useUser();
 
-  const [first, setFirst] = useState(data.user.first_name);
-  const [last, setLast] = useState(data.user.last_name);
-  const [username, setUsername] = useState(data.user.username);
+  const [first, setFirst] = useState(user.first_name);
+  const [last, setLast] = useState(user.last_name);
+  const [username, setUsername] = useState(user.username);
   const [profileImage, setProfileImage] = useState(null);
-  const [currentProfileImage, setCurrentProfileImage] = useState(null);
-
-  useEffect(() => {
-    const fetchProfileImage = async () => {
-      const url = await getProfilePictureUrl(data.session.user.id);
-      setCurrentProfileImage(url);
-    };
-
-    fetchProfileImage();
-  }, []);
+  const [currentProfileImage, setCurrentProfileImage] = useState(pic);
+  const [profileImageBytes, setProfileImageBytes] = useState(null);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0.8,
+      base64: true
     });
     if (!result.canceled) {
       setProfileImage(result.assets[0].uri);
+      setProfileImageBytes(result.assets[0].base64);
     }
   };
+
   return (
-    <ScrollView className="p-3 space-y-1">
-      <Text className="dark:text-white font-bold text-xl">Profile Picture</Text>
-      <View className="flex flex-row w-full justify-between mb-4">
-        {currentProfileImage && (
-          <Image
-            source={{ uri: currentProfileImage }}
-            style={{ width: 100, height: 100, borderRadius: 50 }}
-          />
-        )}
-        <Button title="Change Picture" onPress={pickImage} />
-        {profileImage && (
+    <View className="p-3 space-y-1 mt-12">
+      <Text className="dark:text-white font-bold text-3xl">Settings</Text>
+      <ScrollView>
+        <View className="flex w-full justify-center items-center mb-4">
+          {currentProfileImage && !profileImage ? (
+            <Image
+              source={{ uri: currentProfileImage }}
+              style={{ width: 100, height: 100, borderRadius: 50 }}
+            />
+          ) : (
+            <Image
+              source={{ uri: profileImage }}
+              style={{ width: 100, height: 100, borderRadius: 50 }}
+            />
+          )}
+          <Button title="Change Picture" onPress={pickImage} />
+          {profileImage && (
+            <TouchableOpacity
+              className="w-1/4 bg-black/10 dark:bg-white/10 p-4 rounded-md"
+              onPress={() =>
+                handleUploadProfilePicture(
+                  profileImage,
+                  profileImageBytes,
+                  session.user.id,
+                  refreshUserData
+                )
+              }
+            >
+              <Text className="font-bold text-center dark:text-white">
+                Upload
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+        <Text className="dark:text-white font-bold text-xl">Username</Text>
+        <View className="flex flex-row w-full justify-between">
+          <TextInput
+            value={username}
+            onChangeText={setUsername}
+            className="w-4/6 bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
+          ></TextInput>
           <TouchableOpacity
             className="w-1/4 bg-black/10 dark:bg-white/10 p-4 rounded-md"
-            onPress={handleUploadProfilePicture}
+            onPress={() =>
+              handleUsernameUpdate(username, session.user.id, refreshUserData)
+            }
           >
-            <Text className="font-bold text-center dark:text-white">
-              Upload
-            </Text>
+            <Text className="font-bold text-center dark:text-white">Save</Text>
           </TouchableOpacity>
-        )}
-      </View>
-      <Text className="dark:text-white font-bold text-xl">Username</Text>
-      <View className="flex flex-row w-full justify-between">
-        <TextInput
-          value={username}
-          onChangeText={setUsername}
-          className="w-4/6 bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
-        ></TextInput>
+        </View>
+        <Text className="dark:text-white font-bold text-xl">First Name</Text>
+        <View className="flex flex-row w-full justify-between">
+          <TextInput
+            value={first}
+            onChangeText={setFirst}
+            className="w-4/6 bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
+          ></TextInput>
+          <TouchableOpacity
+            className="w-1/4 bg-black/10 dark:bg-white/10 p-4 rounded-md"
+            onPress={() =>
+              handleFirstnameUpdate(first, session.user.id, refreshUserData)
+            }
+          >
+            <Text className="font-bold text-center dark:text-white">Save</Text>
+          </TouchableOpacity>
+        </View>
+        <Text className="dark:text-white font-bold text-xl">Last Name</Text>
+        <View className="flex flex-row w-full justify-between mb-4">
+          <TextInput
+            value={last}
+            onChangeText={setLast}
+            className="w-4/6 bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
+          ></TextInput>
+          <TouchableOpacity
+            className="w-1/4 bg-black/10 dark:bg-white/10 p-4 rounded-md"
+            onPress={() =>
+              handleLastnameUpdate(last, session.user.id, refreshUserData)
+            }
+          >
+            <Text className="font-bold text-center dark:text-white">Save</Text>
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity
-          className="w-1/4 bg-black/10 dark:bg-white/10 p-4 rounded-md"
-          onPress={handleUsernameUpdate}
+          className="w-full bg-black/10 dark:bg-white/10 p-4 rounded-md"
+          onPress={handleLogOut}
         >
-          <Text className="font-bold text-center dark:text-white">Save</Text>
+          <Text className="font-bold text-center dark:text-white">Logout</Text>
         </TouchableOpacity>
-      </View>
-      <Text className="dark:text-white font-bold text-xl">First Name</Text>
-      <View className="flex flex-row w-full justify-between">
-        <TextInput
-          value={first}
-          onChangeText={setFirst}
-          className="w-4/6 bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
-        ></TextInput>
-        <TouchableOpacity
-          className="w-1/4 bg-black/10 dark:bg-white/10 p-4 rounded-md"
-          onPress={handleFirstnameUpdate}
-        >
-          <Text className="font-bold text-center dark:text-white">Save</Text>
-        </TouchableOpacity>
-      </View>
-      <Text className="dark:text-white font-bold text-xl">Last Name</Text>
-      <View className="flex flex-row w-full justify-between mb-4">
-        <TextInput
-          value={last}
-          onChangeText={setLast}
-          className="w-4/6 bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
-        ></TextInput>
-        <TouchableOpacity
-          className="w-1/4 bg-black/10 dark:bg-white/10 p-4 rounded-md"
-          onPress={handleLastnameUpdate}
-        >
-          <Text className="font-bold text-center dark:text-white">Save</Text>
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity
-        className="w-full bg-black/10 dark:bg-white/10 p-4 rounded-md"
-        onPress={handleLogOut}
-      >
-        <Text className="font-bold text-center dark:text-white">Logout</Text>
-      </TouchableOpacity>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -219,8 +234,11 @@ export default function ProfileStackScreen({ navigation }) {
         component={ProfileScreen}
         options={{ headerShown: false }}
       />
-      <ProfileStack.Screen name="Settings" component={SettingsScreen} />
-      {/* <ProfileStack.Screen name="Notifications" component={NotificationStackScreen} options={{headerShown: false}}/> */}
+      <ProfileStack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{ headerShown: false }}
+      />
     </ProfileStack.Navigator>
   );
 }

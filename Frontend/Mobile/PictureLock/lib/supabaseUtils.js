@@ -1,122 +1,115 @@
 import { supabase } from "./supabase";
-import { useUser } from "./UserContext";
+import { Alert } from "react-native";
+import { decode } from "base64-arraybuffer";
 
-export async function signInWithEmail(email, password) {
-  const { error } = await supabase.auth.signInWithPassword({
-    email: email,
-    password: password,
-  });
-  if (error) Alert.alert(error.message);
-}
-
-export async function signUpWithEmail(email, password) {
-  const { session } = useUser();
-
-  if (password === confirm) {
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    });
-    if (error) {
-      Alert.alert(error.message);
-    } else {
-      console.log(session.user.id);
-      const { error: insertError } = await supabase.from("Users").insert({
-        unique_id: session.user.id,
-      });
-
-      if (insertError) {
-        Alert.alert(insertError.message);
-      } else {
-        Alert.alert("Please check your inbox for email verification!");
-      }
-    }
-  } else {
-    Alert.alert("Please make sure your passwords match!");
-  }
-}
-
-export const getProfilePictureUrl = async () => {
-  const { session } = useUser();
-
-  const { publicURL } = await supabase.storage
+export async function getProfilePictureUrl(id) {
+  const { data, error } = await supabase.storage
     .from("profile-pictures")
-    .getPublicUrl(session.user.id);
-
-  setPic(publicURL);
-};
-
-export const handleUploadProfilePicture = async () => {
-  if (profileImage) {
-    const response = await fetch(profileImage);
-    const blob = await response.blob();
-    const file = new File([blob], "profile.jpg", { type: "image/jpeg" });
-
-    const url = await uploadProfilePicture(file);
-    if (url) {
-      console.log("Profile picture uploaded:", url);
-    }
-  }
-};
-
-export const uploadProfilePicture = async (file) => {
-  const { session } = useUser();
-
-  let { error } = await supabase.storage
-    .from("profile-pictures")
-    .upload(session.user.id, file, {
-      cacheControl: "3600",
-      upsert: true,
-    });
+    .getPublicUrl(id);
 
   if (error) {
-    console.error("Error uploading file:", error);
-    return null;
+    console.error("Error fetching profile picture:", error);
   }
-};
 
-export const handleFirstnameUpdate = async (first) => {
-  const { session } = useUser();
+  if (data.length === 0) {
+    console.error("Error fetching profile picture.");
+  }
 
+  return data.publicUrl;
+}
+
+export async function handleUploadProfilePicture(
+  profileImage,
+  profileImageBytes,
+  id,
+  refreshUserData
+) {
+  try {
+    if (profileImage) {
+      const response = await fetch(profileImage);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+
+      if (blob.size === 0) {
+        throw new Error("Fetched blob is empty.");
+      }
+
+      const fileType = blob.type;
+
+      let { error } = await supabase.storage
+        .from("profile-pictures")
+        .upload(id, decode(profileImageBytes), {
+          cacheControl: "60",
+          upsert: true,
+          contentType: fileType,
+        });
+
+      if (error) {
+        console.error("Error uploading file:", error);
+      } else {
+        Alert.alert("Profile picture updated.");
+        refreshUserData();
+      }
+    } else {
+      console.error("No profile image provided.");
+    }
+  } catch (error) {
+    console.error("Error in handleUploadProfilePicture:", error);
+  }
+}
+
+
+export async function handleFirstnameUpdate(first, id, refreshUserData) {
   const { error } = await supabase
     .from("Users")
     .update({ first_name: first })
-    .eq("unique_id", session.user.id);
+    .eq("unique_id", id);
+
   if (error) {
     console.log(error);
+  } else {
+    Alert.alert("First name updated.");
+    refreshUserData();
   }
-};
+}
 
-export const handleLastnameUpdate = async (last) => {
-  const { session } = useUser();
-
+export async function handleLastnameUpdate(last, id, refreshUserData) {
   const { error } = await supabase
     .from("Users")
     .update({ last_name: last })
-    .eq("unique_id", session.user.id);
+    .eq("unique_id", id);
   if (error) {
     console.log(error);
+  } else {
+    Alert.alert("Last name updated.");
+    refreshUserData();
   }
-};
+}
 
-export const handleUsernameUpdate = async (username) => {
-  const { session } = useUser();
-
+export async function handleUsernameUpdate(username, id, refreshUserData) {
   const { error } = await supabase
     .from("Users")
     .update({ username: username })
-    .eq("unique_id", session.user.id);
+    .eq("unique_id", id);
+
   if (error) {
     console.log(error);
+  } else {
+    Alert.alert("Username updated.");
+    refreshUserData();
   }
-};
+}
 
-export const handleLogOut = async () => {
+export async function handleLogOut() {
   const { error } = await supabase.auth.signOut();
   if (error) {
     console.log(error);
+  } else {
+    Alert.alert("Logged out.");
+    refreshUserData();
   }
-};
+}
