@@ -21,7 +21,7 @@ function SearchScreen({ navigation }) {
     const filteredTitles = titles.filter((movie) =>
       movie.title.toLowerCase().includes(search.toLowerCase())
     );
-    setSuggestions(filteredTitles.slice(0, 16));
+    setSuggestions(filteredTitles.slice(0, 8));
   };
   return (
     <View className="ios:mt-10 p-3 space-y-3">
@@ -45,7 +45,7 @@ function SearchScreen({ navigation }) {
                   </TouchableOpacity>
                 );
               })
-            : titles.slice(0, 32).map((item, index) => {
+            : titles.slice(0, 20).map((item, index) => {
                 return (
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Details", { item })}

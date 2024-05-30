@@ -13,7 +13,7 @@ import {
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { IconButton } from "../components";
 import { useUser } from "../lib/UserContext";
-import { handleFirstnameUpdate, handleLastnameUpdate, handleLogOut, handleUploadProfilePicture, handleUsernameUpdate, getProfilePictureUrl } from "../lib/supabaseUtils";
+import { handleFirstnameUpdate, handleLastnameUpdate, handleLogOut, handleUploadProfilePicture, handleUsernameUpdate, getProfilePictureUrl, handleNameUpdate } from "../lib/supabaseUtils";
 import * as ImagePicker from "expo-image-picker";
 
 function ProfileScreen({ navigation }) {
@@ -40,7 +40,7 @@ function ProfileScreen({ navigation }) {
           <View className="space-y-1">
             <View className="flex flex-row space-x-1 justify-center">
               <Text className="dark:text-white font-bold text-lg">
-                {user.first_name + " " + user.last_name}
+                {user.full_name}
               </Text>
             </View>
             <View className="flex flex-row space-x-1 justify-center">
@@ -67,8 +67,7 @@ function ProfileScreen({ navigation }) {
 function SettingsScreen({ navigation }) {
   const { session, user, pic, refreshUserData } = useUser();
 
-  const [first, setFirst] = useState(user.first_name);
-  const [last, setLast] = useState(user.last_name);
+  const [name, setName] = useState(user.full_name);
   const [username, setUsername] = useState(user.username);
   const [profileImage, setProfileImage] = useState(null);
   const [currentProfileImage, setCurrentProfileImage] = useState(pic);
@@ -139,40 +138,24 @@ function SettingsScreen({ navigation }) {
             <Text className="font-bold text-center dark:text-white">Save</Text>
           </TouchableOpacity>
         </View>
-        <Text className="dark:text-white font-bold text-xl">First Name</Text>
+        <Text className="dark:text-white font-bold text-xl">Full Name</Text>
         <View className="flex flex-row w-full justify-between">
           <TextInput
-            value={first}
-            onChangeText={setFirst}
+            value={name}
+            onChangeText={setName}
             className="w-4/6 bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
           ></TextInput>
           <TouchableOpacity
             className="w-1/4 bg-black/10 dark:bg-white/10 p-4 rounded-md"
             onPress={() =>
-              handleFirstnameUpdate(first, session.user.id, refreshUserData)
-            }
-          >
-            <Text className="font-bold text-center dark:text-white">Save</Text>
-          </TouchableOpacity>
-        </View>
-        <Text className="dark:text-white font-bold text-xl">Last Name</Text>
-        <View className="flex flex-row w-full justify-between mb-4">
-          <TextInput
-            value={last}
-            onChangeText={setLast}
-            className="w-4/6 bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
-          ></TextInput>
-          <TouchableOpacity
-            className="w-1/4 bg-black/10 dark:bg-white/10 p-4 rounded-md"
-            onPress={() =>
-              handleLastnameUpdate(last, session.user.id, refreshUserData)
+              handleNameUpdate(name, session.user.id, refreshUserData)
             }
           >
             <Text className="font-bold text-center dark:text-white">Save</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity
-          className="w-full bg-black/10 dark:bg-white/10 p-4 rounded-md"
+          className="w-full bg-black/10 dark:bg-white/10 p-4 rounded-md mt-2"
           onPress={handleLogOut}
         >
           <Text className="font-bold text-center dark:text-white">Logout</Text>

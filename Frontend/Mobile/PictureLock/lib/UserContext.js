@@ -6,19 +6,20 @@ import React, {
   useCallback,
 } from "react";
 import { supabase } from "./supabase";
-import { getProfilePictureUrl } from "./supabaseUtils";
+import { getProfilePictureUrl, fetchPosts } from "./supabaseUtils";
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [session, setSession] = useState(null);
   const [user, setUser] = useState(null);
   const [pic, setPic] = useState(null);
+  const [posts, setPosts] = useState([]);
 
   const fetchUserData = useCallback(async (userId) => {
     const { data, error } = await supabase
-      .from("Users")
+      .from("profiles")
       .select("*")
-      .eq("unique_id", userId)
+      .eq("id", userId)
       .single();
 
     if (error) {
@@ -26,6 +27,7 @@ export const UserProvider = ({ children }) => {
     } else {
       setUser(data);
       setPic(await getProfilePictureUrl(userId));
+      setPosts(await fetchPosts())
     }
   }, []);
 
@@ -52,7 +54,7 @@ export const UserProvider = ({ children }) => {
   }, [session, fetchUserData]);
 
   return (
-    <UserContext.Provider value={{ session, user, pic, refreshUserData }}>
+    <UserContext.Provider value={{ session, user, pic, refreshUserData, posts }}>
       {children}
     </UserContext.Provider>
   );

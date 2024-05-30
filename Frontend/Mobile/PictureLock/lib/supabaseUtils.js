@@ -18,6 +18,24 @@ export async function getProfilePictureUrl(id) {
   return data.publicUrl;
 }
 
+export async function getUsername(id) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("username")
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error fetching profile username:", error);
+  }
+
+  if (data.length === 0) {
+    console.error("Error fetching profile username.");
+  }
+
+  return data[0].username;
+}
+
+
 export async function handleUploadProfilePicture(
   profileImage,
   profileImageBytes,
@@ -63,38 +81,25 @@ export async function handleUploadProfilePicture(
 }
 
 
-export async function handleFirstnameUpdate(first, id, refreshUserData) {
+export async function handleNameUpdate(name, id, refreshUserData) {
   const { error } = await supabase
-    .from("Users")
-    .update({ first_name: first })
-    .eq("unique_id", id);
+    .from("profiles")
+    .update({ full_name: name })
+    .eq("id", id);
 
   if (error) {
     console.log(error);
   } else {
-    Alert.alert("First name updated.");
-    refreshUserData();
-  }
-}
-
-export async function handleLastnameUpdate(last, id, refreshUserData) {
-  const { error } = await supabase
-    .from("Users")
-    .update({ last_name: last })
-    .eq("unique_id", id);
-  if (error) {
-    console.log(error);
-  } else {
-    Alert.alert("Last name updated.");
+    Alert.alert("Full name updated.");
     refreshUserData();
   }
 }
 
 export async function handleUsernameUpdate(username, id, refreshUserData) {
   const { error } = await supabase
-    .from("Users")
+    .from("profiles")
     .update({ username: username })
-    .eq("unique_id", id);
+    .eq("id", id);
 
   if (error) {
     console.log(error);
@@ -112,4 +117,32 @@ export async function handleLogOut() {
     Alert.alert("Logged out.");
     refreshUserData();
   }
+}
+
+export async function handleCreatePost(film, review, stars, user_id) {
+  const { error } = await supabase
+    .from("posts")
+    .insert({ author: user_id, movie_poster: film, content: review, stars: stars })
+    .select()
+
+  if (error) {
+    console.log(error);
+  } else {
+    Alert.alert("Post Created");
+    refreshUserData();
+  }
+}
+
+export async function fetchPosts() {
+  const { data, error } = await supabase
+    .from("posts")
+    .select('*')
+    .order('created_at', { ascending: false });
+
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data
 }

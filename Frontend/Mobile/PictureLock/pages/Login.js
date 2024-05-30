@@ -21,6 +21,7 @@ export default function LogInScreen() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [login, setLogin] = useState(true);
+  const [name, setName] = useState("");
 
   async function signInWithEmail() {
     const { error } = await supabase.auth.signInWithPassword({
@@ -41,17 +42,6 @@ export default function LogInScreen() {
       });
       if (error) {
         Alert.alert(error.message);
-      } else {
-        console.log(session.user.id);
-        const { error: insertError } = await supabase.from("Users").insert({
-          unique_id: session.user.id,
-        });
-
-        if (insertError) {
-          Alert.alert(insertError.message);
-        } else {
-          Alert.alert("Please check your inbox for email verification!");
-        }
       }
     } else {
       Alert.alert("Please make sure your passwords match!");
@@ -80,6 +70,17 @@ export default function LogInScreen() {
         initial={0}
         onPress={setLogin}
       />
+      {/* {!login && (
+        <View className="space-y-1">
+          <Text className="font-bold dark:text-white">Full Name</Text>
+          <TextInput
+            className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
+            onChangeText={setName}
+            placeholder="Enter your full name"
+            placeholderTextColor="rgba(255, 255, 255, 0.6)"
+          />
+        </View>
+      )} */}
       <View className="space-y-1">
         <Text className="font-bold dark:text-white">Email</Text>
         <TextInput
