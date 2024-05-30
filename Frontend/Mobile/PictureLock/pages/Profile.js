@@ -13,7 +13,7 @@ import {
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { IconButton } from "../components";
 import { useUser } from "../lib/UserContext";
-import { handleFirstnameUpdate, handleLastnameUpdate, handleLogOut, handleUploadProfilePicture, handleUsernameUpdate, getProfilePictureUrl, handleNameUpdate } from "../lib/supabaseUtils";
+import { handleLogOut, handleUploadProfilePicture, handleUsernameUpdate, handleNameUpdate } from "../lib/supabaseUtils";
 import * as ImagePicker from "expo-image-picker";
 
 function ProfileScreen({ navigation }) {
@@ -127,7 +127,7 @@ function SettingsScreen({ navigation }) {
           <TextInput
             value={username}
             onChangeText={setUsername}
-            className="w-4/6 bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
+            className="w-[73%] bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
           ></TextInput>
           <TouchableOpacity
             className="w-1/4 bg-black/10 dark:bg-white/10 p-4 rounded-md"
@@ -143,7 +143,7 @@ function SettingsScreen({ navigation }) {
           <TextInput
             value={name}
             onChangeText={setName}
-            className="w-4/6 bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
+            className="w-[73%] bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
           ></TextInput>
           <TouchableOpacity
             className="w-1/4 bg-black/10 dark:bg-white/10 p-4 rounded-md"

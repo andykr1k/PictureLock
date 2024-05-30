@@ -10,6 +10,7 @@ const MoviePoster = ({ item }) => {
       try {
         const data = await GetMovie(item);
         setPosterUri(`https://image.tmdb.org/t/p/w1280/${data.poster_path}`);
+        item.poster = `https://image.tmdb.org/t/p/w1280/${data.poster_path}`;
       } catch (error) {
         console.error("Error fetching poster:", error);
       }

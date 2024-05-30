@@ -3,12 +3,19 @@ import { Entypo } from "@expo/vector-icons";
 import IconButton from "./IconButton";
 import TimeAgo from "../functions/TimeAgo";
 import { memo } from "react";
-import { getProfilePictureUrl, getUsername } from "../lib/supabaseUtils";
+import { getProfilePictureUrl, getUsername, getComments, getLikes, handleLike, handleUnlike } from "../lib/supabaseUtils";
 import { useState, useEffect } from "react";
+import { useUser } from "../lib/UserContext";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 function Post(item) {
+  const { session, refreshUserData } = useUser();
+
   const [username, setUsername] = useState("");
   const [userpic, setUserpic] = useState("");
+  const [comments, setComments] = useState(null);
+  const [likes, setLikes] = useState(null);
+  const [liked, setLiked] = useState(false);
 
   useEffect(() => {
     const fetchUsername = async () => {
@@ -21,9 +28,24 @@ function Post(item) {
       setUserpic(pic);
     };
 
+    const fetchComments = async () => {
+      const comments = await(getComments(item.post.id));
+      setComments(comments);
+      item.post.comments = comments;
+    }
+
+    const fetchLikes = async () => {
+      const likes = await getLikes(item.post.id);
+      setLikes(likes);
+      item.post.likes = likes;
+      setLiked(likes.some(like => like.user_id === session.user.id));
+    };
+
     fetchUsername();
     fetchUserPicture();
-  }, []);
+    fetchComments();
+    fetchLikes();
+  }, [item.post]);
 
   const stars = Array.from({ length: item.post.stars }, (_, index) => (
     <IconButton key={index} icon="star" size={14} />
@@ -53,8 +75,36 @@ function Post(item) {
                 {item.post.content}
               </Text>
               <View className="flex flex-row justify-around mt-2">
-                <IconButton icon="comment" size={14} text={10} />
-                <IconButton icon="favorite-outline" size={14} text={10} />
+                <IconButton
+                  icon="comment"
+                  size={14}
+                  text={comments && comments.length}
+                />
+                {liked ? (
+                  <TouchableOpacity
+                    onPress={() =>
+                      handleUnlike(item.post.id, session.user.id, refreshUserData)
+                    }
+                  >
+                    <IconButton
+                      icon="favorite"
+                      size={14}
+                      text={likes && likes.length}
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() =>
+                      handleLike(item.post.id, session.user.id, refreshUserData)
+                    }
+                  >
+                    <IconButton
+                      icon="favorite-outline"
+                      size={14}
+                      text={likes && likes.length}
+                    />
+                  </TouchableOpacity>
+                )}
                 <IconButton icon="bookmark-outline" size={14} />
                 <IconButton icon="ios-share" size={14} />
               </View>

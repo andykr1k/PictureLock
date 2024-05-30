@@ -11,11 +11,11 @@ import {
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Post, Comment } from "../components";
 import { RefreshControl } from "react-native-gesture-handler";
-import React from "react";
+import React, { useState } from "react";
 import titles from "../assets/titles_and_ids.json";
 import { MoviePoster } from "../components";
 import IconButton from "../components/IconButton";
-import { handleCreatePost } from "../lib/supabaseUtils";
+import { handleComment, handleCreatePost } from "../lib/supabaseUtils";
 import { useUser } from "../lib/UserContext";
 
 function HomeScreen({ navigation }) {
@@ -67,42 +67,57 @@ function HomeScreen({ navigation }) {
 }
 
 function PostDetails({ route, navigation }) {
+  const { session, refreshUserData } = useUser();
   const { item, index } = route.params;
 
-  const [text, onChangeText] = React.useState("");
+  const [text, onChangeText] = useState("");
 
-  const comments = item.comments;
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
-      <View className="ios:mt-16 p-2 pt-2 h-full">
+      <View className="ios:mt-16 p-2 pt-2">
         <Post key={index} post={item} />
-        {/* <ScrollView className="h-1/2">
-          {comments.map((item, index) => (
-            <Comment key={index} post={item} />
-          ))}
-        </ScrollView> */}
-        {/* <TextInput
-          placeholder="Comment"
-          value={text}
-          onChangeText={onChangeText}
-          className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md"
-        /> */}
+        <ScrollView className="">
+          {item.comments &&
+            item.comments.map((item, index) => (
+              <Comment key={index} post={item} />
+            ))}
+        </ScrollView>
+        <View className="flex flex-row mt-3 justify-between">
+          <TextInput
+            placeholder="Comment"
+            value={text}
+            onChangeText={onChangeText}
+            className="dark:text-white bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md w-[73%]"
+          />
+          <TouchableOpacity
+            onPress={() =>
+              handleComment(item.id, session.user.id, text, refreshUserData)
+            }
+            className="w-1/4 bg-black/10 dark:bg-white/10 p-4 rounded-md"
+          >
+            <Text className="font-bold text-center dark:text-white">
+              Comment
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </KeyboardAvoidingView>
   );
 }
 
 function CreatePost({ navigation }) {
-  const { session, user, pic } = useUser();
+  const { session } = useUser();
 
-  const [review, setReview] = React.useState("");
-  const [stars, setStars] = React.useState(0);
-  const [movie, setMovie] = React.useState("");
-  const [search, setSearch] = React.useState("");
-  const [suggestions, setSuggestions] = React.useState([]);
+  const [review, setReview] = useState("");
+  const [stars, setStars] = useState(0);
+  const [movie, setMovie] = useState("");
+  const [movieID, setMovieID] = useState("");
+  const [moviePoster, setMoviePoster] = useState("");
+  const [search, setSearch] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
 
   const handleStarPress = (rating) => {
     setStars(rating);
@@ -129,10 +144,15 @@ function CreatePost({ navigation }) {
     setSuggestions(filteredTitles.slice(0, 8));
   };
 
+  const handleMovie = (e) => {
+    setMovie(e.title);
+    setMovieID(e.id);
+    setMoviePoster(e.poster);
+  };
+
   return (
     <View className="ios:ios:mt-10 p-3 space-y-3">
       <Text className="dark:text-white font-bold text-3xl">Post</Text>
-      <Text className="dark:text-white font-bold text-xl">Film</Text>
       <TextInput
         placeholder="Search for films"
         onChangeText={handleSearchValueChange}
@@ -143,13 +163,13 @@ function CreatePost({ navigation }) {
           {(suggestions !== null) & (search.length > 3)
             ? suggestions.map((item, index) => (
                 <TouchableOpacity
-                  className="w-1/4 h-36 p-1"
+                  className="w-1/3 h-36 p-1"
                   key={index}
-                  onPress={() => setMovie(movie.title)}
+                  onPress={() => handleMovie(item)}
                 >
                   <View
                     className={`border-2 rounded-md ${
-                      movie === movie.title
+                      movie === item.title
                         ? "border-orange-500"
                         : "border-transparent"
                     }`}
@@ -158,26 +178,25 @@ function CreatePost({ navigation }) {
                   </View>
                 </TouchableOpacity>
               ))
-            : titles.slice(0, 8).map((movie, index) => (
+            : titles.slice(0, 8).map((item, index) => (
                 <TouchableOpacity
-                  className="w-1/4 h-36 p-1"
+                  className="w-1/3 h-36 p-1"
                   key={index}
-                  onPress={() => setMovie(movie.title)}
+                  onPress={() => handleMovie(item)}
                 >
                   <View
                     className={`border-2 rounded-md ${
-                      movie === movie.title
+                      movie === item.title
                         ? "border-orange-500"
                         : "border-transparent"
                     }`}
                   >
-                    <MoviePoster item={movie} />
+                    <MoviePoster item={item} />
                   </View>
                 </TouchableOpacity>
               ))}
         </View>
       </ScrollView>
-      <Text className="dark:text-white font-bold text-xl">Review</Text>
       <TextInput
         placeholder="Write a review"
         onChangeText={setReview}
@@ -191,11 +210,11 @@ function CreatePost({ navigation }) {
         onPress={() =>
           handleCreatePost(
             movie,
+            movieID,
+            moviePoster,
             review,
             stars,
-            session.user.id,
-            pic,
-            user.username
+            session.user.id
           )
         }
         className="w-full bg-black/10 dark:bg-white/10 p-4 rounded-md"

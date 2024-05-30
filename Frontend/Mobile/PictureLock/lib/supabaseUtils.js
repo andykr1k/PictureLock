@@ -35,7 +35,6 @@ export async function getUsername(id) {
   return data[0].username;
 }
 
-
 export async function handleUploadProfilePicture(
   profileImage,
   profileImageBytes,
@@ -80,7 +79,6 @@ export async function handleUploadProfilePicture(
   }
 }
 
-
 export async function handleNameUpdate(name, id, refreshUserData) {
   const { error } = await supabase
     .from("profiles")
@@ -115,20 +113,96 @@ export async function handleLogOut() {
     console.log(error);
   } else {
     Alert.alert("Logged out.");
-    refreshUserData();
   }
 }
 
-export async function handleCreatePost(film, review, stars, user_id) {
+export async function handleCreatePost(
+  film,
+  film_id,
+  film_poster,
+  review,
+  stars,
+  user_id
+) {
   const { error } = await supabase
     .from("posts")
-    .insert({ author: user_id, movie_poster: film, content: review, stars: stars })
-    .select()
+    .insert({
+      author: user_id,
+      movie_poster: film_poster,
+      movie_name: film,
+      movie_id: film_id,
+      content: review,
+      stars: stars,
+    })
+    .select();
 
   if (error) {
     console.log(error);
   } else {
     Alert.alert("Post Created");
+  }
+}
+
+export async function handleComment(post_id, user_id, comment, refreshUserData) {
+  const { error } = await supabase
+    .from("comments")
+    .insert({
+      post_id: post_id,
+      user_id: user_id,
+      comment: comment,
+    })
+    .select();
+
+  if (error) {
+    console.log(error);
+  } else {
+    Alert.alert("Commmented");
+    refreshUserData();
+  }
+}
+
+export async function handleDeleteComment(comment_id, refreshUserData) {
+  const { error } = await supabase
+    .from("comments")
+    .delete()
+    .eq("id", comment_id);
+
+  if (error) {
+    console.log(error);
+  } else {
+    Alert.alert("Comment deleted");
+    refreshUserData();
+  }
+}
+
+export async function handleLike(post_id, user_id, refreshUserData) {
+  const { error } = await supabase
+    .from("likes")
+    .insert({
+      post_id: post_id,
+      user_id: user_id,
+    })
+    .select();
+
+  if (error) {
+    console.log(error);
+  } else {
+    Alert.alert("Liked");
+    refreshUserData();
+  }
+}
+
+export async function handleUnlike(post_id, user_id, refreshUserData) {
+  const { error } = await supabase
+    .from("likes")
+    .delete()
+    .eq("post_id", post_id)
+    .eq("user_id", user_id);
+
+  if (error) {
+    console.log(error);
+  } else {
+    Alert.alert("Unliked");
     refreshUserData();
   }
 }
@@ -136,13 +210,39 @@ export async function handleCreatePost(film, review, stars, user_id) {
 export async function fetchPosts() {
   const { data, error } = await supabase
     .from("posts")
-    .select('*')
-    .order('created_at', { ascending: false });
-
+    .select("*")
+    .order("created_at", { ascending: false });
 
   if (error) {
     console.log(error);
   }
 
-  return data
+  return data;
+}
+
+export async function getComments(id) {
+  const { data, error } = await supabase
+    .from("comments")
+    .select("*")
+    .eq("post_id", id)
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data;
+}
+
+export async function getLikes(id) {
+  const { data, error } = await supabase
+    .from("likes")
+    .select("*")
+    .eq("post_id", id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data;
 }

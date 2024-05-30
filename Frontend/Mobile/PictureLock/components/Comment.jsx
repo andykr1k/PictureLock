@@ -1,29 +1,64 @@
-import { Text, View, useColorScheme, Image } from "react-native";
+import { Text, View, Image } from "react-native";
 import TimeAgo from "../functions/TimeAgo";
-import { memo } from "react";
+import { memo, useState, useEffect } from "react";
+import {
+  getUsername,
+  getProfilePictureUrl,
+  handleDeleteComment,
+} from "../lib/supabaseUtils";
+import { useUser } from "../lib/UserContext";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import IconButton from "./IconButton";
 
 function Comment(props) {
-  const colorScheme = useColorScheme();
+  const { session, refreshUserData } = useUser();
+
+  const [username, setUsername] = useState("");
+  const [userpic, setUserpic] = useState("");
+
+  const [mine, setMine] = useState(props.post.user_id === session.user.id);
+
+  useEffect(() => {
+    const fetchUsername = async () => {
+      const username = await getUsername(props.post.user_id);
+      setUsername(username);
+    };
+
+    const fetchUserPicture = async () => {
+      const pic = await getProfilePictureUrl(props.post.user_id);
+      setUserpic(pic);
+    };
+
+    fetchUsername();
+    fetchUserPicture();
+  }, [props.post]);
 
   return (
-    <View className="flex flex-row mt-2 items-center">
-      <Image
-        source={{ uri: props.post.author.image }}
-        className="w-8 h-8 rounded-xl"
-      />
-      <View className="ml-2">
-        <View className="flex flex-row">
-          <Text className="dark:text-white text-sm font-bold">
-            {props.post.author.username}
-          </Text>
-          <Text className="dark:text-white text-sm">
-            &nbsp; · {TimeAgo(props.post.createdAt)}
-          </Text>
+    <View className="flex flex-row justify-between">
+      <View className="flex flex-row items-center">
+        {userpic && (
+          <Image source={{ uri: userpic }} className="w-8 h-8 rounded-lg" />
+        )}
+        <View className="ml-2">
+          <View className="flex flex-row">
+            <Text className="dark:text-white text-sm font-bold">
+              {username}
+            </Text>
+            <Text className="dark:text-white text-sm">
+              &nbsp; · {TimeAgo(props.post.created_at)}
+            </Text>
+          </View>
+          <Text className="dark:text-white">{props.post.comment}</Text>
         </View>
-        <Text className="dark:text-white">
-          {props.post.content}
-        </Text>
       </View>
+      {mine && (
+        <TouchableOpacity
+          className=""
+          onPress={() => handleDeleteComment(props.post.id, refreshUserData)}
+        >
+          <IconButton icon="delete" size={14} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
