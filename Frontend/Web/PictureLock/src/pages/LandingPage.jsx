@@ -6,7 +6,7 @@ export default function LandingPage() {
           <div className="flex justify-center">
             <img className="w-48" src="./logo.png" />
           </div>
-          <h2 className="text-4xl tracking-tight leading-10 font-bold text-white sm:text-5xl sm:leading-none md:text-6xl">
+          <h2 className="text-4xl tracking-wide leading-10 font-extrabold text-white sm:text-5xl sm:leading-none md:text-6xl">
             Picturelock
           </h2>
           <p className="text-md md:text-xl ios:mt-10 text-white">
