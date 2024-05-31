@@ -1,58 +1,113 @@
-import { Text, View, Image } from "react-native";
+import { Text, View, Image, Modal, ScrollView, TextInput } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import IconButton from "./IconButton";
 import TimeAgo from "../functions/TimeAgo";
-import { memo } from "react";
-import { getProfilePictureUrl, getUsername, getComments, getLikes, handleLike, handleUnlike } from "../lib/supabaseUtils";
-import { useState, useEffect } from "react";
+import {
+  getProfilePictureUrl,
+  getUsername,
+  getComments,
+  getLikes,
+  handleLike,
+  handleUnlike,
+  handleComment,
+} from "../lib/supabaseUtils";
+import { useState, useEffect, memo } from "react";
 import { useUser } from "../lib/UserContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Comment from "./Comment";
 
-function Post(item) {
+function Post(props) {
   const { session, refreshUserData } = useUser();
-
+  const [modalVisible, setModalVisible] = useState(false);
   const [username, setUsername] = useState("");
   const [userpic, setUserpic] = useState("");
   const [comments, setComments] = useState(null);
   const [likes, setLikes] = useState(null);
   const [liked, setLiked] = useState(false);
+  const [text, onChangeText] = useState("");
+  const [item, setItem] = useState({ id: props.post.movie_id });
 
   useEffect(() => {
     const fetchUsername = async () => {
-      const username = await getUsername(item.post.author);
+      const username = await getUsername(props.post.author);
       setUsername(username);
     };
 
     const fetchUserPicture = async () => {
-      const pic = await getProfilePictureUrl(item.post.author);
+      const pic = await getProfilePictureUrl(props.post.author);
       setUserpic(pic);
     };
 
     const fetchComments = async () => {
-      const comments = await(getComments(item.post.id));
+      const comments = await getComments(props.post.id);
       setComments(comments);
-      item.post.comments = comments;
-    }
+      props.post.comments = comments;
+    };
 
     const fetchLikes = async () => {
-      const likes = await getLikes(item.post.id);
+      const likes = await getLikes(props.post.id);
       setLikes(likes);
-      item.post.likes = likes;
-      setLiked(likes.some(like => like.user_id === session.user.id));
+      props.post.likes = likes;
+      setLiked(likes.some((like) => like.user_id === session.user.id));
     };
 
     fetchUsername();
     fetchUserPicture();
     fetchComments();
     fetchLikes();
-  }, [item.post]);
+  }, [props.post]);
 
-  const stars = Array.from({ length: item.post.stars }, (_, index) => (
+  const stars = Array.from({ length: props.post.stars }, (_, index) => (
     <IconButton key={index} icon="star" size={14} />
   ));
 
   return (
-    <View className="w-full mb-3 border-b-[1px] border-black/10 dark:border-white/10 pb-3">
+    <View className="w-full mb-3 border-b-[0.25px] border-black/10 dark:border-white/10 pb-3">
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View className="bg-white/95 dark:bg-black/95 absolute bottom-0 left-0 right-0 h-3/4 p-2 rounded-xl">
+          <View className="flex flex-row justify-center">
+            <TouchableOpacity
+              className="h-2 bg-black/10 dark:bg-white/10 w-20 rounded-md"
+              onPress={() => setModalVisible(!modalVisible)}
+            />
+          </View>
+          <View className="flex flex-row mt-2 justify-between">
+            <TextInput
+              placeholder="Comment"
+              value={text}
+              onChangeText={onChangeText}
+              className="dark:text-white bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md w-[85%]"
+            />
+            <TouchableOpacity
+              onPress={() =>
+                handleComment(
+                  props.post.id,
+                  session.user.id,
+                  text,
+                  refreshUserData
+                )
+              }
+              className="bg-black/10 dark:bg-white/10 p-4 rounded-md"
+            >
+              <IconButton icon="upload" size={20} />
+            </TouchableOpacity>
+          </View>
+          <ScrollView className="mt-2">
+            {comments &&
+              comments.map((item, index) => (
+                <Comment key={index} post={item} />
+              ))}
+          </ScrollView>
+        </View>
+      </Modal>
       <View className="flex flex-row space-x-2 w-full">
         <View className="flex w-1/10">
           {userpic && (
@@ -64,7 +119,7 @@ function Post(item) {
             <View className="flex flex-row">
               <Text className="font-bold dark:text-white">{username}</Text>
               <Text className="dark:text-white text-xs">
-                &nbsp;· {TimeAgo(item.post.created_at)}
+                &nbsp;· {TimeAgo(props.post.created_at)}
               </Text>
             </View>
             <Entypo name="dots-three-horizontal" size={16} color="gray" />
@@ -72,50 +127,66 @@ function Post(item) {
           <View className="flex flex-row w-full justify-between">
             <View className="flex justify-between w-2/3">
               <Text className="dark:text-white text-xs pr-1">
-                {item.post.content}
+                {props.post.content}
               </Text>
-              <View className="flex flex-row justify-around mt-2">
-                <IconButton
-                  icon="comment"
-                  size={14}
-                  text={comments && comments.length}
-                />
+              <View className="flex flex-row space-x-3 mt-2">
+                <TouchableOpacity
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <IconButton
+                    icon="comment"
+                    size={24}
+                    text={comments && comments.length}
+                  />
+                </TouchableOpacity>
                 {liked ? (
                   <TouchableOpacity
                     onPress={() =>
-                      handleUnlike(item.post.id, session.user.id, refreshUserData)
+                      handleUnlike(
+                        props.post.id,
+                        session.user.id,
+                        refreshUserData
+                      )
                     }
                   >
                     <IconButton
                       icon="favorite"
-                      size={14}
+                      size={24}
                       text={likes && likes.length}
                     />
                   </TouchableOpacity>
                 ) : (
                   <TouchableOpacity
                     onPress={() =>
-                      handleLike(item.post.id, session.user.id, refreshUserData)
+                      handleLike(
+                        props.post.id,
+                        session.user.id,
+                        refreshUserData
+                      )
                     }
                   >
                     <IconButton
                       icon="favorite-outline"
-                      size={14}
+                      size={24}
                       text={likes && likes.length}
                     />
                   </TouchableOpacity>
                 )}
-                <IconButton icon="bookmark-outline" size={14} />
-                <IconButton icon="ios-share" size={14} />
               </View>
             </View>
             <View className="flex flex-row justify-between w-1/3">
               <View className="w-full">
-                {item.post.movie_poster && (
-                  <Image
-                    source={{ uri: item.post.movie_poster }}
-                    className="w-full h-40 rounded-md"
-                  />
+                {props.post.movie_poster && (
+                  <TouchableOpacity
+                    onPress={() =>
+                      props.navigation.navigate("Details", { item })
+                    }
+                  >
+                    <Image
+                      source={{ uri: props.post.movie_poster }}
+                      className="w-full h-40 rounded-md"
+                    />
+                  </TouchableOpacity>
                 )}
                 <View className="flex flex-row justify-center mt-3">
                   {stars}

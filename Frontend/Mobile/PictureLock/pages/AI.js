@@ -43,7 +43,7 @@ function AIScreen({ navigation }) {
       image: require("../assets/hbo_logo.png"),
     },
   ];
-  const genres = ["Action", "Drama", "Comedy", "Romance"];
+  const genres = ["Action", "Drama", "Comedy", "Romance", "Thriller", "Horror"];
   const [recommends, setRecommends] = useState(null);
   const [movieName, setMovieName] = useState("");
   const [selectedTypeIndex, setSelectedTypeIndex] = useState(0);
@@ -170,24 +170,26 @@ function AIScreen({ navigation }) {
           <Text h4 className="dark:text-white font-bold text-lg">
             Genres
           </Text>
-          <View className="flex flex-row space-x-2">
-            {genres.map((genre, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => toggleGenreSelection(index)}
-              >
-                <View
-                  className={`p-3 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
-                    selectedGenreIndexes.includes(index)
-                      ? "border-orange-500"
-                      : "border-transparent"
-                  }`}
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View className="flex flex-row space-x-2">
+              {genres.map((genre, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => toggleGenreSelection(index)}
                 >
-                  <Text className="font-bold dark:text-white">{genre}</Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
+                  <View
+                    className={`p-3 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
+                      selectedGenreIndexes.includes(index)
+                        ? "border-orange-500"
+                        : "border-transparent"
+                    }`}
+                  >
+                    <Text className="font-bold dark:text-white">{genre}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
         </View>
         <View className="space-y-2">
           <Text h4 className="dark:text-white font-bold text-lg">

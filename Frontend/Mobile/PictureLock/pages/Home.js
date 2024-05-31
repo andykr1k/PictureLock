@@ -3,20 +3,19 @@ import {
   View,
   Text,
   useColorScheme,
-  KeyboardAvoidingView,
-  Platform,
   TextInput,
   ScrollView,
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Post, Comment } from "../components";
+import { Post } from "../components";
 import { RefreshControl } from "react-native-gesture-handler";
 import React, { useState } from "react";
 import titles from "../assets/titles_and_ids.json";
 import { MoviePoster } from "../components";
 import IconButton from "../components/IconButton";
-import { handleComment, handleCreatePost } from "../lib/supabaseUtils";
+import { handleCreatePost } from "../lib/supabaseUtils";
 import { useUser } from "../lib/UserContext";
+import MovieDetails from "../components/MovieDetails";
 
 function HomeScreen({ navigation }) {
   const animationRef = React.useRef(null);
@@ -51,14 +50,7 @@ function HomeScreen({ navigation }) {
       >
         {posts &&
           posts.map((item, index) => {
-            return (
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Details", { item, index })}
-                key={index}
-              >
-                <Post key={index} post={item} />
-              </TouchableOpacity>
-            );
+            return <Post key={index} post={item} navigation={navigation} />;
           })}
         <View className="p-12"></View>
       </ScrollView>
@@ -66,50 +58,8 @@ function HomeScreen({ navigation }) {
   );
 }
 
-function PostDetails({ route, navigation }) {
-  const { session, refreshUserData } = useUser();
-  const { item, index } = route.params;
-
-  const [text, onChangeText] = useState("");
-
-  return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-    >
-      <View className="ios:mt-16 p-2 pt-2">
-        <Post key={index} post={item} />
-        <ScrollView className="">
-          {item.comments &&
-            item.comments.map((item, index) => (
-              <Comment key={index} post={item} />
-            ))}
-        </ScrollView>
-        <View className="flex flex-row mt-3 justify-between">
-          <TextInput
-            placeholder="Comment"
-            value={text}
-            onChangeText={onChangeText}
-            className="dark:text-white bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md w-[73%]"
-          />
-          <TouchableOpacity
-            onPress={() =>
-              handleComment(item.id, session.user.id, text, refreshUserData)
-            }
-            className="w-1/4 bg-black/10 dark:bg-white/10 p-4 rounded-md"
-          >
-            <Text className="font-bold text-center dark:text-white">
-              Comment
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </KeyboardAvoidingView>
-  );
-}
-
 function CreatePost({ navigation }) {
-  const { session } = useUser();
+  const { session, refreshUserData } = useUser();
 
   const [review, setReview] = useState("");
   const [stars, setStars] = useState(0);
@@ -214,7 +164,8 @@ function CreatePost({ navigation }) {
             moviePoster,
             review,
             stars,
-            session.user.id
+            session.user.id,
+            refreshUserData
           )
         }
         className="w-full bg-black/10 dark:bg-white/10 p-4 rounded-md"
@@ -223,6 +174,12 @@ function CreatePost({ navigation }) {
       </TouchableOpacity>
     </View>
   );
+}
+
+function DetailsScreen({ route, navigation }) {
+  const { item } = route.params;
+
+  return <MovieDetails item={item} navigation={navigation} />;
 }
 
 const HomeStack = createNativeStackNavigator();
@@ -248,7 +205,7 @@ export default function HomeStackScreen() {
       />
       <HomeStack.Screen
         name="Details"
-        component={PostDetails}
+        component={DetailsScreen}
         options={{ headerShown: false }}
       />
     </HomeStack.Navigator>

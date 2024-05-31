@@ -88,7 +88,6 @@ export async function handleNameUpdate(name, id, refreshUserData) {
   if (error) {
     console.log(error);
   } else {
-    Alert.alert("Full name updated.");
     refreshUserData();
   }
 }
@@ -102,7 +101,6 @@ export async function handleUsernameUpdate(username, id, refreshUserData) {
   if (error) {
     console.log(error);
   } else {
-    Alert.alert("Username updated.");
     refreshUserData();
   }
 }
@@ -122,7 +120,8 @@ export async function handleCreatePost(
   film_poster,
   review,
   stars,
-  user_id
+  user_id,
+  refreshUserData
 ) {
   const { error } = await supabase
     .from("posts")
@@ -139,7 +138,7 @@ export async function handleCreatePost(
   if (error) {
     console.log(error);
   } else {
-    Alert.alert("Post Created");
+    refreshUserData();
   }
 }
 
@@ -156,7 +155,6 @@ export async function handleComment(post_id, user_id, comment, refreshUserData) 
   if (error) {
     console.log(error);
   } else {
-    Alert.alert("Commmented");
     refreshUserData();
   }
 }
@@ -170,7 +168,6 @@ export async function handleDeleteComment(comment_id, refreshUserData) {
   if (error) {
     console.log(error);
   } else {
-    Alert.alert("Comment deleted");
     refreshUserData();
   }
 }
@@ -187,7 +184,6 @@ export async function handleLike(post_id, user_id, refreshUserData) {
   if (error) {
     console.log(error);
   } else {
-    Alert.alert("Liked");
     refreshUserData();
   }
 }
@@ -202,7 +198,6 @@ export async function handleUnlike(post_id, user_id, refreshUserData) {
   if (error) {
     console.log(error);
   } else {
-    Alert.alert("Unliked");
     refreshUserData();
   }
 }

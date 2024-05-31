@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 * {
-  font-family: "Ubuntu", sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
 }

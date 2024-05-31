@@ -53,7 +53,7 @@ function Comment(props) {
       </View>
       {mine && (
         <TouchableOpacity
-          className=""
+          className="mt-3 mr-1"
           onPress={() => handleDeleteComment(props.post.id, refreshUserData)}
         >
           <IconButton icon="delete" size={14} />
