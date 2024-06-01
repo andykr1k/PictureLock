@@ -121,7 +121,8 @@ export async function handleCreatePost(
   review,
   stars,
   user_id,
-  refreshUserData
+  refreshUserData,
+  spoiler
 ) {
   const { error } = await supabase
     .from("posts")
@@ -132,6 +133,7 @@ export async function handleCreatePost(
       movie_id: film_id,
       content: review,
       stars: stars,
+      spoiler: spoiler
     })
     .select();
 
@@ -210,6 +212,23 @@ export async function fetchPosts() {
 
   if (error) {
     console.log(error);
+  }
+
+  return data;
+}
+
+export async function getUser(id) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error fetching profile username:", error);
+  }
+
+  if (data.length === 0) {
+    console.error("Error fetching profile username.");
   }
 
   return data;

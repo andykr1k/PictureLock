@@ -15,8 +15,10 @@ import { useState, useEffect, memo } from "react";
 import { useUser } from "../lib/UserContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Comment from "./Comment";
+import { useNavigation } from "@react-navigation/native";
 
 function Post(props) {
+  const navigation = useNavigation();
   const { session, refreshUserData } = useUser();
   const [modalVisible, setModalVisible] = useState(false);
   const [username, setUsername] = useState("");
@@ -26,7 +28,8 @@ function Post(props) {
   const [liked, setLiked] = useState(false);
   const [text, onChangeText] = useState("");
   const [item, setItem] = useState({ id: props.post.movie_id });
-
+  const [spoilerBlur, setSpoilerBlur] = useState(true);
+  const [userID, setuserID] = useState(props.post.author);
   useEffect(() => {
     const fetchUsername = async () => {
       const username = await getUsername(props.post.author);
@@ -111,7 +114,13 @@ function Post(props) {
       <View className="flex flex-row space-x-2 w-full">
         <View className="flex w-1/10">
           {userpic && (
-            <Image source={{ uri: userpic }} className="w-8 h-8 rounded-md" />
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("Profile", { userID, userpic })
+              }
+            >
+              <Image source={{ uri: userpic }} className="w-8 h-8 rounded-md" />
+            </TouchableOpacity>
           )}
         </View>
         <View className="flex-1 w-8/10">
@@ -126,10 +135,30 @@ function Post(props) {
           </View>
           <View className="flex flex-row w-full justify-between">
             <View className="flex justify-between w-2/3">
-              <Text className="dark:text-white text-xs pr-1">
-                {props.post.content}
-              </Text>
-              <View className="flex flex-row space-x-3 mt-2">
+              {props.post.spoiler ? (
+                <View className="flex flex-1 pr-1">
+                  <Text className="dark:text-white text-xs">
+                    {props.post.content}
+                  </Text>
+                  {spoilerBlur && (
+                    <View
+                      blurRadius={90}
+                      className="w-full h-40 bg-black flex flex-row justify-center absolute rounded-md items-center"
+                    >
+                      <TouchableOpacity onPress={() => setSpoilerBlur(false)}>
+                        <Text className="dark:text-white/50 font-bold">
+                          Reveal spoiler
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+              ) : (
+                <Text className="dark:text-white text-xs pr-1">
+                  {props.post.content}
+                </Text>
+              )}
+              <View className="flex flex-row space-x-5 mt-2">
                 <TouchableOpacity
                   onPress={() => setModalVisible(!modalVisible)}
                 >
@@ -178,9 +207,7 @@ function Post(props) {
               <View className="w-full">
                 {props.post.movie_poster && (
                   <TouchableOpacity
-                    onPress={() =>
-                      props.navigation.navigate("Details", { item })
-                    }
+                    onPress={() => navigation.navigate("Details", { item })}
                   >
                     <Image
                       source={{ uri: props.post.movie_poster }}

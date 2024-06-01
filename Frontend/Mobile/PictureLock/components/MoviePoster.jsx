@@ -2,7 +2,8 @@ import React, { useState, useEffect, memo } from "react";
 import GetMovie from "../functions/GetMovie";
 import { Image } from "react-native";
 
-const MoviePoster = ({ item }) => {
+const MoviePoster = ({ item, size }) => {
+
   const [posterUri, setPosterUri] = useState(null);
 
   useEffect(() => {
@@ -19,11 +20,21 @@ const MoviePoster = ({ item }) => {
     fetchPoster();
   }, [item]);
 
-  return (
+  if (!posterUri) {
+    return null;
+  }
+
+  return size === "small" ? (
     <Image
       key={posterUri}
       source={{ uri: posterUri }}
-      className="w-full h-full rounded-md"
+      className="w-full h-36 rounded-md"
+    />
+  ) : (
+    <Image
+      key={posterUri}
+      source={{ uri: posterUri }}
+      className="w-1/3 h-60 rounded-md"
     />
   );
 };

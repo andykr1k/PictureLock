@@ -9,10 +9,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import titles from "../assets/titles_and_ids.json";
-import { MoviePoster } from "../components";
-import MovieDetails from "../components/MovieDetails";
+import { MoviePoster, MovieDetails } from "../components";
+import { useNavigation } from "@react-navigation/native";
 
-function SearchScreen({ navigation }) {
+function SearchScreen() {
+  const navigation = useNavigation();
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
@@ -23,51 +24,44 @@ function SearchScreen({ navigation }) {
     );
     setSuggestions(filteredTitles.slice(0, 8));
   };
+
   return (
-    <View className="ios:mt-10 p-3 space-y-3">
+    <View className="ios:mt-10 p-3 space-y-3 max-w-full">
       <Text className="dark:text-white font-bold text-3xl">Search</Text>
       <TextInput
         placeholder="Search for films"
         onChangeText={handleSearchValueChange}
         className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
       ></TextInput>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="flex flex-row flex-wrap">
+      <ScrollView showsVerticalScrollIndicator={false} className="flex">
+        <View className="flex-row flex-wrap">
           {search.length > 2
-            ? suggestions.map((item, index) => {
+            ? suggestions.map((item) => {
                 return (
                   <TouchableOpacity
+                    className="w-1/4 p-1"
+                    key={item.id}
                     onPress={() => navigation.navigate("Details", { item })}
-                    key={index}
-                    className="w-1/4 h-36 p-1"
                   >
-                    <MoviePoster item={item} />
+                    <MoviePoster item={item} size={"small"} />
                   </TouchableOpacity>
                 );
               })
-            : titles.slice(0, 20).map((item, index) => {
+            : titles.slice(0, 20).map((item) => {
                 return (
                   <TouchableOpacity
+                    className="w-1/4 p-1"
+                    key={item.id}
                     onPress={() => navigation.navigate("Details", { item })}
-                    key={index}
-                    className="w-1/4 h-36 p-1"
                   >
-                    <MoviePoster item={item} />
+                    <MoviePoster item={item} size={"small"} />
                   </TouchableOpacity>
                 );
               })}
-          <View className="p-12"></View>
         </View>
+        <View className="p-12"></View>
       </ScrollView>
     </View>
-  );
-}
-
-function DetailsScreen({ route, navigation }) {
-  const { item } = route.params;
-
-  return (
-    <MovieDetails item={item} navigation={navigation} />
   );
 }
 
@@ -90,7 +84,7 @@ export default function SearchStackScreen() {
       <SearchStack.Screen
         options={{ headerShown: false }}
         name="Details"
-        component={DetailsScreen}
+        component={MovieDetails}
       />
     </SearchStack.Navigator>
   );

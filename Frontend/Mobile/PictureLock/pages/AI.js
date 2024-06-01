@@ -110,7 +110,7 @@ function AIScreen({ navigation }) {
   };
 
   return (
-    <View className="ios:mt-10 p-3 space-y-3">
+    <View className="ios:mt-10 p-3 space-y-3 w-full h-full">
       <Text className="dark:text-white font-bold text-3xl">The Slate</Text>
       <ScrollView>
         <View className="space-y-2">
@@ -204,7 +204,6 @@ function AIScreen({ navigation }) {
             {(suggestions !== null) & (search.length > 3)
               ? suggestions.map((item, index) => (
                   <TouchableOpacity
-                    className="w-1/4 h-36 p-1"
                     key={index}
                     onPress={() => handleMovieNameChange(item.title)}
                   >
@@ -215,13 +214,13 @@ function AIScreen({ navigation }) {
                           : "border-transparent"
                       }`}
                     >
-                      <MoviePoster item={item} />
+                      <MoviePoster item={item} size={"small"} />
                     </View>
                   </TouchableOpacity>
                 ))
               : titles.slice(0, 8).map((movie, index) => (
                   <TouchableOpacity
-                    className="w-1/4 h-36 p-1"
+                    className="w-1/4"
                     key={index}
                     onPress={() => handleMovieNameChange(movie.title)}
                   >
@@ -232,21 +231,19 @@ function AIScreen({ navigation }) {
                           : "border-transparent"
                       }`}
                     >
-                      <MoviePoster item={movie} />
+                      <MoviePoster item={movie} size={"small"} />
                     </View>
                   </TouchableOpacity>
                 ))}
           </View>
         </View>
-        <TouchableOpacity
-          className=" bg-black/10 dark:bg-white/10 p-3 rounded-2xl mb-20"
-          onPress={handleRecommendation}
-        >
-          <Text className="font-bold text-center dark:text-white">
-            Recommend
-          </Text>
-        </TouchableOpacity>
       </ScrollView>
+      <TouchableOpacity
+        className="absolute bottom-0 left-0 right-0 mb-32 mx-4 bg-black/10 dark:bg-white/10 p-3 rounded-2xl"
+        onPress={handleRecommendation}
+      >
+        <Text className="font-bold text-center dark:text-white">Recommend</Text>
+      </TouchableOpacity>
     </View>
   );
 }
