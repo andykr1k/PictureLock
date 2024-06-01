@@ -8,16 +8,24 @@ import {
   Text,
   TextInput,
   Button,
-  FlatList
+  FlatList,
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { IconButton } from "../components";
 import { useUser } from "../lib/UserContext";
-import { handleLogOut, handleUploadProfilePicture, handleUsernameUpdate, handleNameUpdate } from "../lib/supabaseUtils";
+import {
+  handleLogOut,
+  handleUploadProfilePicture,
+  handleUsernameUpdate,
+  handleNameUpdate,
+} from "../lib/supabaseUtils";
 import * as ImagePicker from "expo-image-picker";
+import { useNavigation } from "@react-navigation/native";
 
-function ProfileScreen({ navigation }) {
-  const { session, user, pic } = useUser();
+function Profile() {
+  const navigation = useNavigation();
+
+  const { session, user, pic, followers, following } = useUser();
 
   return (
     <View className="p-2 ios:mt-10">
@@ -49,8 +57,12 @@ function ProfileScreen({ navigation }) {
               </Text>
             </View>
             <View className="flex flex-row space-x-2 justify-center">
-              <Text className="dark:text-white">Followers: 10</Text>
-              <Text className="dark:text-white">Following: 10</Text>
+              <Text className="dark:text-white">
+                Followers: {followers.length}
+              </Text>
+              <Text className="dark:text-white">
+                Following: {following.length}
+              </Text>
             </View>
           </View>
         </View>
@@ -64,8 +76,9 @@ function ProfileScreen({ navigation }) {
   );
 }
 
-function SettingsScreen({ navigation }) {
+function SettingsScreen() {
   const { session, user, pic, refreshUserData } = useUser();
+  const navigation = useNavigation();
 
   const [name, setName] = useState(user.full_name);
   const [username, setUsername] = useState(user.username);
@@ -79,7 +92,7 @@ function SettingsScreen({ navigation }) {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 0.8,
-      base64: true
+      base64: true,
     });
     if (!result.canceled) {
       setProfileImage(result.assets[0].uri);
@@ -167,7 +180,7 @@ function SettingsScreen({ navigation }) {
 
 const ProfileStack = createNativeStackNavigator();
 
-export default function ProfileStackScreen({ navigation }) {
+export default function ProfileStackScreen() {
   const colorScheme = useColorScheme();
 
   return (
@@ -178,8 +191,8 @@ export default function ProfileStackScreen({ navigation }) {
       }}
     >
       <ProfileStack.Screen
-        name="Profile"
-        component={ProfileScreen}
+        name="profile"
+        component={Profile}
         options={{ headerShown: false }}
       />
       <ProfileStack.Screen

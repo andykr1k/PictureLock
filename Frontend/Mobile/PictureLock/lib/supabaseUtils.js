@@ -260,3 +260,61 @@ export async function getLikes(id) {
 
   return data;
 }
+
+export async function getFollowers(id) {
+  const { data, error } = await supabase
+    .from("followers")
+    .select("*")
+    .eq("id", id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data;
+}
+
+export async function getFollowing(id) {
+  const { data, error } = await supabase
+    .from("followers")
+    .select("*")
+    .eq("following", id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data;
+}
+
+export async function handleFollow(user_id, follow_id, refreshUserData) {
+  const { error } = await supabase
+    .from("followers")
+    .insert({
+      id: follow_id,
+      following: user_id,
+    })
+    .select();
+
+  if (error) {
+    console.log(error);
+  } else {
+    refreshUserData();
+  }
+}
+
+export async function handleUnfollow(user_id, follow_id, refreshUserData) {
+  const { error } = await supabase
+    .from("followers")
+    .delete()
+    .eq("id", follow_id)
+    .eq("following", user_id);
+
+  if (error) {
+    console.log(error);
+  } else {
+    refreshUserData();
+  }
+}

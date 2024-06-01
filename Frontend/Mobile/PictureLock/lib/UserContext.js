@@ -6,7 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import { supabase } from "./supabase";
-import { getProfilePictureUrl, fetchPosts } from "./supabaseUtils";
+import { getProfilePictureUrl, fetchPosts, getFollowers, getFollowing } from "./supabaseUtils";
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
@@ -14,6 +14,8 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [pic, setPic] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [followers, setFollowers] = useState();
+  const [following, setFollowing] = useState();
 
   const fetchUserData = useCallback(async (userId) => {
     const { data, error } = await supabase
@@ -28,6 +30,8 @@ export const UserProvider = ({ children }) => {
       setUser(data);
       setPic(await getProfilePictureUrl(userId));
       setPosts(await fetchPosts())
+      setFollowers(await getFollowers(userId));
+      setFollowing(await getFollowing(userId));
     }
   }, []);
 
@@ -54,7 +58,7 @@ export const UserProvider = ({ children }) => {
   }, [session, fetchUserData]);
 
   return (
-    <UserContext.Provider value={{ session, user, pic, refreshUserData, posts }}>
+    <UserContext.Provider value={{ session, user, pic, refreshUserData, posts, followers, following }}>
       {children}
     </UserContext.Provider>
   );

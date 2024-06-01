@@ -142,6 +142,7 @@ function MovieDetails() {
           <View className="flex-row flex-wrap">
             {similarMovies.results.map((item) => (
               <TouchableOpacity
+                key={item.id}
                 className="w-1/4 p-1"
                 onPress={() => navigation.navigate("Details", { item })}
               >

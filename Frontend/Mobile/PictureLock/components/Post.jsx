@@ -30,6 +30,7 @@ function Post(props) {
   const [item, setItem] = useState({ id: props.post.movie_id });
   const [spoilerBlur, setSpoilerBlur] = useState(true);
   const [userID, setuserID] = useState(props.post.author);
+  
   useEffect(() => {
     const fetchUsername = async () => {
       const username = await getUsername(props.post.author);
@@ -112,17 +113,29 @@ function Post(props) {
         </View>
       </Modal>
       <View className="flex flex-row space-x-2 w-full">
-        <View className="flex w-1/10">
-          {userpic && (
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Profile", { userID, userpic })
-              }
-            >
-              <Image source={{ uri: userpic }} className="w-8 h-8 rounded-md" />
-            </TouchableOpacity>
-          )}
-        </View>
+        {userpic && (
+          <View className="flex w-1/10">
+            {userID === session.user.id ? (
+              <TouchableOpacity onPress={() => navigation.navigate("profile")}>
+                <Image
+                  source={{ uri: userpic }}
+                  className="w-8 h-8 rounded-md"
+                />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("ProfileScreen", { userID, userpic })
+                }
+              >
+                <Image
+                  source={{ uri: userpic }}
+                  className="w-8 h-8 rounded-md"
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
         <View className="flex-1 w-8/10">
           <View className="flex flex-row justify-between mb-1">
             <View className="flex flex-row">
