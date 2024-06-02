@@ -217,6 +217,20 @@ export async function fetchPosts() {
   return data;
 }
 
+export async function getPosts(id) {
+  const { data, error } = await supabase
+    .from("posts")
+    .select("*")
+    .eq("author", id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data;
+}
+
 export async function getUser(id) {
   const { data, error } = await supabase
     .from("profiles")

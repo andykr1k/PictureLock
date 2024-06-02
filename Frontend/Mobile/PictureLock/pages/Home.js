@@ -10,9 +10,10 @@ import { MovieDetails, Post, CreatePost, ProfileScreen } from "../components";
 import { RefreshControl } from "react-native-gesture-handler";
 import React from "react";
 import { useUser } from "../lib/UserContext";
+import { useNavigation } from "@react-navigation/native";
 
-
-function HomeScreen({ navigation }) {
+function HomeScreen() {
+  const navigation = useNavigation();
   const animationRef = React.useRef(null);
   const { refreshUserData, posts } = useUser();
 
@@ -45,7 +46,7 @@ function HomeScreen({ navigation }) {
       >
         {posts &&
           posts.map((item, index) => {
-            return <Post key={index} post={item} navigation={navigation} />;
+            return <Post key={index} post={item} />;
           })}
         <View className="p-12"></View>
       </ScrollView>

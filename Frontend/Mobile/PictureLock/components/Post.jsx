@@ -1,4 +1,12 @@
-import { Text, View, Image, Modal, ScrollView, TextInput } from "react-native";
+import {
+  Text,
+  View,
+  Image,
+  Modal,
+  ScrollView,
+  TextInput,
+  Animated,
+} from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import IconButton from "./IconButton";
 import TimeAgo from "../functions/TimeAgo";
@@ -11,11 +19,15 @@ import {
   handleUnlike,
   handleComment,
 } from "../lib/supabaseUtils";
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect, memo, useRef } from "react";
 import { useUser } from "../lib/UserContext";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import Comment from "./Comment";
 import { useNavigation } from "@react-navigation/native";
+import {
+  TouchableOpacity,
+  PanGestureHandler,
+  State,
+} from "react-native-gesture-handler";
 
 function Post(props) {
   const navigation = useNavigation();
@@ -26,11 +38,12 @@ function Post(props) {
   const [comments, setComments] = useState(null);
   const [likes, setLikes] = useState(null);
   const [liked, setLiked] = useState(false);
-  const [text, onChangeText] = useState("");
+  const [text, setText] = useState("");
   const [item, setItem] = useState({ id: props.post.movie_id });
   const [spoilerBlur, setSpoilerBlur] = useState(true);
   const [userID, setuserID] = useState(props.post.author);
-  
+  const translateY = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
     const fetchUsername = async () => {
       const username = await getUsername(props.post.author);
@@ -61,9 +74,38 @@ function Post(props) {
     fetchLikes();
   }, [props.post]);
 
+  const handleGesture = Animated.event(
+    [{ nativeEvent: { translationY: translateY } }],
+    { useNativeDriver: false }
+  );
+
+  const handleStateChange = ({ nativeEvent }) => {
+    if (nativeEvent.state === State.END) {
+      if (nativeEvent.translationY > 100) {
+        setModalVisible(false);
+      } else {
+        Animated.spring(translateY, {
+          toValue: 0,
+          useNativeDriver: true,
+        }).start();
+      }
+    }
+  };
+
+  const translateYClamped = translateY.interpolate({
+    inputRange: [0, 600],
+    outputRange: [0, 600],
+    extrapolate: "clamp",
+  });
+
   const stars = Array.from({ length: props.post.stars }, (_, index) => (
     <IconButton key={index} icon="star" size={14} />
   ));
+
+  const handleCommentSubmit = async () => {
+    await handleComment(props.post.id, session.user.id, text, refreshUserData);
+    setText("");
+  };
 
   return (
     <View className="w-full mb-3 border-b-[0.25px] border-black/10 dark:border-white/10 pb-3">
@@ -76,41 +118,52 @@ function Post(props) {
           setModalVisible(!modalVisible);
         }}
       >
-        <View className="bg-white/95 dark:bg-black/95 absolute bottom-0 left-0 right-0 h-3/4 p-2 rounded-xl">
-          <View className="flex flex-row justify-center">
-            <TouchableOpacity
-              className="h-2 bg-black/10 dark:bg-white/10 w-20 rounded-md"
-              onPress={() => setModalVisible(!modalVisible)}
-            />
-          </View>
-          <View className="flex flex-row mt-2 justify-between">
-            <TextInput
-              placeholder="Comment"
-              value={text}
-              onChangeText={onChangeText}
-              className="dark:text-white bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md w-[85%]"
-            />
-            <TouchableOpacity
-              onPress={() =>
-                handleComment(
-                  props.post.id,
-                  session.user.id,
-                  text,
-                  refreshUserData
-                )
-              }
-              className="bg-black/10 dark:bg-white/10 p-4 rounded-md"
-            >
-              <IconButton icon="upload" size={20} />
-            </TouchableOpacity>
-          </View>
-          <ScrollView className="mt-2">
-            {comments &&
-              comments.map((item, index) => (
-                <Comment key={index} post={item} />
-              ))}
-          </ScrollView>
-        </View>
+        <PanGestureHandler
+          onGestureEvent={handleGesture}
+          onHandlerStateChange={handleStateChange}
+        >
+          <Animated.View
+            style={{
+              transform: [{ translateY: translateYClamped }],
+              backgroundColor: "rgba(0, 0, 0, 0.95)",
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: "75%",
+              padding: 16,
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+            }}
+          >
+            <View className="flex flex-row justify-center">
+              <TouchableOpacity
+                className="h-2 bg-black/10 dark:bg-white/10 w-20 rounded-md"
+                onPress={() => setModalVisible(!modalVisible)}
+              />
+            </View>
+            <View className="flex flex-row mt-2 justify-between">
+              <TextInput
+                placeholder="Comment"
+                value={text}
+                onChangeText={setText}
+                className="dark:text-white bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md w-[85%]"
+              />
+              <TouchableOpacity
+                onPress={handleCommentSubmit}
+                className="bg-black/10 dark:bg-white/10 p-4 rounded-md"
+              >
+                <IconButton icon="upload" size={20} />
+              </TouchableOpacity>
+            </View>
+            <ScrollView showsVerticalScrollIndicator={false} className="mt-2">
+              {comments &&
+                comments.map((item, index) => (
+                  <Comment key={index} post={item} />
+                ))}
+            </ScrollView>
+          </Animated.View>
+        </PanGestureHandler>
       </Modal>
       <View className="flex flex-row space-x-2 w-full">
         {userpic && (

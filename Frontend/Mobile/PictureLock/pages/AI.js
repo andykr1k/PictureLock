@@ -252,7 +252,7 @@ function DetailsScreen({ route, navigation }) {
   const { movies, recommendations } = route.params;
 
   return (
-    <View className="p-2 ios:mt-10">
+    <View className="p-3 ios:mt-10">
       <Text className="dark:text-white font-bold text-3xl mb-2">
         Recommendations
       </Text>

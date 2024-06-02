@@ -6,3 +6,4 @@ export { default as MoviePoster } from './MoviePoster'
 export { default as MovieDetails } from "./MovieDetails";
 export { default as CreatePost } from './CreatePost'
 export { default as ProfileScreen } from "./ProfileScreen";
+export { default as ProfileTabs } from "./ProfileTabs";

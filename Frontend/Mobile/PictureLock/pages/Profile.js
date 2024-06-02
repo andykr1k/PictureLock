@@ -11,7 +11,7 @@ import {
   FlatList,
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { IconButton } from "../components";
+import { IconButton, ProfileTabs } from "../components";
 import { useUser } from "../lib/UserContext";
 import {
   handleLogOut,
@@ -25,10 +25,10 @@ import { useNavigation } from "@react-navigation/native";
 function Profile() {
   const navigation = useNavigation();
 
-  const { session, user, pic, followers, following } = useUser();
+  const { session, user, pic, posts, followers, following } = useUser();
 
   return (
-    <View className="p-2 ios:mt-10">
+    <View className="p-3 ios:mt-10">
       <View className="flex flex-row items-center justify-between">
         <Text className="dark:text-white font-bold text-3xl mb-2">
           {user.username}
@@ -37,41 +37,37 @@ function Profile() {
           <IconButton icon="settings" size={28} />
         </TouchableOpacity>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false} className="h-full">
-        <View className="flex-1 space-y-2 items-center">
+      <View className="flex flex-row justify-around">
+        <View className="flex items-center">
           {pic && (
-            <Image
-              source={{ uri: pic }}
-              style={{ width: 100, height: 100, borderRadius: 50 }}
-            />
+            <Image source={{ uri: pic }} className="w-24 h-24 rounded-full" />
           )}
-          <View className="space-y-1">
-            <View className="flex flex-row space-x-1 justify-center">
-              <Text className="dark:text-white font-bold text-lg">
-                {user.full_name}
-              </Text>
-            </View>
-            <View className="flex flex-row space-x-1 justify-center">
-              <Text className="dark:text-white font-bold text-md">
-                {session.user.email}
-              </Text>
-            </View>
-            <View className="flex flex-row space-x-2 justify-center">
-              <Text className="dark:text-white">
-                Followers: {followers.length}
-              </Text>
-              <Text className="dark:text-white">
-                Following: {following.length}
-              </Text>
-            </View>
+          <View className="flex flex-row space-x-1 justify-center">
+            <Text className="dark:text-white font-bold text-lg">
+              {user.full_name}
+            </Text>
           </View>
         </View>
-        <TouchableOpacity className="w-full bg-black/10 dark:bg-white/10 mt-4 p-4 rounded-md">
-          <Text className="font-bold text-center dark:text-white">
-            Create A New List
-          </Text>
-        </TouchableOpacity>
-      </ScrollView>
+        <View className="flex flex-row space-x-5 justify-around items-center mt-3">
+          <View className="items-center">
+            <Text className="dark:text-white font-bold">{posts.length}</Text>
+            <Text className="dark:text-white font-bold">Posts</Text>
+          </View>
+          <View className="items-center">
+            <Text className="dark:text-white font-bold">
+              {followers.length}
+            </Text>
+            <Text className="dark:text-white font-bold">Followers</Text>
+          </View>
+          <View className="items-center">
+            <Text className="dark:text-white font-bold">
+              {following.length}
+            </Text>
+            <Text className="dark:text-white font-bold">Following</Text>
+          </View>
+        </View>
+      </View>
+      <ProfileTabs id={session.user.id} posts={posts} />
     </View>
   );
 }
@@ -101,9 +97,9 @@ function SettingsScreen() {
   };
 
   return (
-    <View className="p-3 space-y-1 mt-12">
+    <View className="p-3 space-y-3 mt-12">
       <Text className="dark:text-white font-bold text-3xl">Settings</Text>
-      <ScrollView>
+      <ScrollView className="h-full space-y-3">
         <View className="flex w-full justify-center items-center mb-4">
           {currentProfileImage && !profileImage ? (
             <Image
