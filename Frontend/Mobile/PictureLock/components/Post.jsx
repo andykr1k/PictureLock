@@ -97,8 +97,8 @@ function Post(props) {
   };
 
   const translateYClamped = translateY.interpolate({
-    inputRange: [0, 200],
-    outputRange: [0, 200],
+    inputRange: [0, 100],
+    outputRange: [0, 100],
     extrapolate: "clamp",
   });
 
@@ -150,7 +150,7 @@ function Post(props) {
             onHandlerStateChange={handleStateChange}
           >
             <Animated.View
-              className="bg-white/90 dark:bg-black/50"
+              className="bg-white/90 dark:bg-black/90"
               style={{
                 transform: [{ translateY: translateYClamped }],
                 position: "absolute",
@@ -195,7 +195,7 @@ function Post(props) {
             onHandlerStateChange={handleStateChange}
           >
             <Animated.View
-              className="bg-white/90 dark:bg-black/50"
+              className="bg-white/90 dark:bg-black/90"
               style={{
                 transform: [{ translateY: translateYClamped }],
                 position: "absolute",
@@ -250,7 +250,7 @@ function Post(props) {
               />
             </TouchableOpacity>
           )}
-          <View className="flex flex-row space-x-2 w-full absolute bottom-0 p-2 bg-white/90 dark:bg-black/50 rounded-md">
+          <View className="flex flex-row space-x-2 w-full absolute bottom-0 p-2 bg-white/90 dark:bg-black/90 rounded-md">
             {userpic && (
               <View className="flex w-1/10">
                 {userID === session.user.id ? (
