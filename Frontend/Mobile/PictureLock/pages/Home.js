@@ -11,19 +11,25 @@ import { RefreshControl } from "react-native-gesture-handler";
 import React from "react";
 import { useUser } from "../lib/UserContext";
 import { useNavigation } from "@react-navigation/native";
+import * as Haptics from "expo-haptics";
 
 function HomeScreen() {
   const navigation = useNavigation();
   const animationRef = React.useRef(null);
   const { refreshUserData, posts } = useUser();
 
-  function refresh() {
+  async function refresh() {
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     animationRef.current?.play();
-    setTimeout(() => {
-      refreshUserData();
-      animationRef.current?.play();
-    }, 100);
+    try {
+      await refreshUserData();
+    } catch (error) {
+      console.error("Failed to refresh data:", error);
+    } finally {
+      animationRef.current?.reset();
+    }
   }
+
   return (
     <View className="ios:ios:mt-10 p-3 space-y-3">
       <View className="flex flex-row justify-between">
@@ -33,6 +39,7 @@ function HomeScreen() {
         </TouchableOpacity>
       </View>
       <ScrollView
+        className="h-full"
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
@@ -40,7 +47,6 @@ function HomeScreen() {
             onRefresh={() => {
               refresh();
             }}
-            tintColor={"transparent"}
           />
         }
       >

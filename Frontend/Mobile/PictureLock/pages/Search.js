@@ -47,17 +47,19 @@ function SearchScreen() {
                   </TouchableOpacity>
                 );
               })
-            : titles.slice(0, 20).map((item) => {
-                return (
-                  <TouchableOpacity
-                    className="w-1/4 p-1"
-                    key={item.id}
-                    onPress={() => navigation.navigate("Details", { item })}
-                  >
-                    <MoviePoster item={item} size={"small"} />
-                  </TouchableOpacity>
-                );
-              })}
+            : titles
+                .slice(0, 20)
+                .map((item) => {
+                  return (
+                    <TouchableOpacity
+                      className="w-1/4 p-1"
+                      key={item.id}
+                      onPress={() => navigation.navigate("Details", { item })}
+                    >
+                      <MoviePoster item={item} size={"small"} />
+                    </TouchableOpacity>
+                  );
+                })}
         </View>
         <View className="p-12"></View>
       </ScrollView>

@@ -9,6 +9,7 @@ import {
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
+import Loading from "./Loading";
 
 function MovieDetails() {
   const ref = useRef(null);
@@ -25,8 +26,11 @@ function MovieDetails() {
         const data = await GetMovie(item);
         const similar = await GetSimilarMovies(item);
         const providers = await GetProviders(item);
+        const filteredSimilarMovies = similar.results.filter(
+          (movie) => movie.poster_path !== null
+        );
         setData(data);
-        setSimilarMovies(similar);
+        setSimilarMovies({ ...similar, results: filteredSimilarMovies });
         setProviders(providers);
       } catch (error) {
         console.error("Error fetching movie data:", error);
@@ -41,7 +45,9 @@ function MovieDetails() {
   }, [item]);
 
   if (!data || !similarMovies || !providers) {
-    return <Text>Loading...</Text>;
+    return (
+      <Loading/>
+    );
   }
 
   return (

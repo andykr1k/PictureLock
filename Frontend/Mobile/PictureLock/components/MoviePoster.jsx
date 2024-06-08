@@ -3,15 +3,17 @@ import GetMovie from "../functions/GetMovie";
 import { Image } from "react-native";
 
 const MoviePoster = ({ item, size }) => {
-
   const [posterUri, setPosterUri] = useState(null);
 
   useEffect(() => {
     const fetchPoster = async () => {
       try {
         const data = await GetMovie(item);
-        setPosterUri(`https://image.tmdb.org/t/p/w1280/${data.poster_path}`);
-        item.poster = `https://image.tmdb.org/t/p/w1280/${data.poster_path}`;
+        if (data.poster_path) {
+          const uri = `https://image.tmdb.org/t/p/w1280/${data.poster_path}`;
+          setPosterUri(uri);
+          item.poster = uri;
+        }
       } catch (error) {
         console.error("Error fetching poster:", error);
       }

@@ -6,13 +6,13 @@ const IconButton = ({ icon, text, size, color }) => {
 
   const colorScheme = useColorScheme();
   
-  const themeIconStyle = colorScheme === 'light' ? 'gray' : 'white';
+  const themeIconStyle = colorScheme === 'light' ? 'black' : 'white';
   
   if ( color !== undefined){
     return (
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <MaterialIcons name={icon} size={size} color={color} />
-        <Text style={{ fontSize: 10, color: themeIconStyle, marginLeft: 2 }}>
+        <Text style={{ fontSize: 10, color: themeIconStyle }}>
           {text}
         </Text>
       </View>
@@ -22,7 +22,7 @@ const IconButton = ({ icon, text, size, color }) => {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <MaterialIcons name={icon} size={size} color={themeIconStyle} />
-      <Text style={{ fontSize: 10, color: themeIconStyle, marginLeft: 2, }}>{text}</Text>
+      <Text style={{ fontSize: 10, color: themeIconStyle }}>{text}</Text>
     </View>
   );
 };

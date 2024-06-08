@@ -17,7 +17,7 @@ export default function TimeAgo(time) {
     } else if ( diffInDays == 1){
         return "yesterday";
     } else {
-        return diffInDays + "days"
+        return diffInDays + " days"
     }
 
 }

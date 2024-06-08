@@ -12,10 +12,11 @@ import MoviePoster from "../components/MoviePoster";
 import IconButton from "../components/IconButton";
 import { handleCreatePost } from "../lib/supabaseUtils";
 import { useUser } from "../lib/UserContext";
+import { useNavigation } from "@react-navigation/native";
 
-export default function CreatePost({ navigation }) {
+export default function CreatePost() {
+  const navigation = useNavigation();
   const { session, refreshUserData } = useUser();
-
   const [review, setReview] = useState("");
   const [stars, setStars] = useState(0);
   const [movie, setMovie] = useState("");
@@ -56,6 +57,20 @@ export default function CreatePost({ navigation }) {
     setMoviePoster(e.poster);
   };
 
+  const handlePost = async() => {
+    await handleCreatePost(
+      movie,
+      movieID,
+      moviePoster,
+      review,
+      stars,
+      session.user.id,
+      refreshUserData,
+      spoiler
+    );
+    navigation.navigate("PictureLock");
+  };
+
   return (
     <View className="ios:mt-10 p-3 space-y-3">
       <Text className="dark:text-white font-bold text-3xl">Post</Text>
@@ -64,43 +79,43 @@ export default function CreatePost({ navigation }) {
         onChangeText={handleSearchValueChange}
         className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
       ></TextInput>
-        <View className="flex flex-row flex-wrap">
-          {(suggestions !== null) & (search.length > 3)
-            ? suggestions.map((item, index) => (
-                <TouchableOpacity
-                  className="w-1/4"
-                  key={index}
-                  onPress={() => handleMovie(item)}
+      <View className="flex flex-row flex-wrap">
+        {(suggestions !== null) & (search.length > 3)
+          ? suggestions.map((item, index) => (
+              <TouchableOpacity
+                className="w-1/4"
+                key={index}
+                onPress={() => handleMovie(item)}
+              >
+                <View
+                  className={`border-2 rounded-md ${
+                    movie === item.title
+                      ? "border-orange-500"
+                      : "border-transparent"
+                  }`}
                 >
-                  <View
-                    className={`border-2 rounded-md ${
-                      movie === item.title
-                        ? "border-orange-500"
-                        : "border-transparent"
-                    }`}
-                  >
-                    <MoviePoster item={item} size={"small"} />
-                  </View>
-                </TouchableOpacity>
-              ))
-            : titles.slice(0, 8).map((item, index) => (
-                <TouchableOpacity
-                  className="w-1/4"
-                  key={index}
-                  onPress={() => handleMovie(item)}
+                  <MoviePoster item={item} size={"small"} />
+                </View>
+              </TouchableOpacity>
+            ))
+          : titles.slice(0, 8).map((item, index) => (
+              <TouchableOpacity
+                className="w-1/4"
+                key={index}
+                onPress={() => handleMovie(item)}
+              >
+                <View
+                  className={`border-2 rounded-md ${
+                    movie === item.title
+                      ? "border-orange-500"
+                      : "border-transparent"
+                  }`}
                 >
-                  <View
-                    className={`border-2 rounded-md ${
-                      movie === item.title
-                        ? "border-orange-500"
-                        : "border-transparent"
-                    }`}
-                  >
-                    <MoviePoster item={item} size={"small"} />
-                  </View>
-                </TouchableOpacity>
-              ))}
-        </View>
+                  <MoviePoster item={item} size={"small"} />
+                </View>
+              </TouchableOpacity>
+            ))}
+      </View>
       <TextInput
         placeholder="Write a review"
         onChangeText={setReview}
@@ -117,18 +132,7 @@ export default function CreatePost({ navigation }) {
       </View>
       <View className="flex flex-row justify-center mt-2">{renderStars()}</View>
       <TouchableOpacity
-        onPress={() =>
-          handleCreatePost(
-            movie,
-            movieID,
-            moviePoster,
-            review,
-            stars,
-            session.user.id,
-            refreshUserData,
-            spoiler
-          )
-        }
+        onPress={handlePost}
         className="w-full bg-black/10 dark:bg-white/10 p-4 rounded-md"
       >
         <Text className="font-bold text-center dark:text-white">Post</Text>

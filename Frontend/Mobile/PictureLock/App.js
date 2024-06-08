@@ -115,18 +115,20 @@ export default function App() {
   const theme = colorScheme === "light" ? LightTheme : DarkTheme;
   return (
     <UserProvider>
-      <NavigationContainer theme={theme}>
-        <StatusBar
-          barStyle={colorScheme === "light" ? "dark-content" : "light-content"}
-          backgroundColor={theme.colors.background}
-        />
-        <Stack.Navigator
-          initialRouteName={"HomeTabs"}
-          screenOptions={{ headerShown: false }}
-        >
-          <Stack.Screen name="HomeTabs" component={HomeTabs} />
-        </Stack.Navigator>
-      </NavigationContainer>
+        <NavigationContainer theme={theme}>
+          <StatusBar
+            barStyle={
+              colorScheme === "light" ? "dark-content" : "light-content"
+            }
+            backgroundColor={theme.colors.background}
+          />
+          <Stack.Navigator
+            initialRouteName={"HomeTabs"}
+            screenOptions={{ headerShown: false }}
+          >
+            <Stack.Screen name="HomeTabs" component={HomeTabs} />
+          </Stack.Navigator>
+        </NavigationContainer>
     </UserProvider>
   );
 }

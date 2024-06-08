@@ -7,3 +7,4 @@ export { default as MovieDetails } from "./MovieDetails";
 export { default as CreatePost } from './CreatePost'
 export { default as ProfileScreen } from "./ProfileScreen";
 export { default as ProfileTabs } from "./ProfileTabs";
+export { default as Loading } from "./Loading";

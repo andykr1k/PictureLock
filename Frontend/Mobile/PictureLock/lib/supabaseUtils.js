@@ -106,6 +106,7 @@ export async function handleUsernameUpdate(username, id, refreshUserData) {
 }
 
 export async function handleLogOut() {
+
   const { error } = await supabase.auth.signOut();
   if (error) {
     console.log(error);
@@ -124,6 +125,7 @@ export async function handleCreatePost(
   refreshUserData,
   spoiler
 ) {
+
   const { error } = await supabase
     .from("posts")
     .insert({
@@ -144,7 +146,7 @@ export async function handleCreatePost(
   }
 }
 
-export async function handleComment(post_id, user_id, comment, refreshUserData) {
+export async function handleComment(post_id, user_id, comment, refreshUserData){
   const { error } = await supabase
     .from("comments")
     .insert({
@@ -191,6 +193,7 @@ export async function handleLike(post_id, user_id, refreshUserData) {
 }
 
 export async function handleUnlike(post_id, user_id, refreshUserData) {
+
   const { error } = await supabase
     .from("likes")
     .delete()
@@ -215,6 +218,19 @@ export async function fetchPosts() {
   }
 
   return data;
+}
+
+export async function handleDeletePost(post_id, refreshUserData) {
+  const { error } = await supabase
+    .from("posts")
+    .delete()
+    .eq("post_id", post_id)
+
+  if (error) {
+    console.log(error);
+  } else {
+    refreshUserData();
+  }
 }
 
 export async function getPosts(id) {

@@ -17,8 +17,8 @@ const ProfileTabs = (props) => {
         return (
           <ScrollView showsVerticalScrollIndicator={false} className="max-h-screen">
             <View className="flex items-center">
-              {feed &&
-                feed.map((item, index) => <Post key={index} post={item} />)}
+              {/* {feed &&
+                feed.map((item, index) => <Post key={index} post={item} />)} */}
             </View>
             <View className="p-44"></View>
           </ScrollView>

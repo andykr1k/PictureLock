@@ -17,6 +17,7 @@ import { MoviePoster } from "../components";
 
 function AIScreen({ navigation }) {
   const filmtypes = ["TV Show", "Movie"];
+
   const platforms = [
     {
       name: "Amazon Prime",
@@ -43,6 +44,7 @@ function AIScreen({ navigation }) {
       image: require("../assets/hbo_logo.png"),
     },
   ];
+  
   const genres = ["Action", "Drama", "Comedy", "Romance", "Thriller", "Horror"];
   const [recommends, setRecommends] = useState(null);
   const [movieName, setMovieName] = useState("");
