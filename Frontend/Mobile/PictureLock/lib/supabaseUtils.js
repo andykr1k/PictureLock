@@ -146,13 +146,14 @@ export async function handleCreatePost(
   }
 }
 
-export async function handleComment(post_id, user_id, comment, refreshUserData){
+export async function handleComment(post_id, user_id, comment, refreshUserData, author){
   const { error } = await supabase
     .from("comments")
     .insert({
       post_id: post_id,
       user_id: user_id,
       comment: comment,
+      author_id: author
     })
     .select();
 
@@ -176,12 +177,13 @@ export async function handleDeleteComment(comment_id, refreshUserData) {
   }
 }
 
-export async function handleLike(post_id, user_id, refreshUserData) {
+export async function handleLike(post_id, user_id, refreshUserData, author) {
   const { error } = await supabase
     .from("likes")
     .insert({
       post_id: post_id,
       user_id: user_id,
+      author_id: author
     })
     .select();
 
@@ -259,6 +261,34 @@ export async function getUser(id) {
 
   if (data.length === 0) {
     console.error("Error fetching profile username.");
+  }
+
+  return data;
+}
+
+export async function getUserComments(id) {
+  const { data, error } = await supabase
+    .from("comments")
+    .select("*")
+    .eq("author_id", id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data;
+}
+
+export async function getUserLikes(id) {
+  const { data, error } = await supabase
+    .from("likes")
+    .select("*")
+    .eq("author_id", id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.log(error);
   }
 
   return data;

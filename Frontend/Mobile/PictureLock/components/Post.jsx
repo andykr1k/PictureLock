@@ -107,7 +107,7 @@ function Post(props) {
   ));
 
   const handleCommentSubmit = async () => {
-    await handleComment(props.post.id, session.user.id, text, refreshUserData);
+    await handleComment(props.post.id, session.user.id, text, refreshUserData, props.post.author);
     setText("");
   };
 
@@ -344,7 +344,8 @@ function Post(props) {
                           handleLike(
                             props.post.id,
                             session.user.id,
-                            refreshUserData
+                            refreshUserData,
+                            props.post.author
                           )
                         }
                       >

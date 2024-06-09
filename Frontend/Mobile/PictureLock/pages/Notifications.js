@@ -1,87 +1,26 @@
 import { View, ScrollView, Text } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Notification } from "../components";
+import { useNavigation } from "@react-navigation/native";
+import { useUser } from "../lib/UserContext";
 
-const data = [
-  {
-    name: "Andykr1k",
-    status: "just followed you",
-    image: "https://randomuser.me/api/portraits/men/47.jpg",
-  },
-  {
-    name: "JadaGanim",
-    status: "just followed you",
-    image: "https://randomuser.me/api/portraits/women/40.jpg",
-  },
-  {
-    name: "ONoss",
-    status: "liked a recent post",
-    image: "https://randomuser.me/api/portraits/men/40.jpg",
-  },
-  {
-    name: "SWilliams",
-    status: "bookmarked your post",
-    image: "https://randomuser.me/api/portraits/women/13.jpg",
-  },
-  {
-    name: "ONoss",
-    status: "liked a recent post",
-    image: "https://randomuser.me/api/portraits/men/40.jpg",
-  },
-  {
-    name: "SWilliams",
-    status: "bookmarked your post",
-    image: "https://randomuser.me/api/portraits/women/13.jpg",
-  },
-  {
-    name: "Andykr1k",
-    status: "just followed you",
-    image: "https://randomuser.me/api/portraits/men/47.jpg",
-  },
-  {
-    name: "JadaGanim",
-    status: "just followed you",
-    image: "https://randomuser.me/api/portraits/women/40.jpg",
-  },
-  {
-    name: "ONoss",
-    status: "liked a recent post",
-    image: "https://randomuser.me/api/portraits/men/40.jpg",
-  },
-  {
-    name: "SWilliams",
-    status: "commented your post",
-    image: "https://randomuser.me/api/portraits/women/13.jpg",
-  },
-  {
-    name: "Andykr1k",
-    status: "just followed you",
-    image: "https://randomuser.me/api/portraits/men/47.jpg",
-  },
-  {
-    name: "JadaGanim",
-    status: "just followed you",
-    image: "https://randomuser.me/api/portraits/women/40.jpg",
-  },
-  {
-    name: "ONoss",
-    status: "liked a recent post",
-    image: "https://randomuser.me/api/portraits/men/40.jpg",
-  },
-];
-
-function NotificationsScreen({ navigation }) {
+function NotificationsScreen() {
+  const navigation = useNavigation();
+  const { refreshUserData, notifications } = useUser();
+  console.log(notifications)
   return (
     <View className="ios:mt-10 p-3 space-y-3">
       <Text className="dark:text-white font-bold text-3xl">Notifications</Text>
       <ScrollView showsVerticalScrollIndicator={false} className="h-full">
-        {data.map((item, index) => {
+        {notifications.map((item, index) => {
           return (
             <Notification
               key={index}
-              name={item.name}
-              status={item.status}
-              image={item.image}
+              id={item.user_id}
+              content={item?.comment}
+              post_id={item.post_id}
+              date={item.created_at}
+              status={item.type}
             />
           );
         })}

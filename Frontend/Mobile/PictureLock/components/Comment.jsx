@@ -34,7 +34,7 @@ function Comment(props) {
   }, [props.post]);
 
   return (
-    <View className="flex flex-row justify-between mb-2">
+    <View className="flex flex-row justify-between mb-2 max-w-full">
       <View className="flex flex-row items-center">
         {userpic && (
           <Image source={{ uri: userpic }} className="w-8 h-8 rounded-lg" />

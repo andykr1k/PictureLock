@@ -50,12 +50,12 @@ export default function SettingsScreen() {
           {currentProfileImage && !profileImage ? (
             <Image
               source={{ uri: currentProfileImage }}
-              style={{ width: 100, height: 100, borderRadius: 50 }}
+              style={{ width: 200, height: 200, borderRadius: 100 }}
             />
           ) : (
             <Image
               source={{ uri: profileImage }}
-              style={{ width: 100, height: 100, borderRadius: 50 }}
+              style={{ width: 200, height: 200, borderRadius: 100 }}
             />
           )}
           <Button title="Change Picture" onPress={pickImage} />
