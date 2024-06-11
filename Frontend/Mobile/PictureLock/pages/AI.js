@@ -9,6 +9,7 @@ import {
   Button,
   TextInput,
 } from "react-native";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Recommend from "../functions/Recommendation";
 import GetMovieDetails from "../functions/GetMovieDetails";
@@ -17,6 +18,7 @@ import { MoviePoster } from "../components";
 
 function AIScreen({ navigation }) {
   const filmtypes = ["TV Show", "Movie"];
+  const tabBarHeight = useBottomTabBarHeight();
 
   const platforms = [
     {
@@ -114,7 +116,7 @@ function AIScreen({ navigation }) {
   return (
     <View className="ios:mt-10 p-3 space-y-3 w-full h-full">
       <Text className="dark:text-white font-bold text-3xl">The Slate</Text>
-      <ScrollView>
+      <ScrollView className="space-y-2">
         <View className="space-y-2">
           <Text h4 className="dark:text-white font-bold text-lg">
             Film Type
@@ -126,7 +128,7 @@ function AIScreen({ navigation }) {
                 onPress={() => setSelectedTypeIndex(index)}
               >
                 <View
-                  className={`p-3 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
+                  className={`p-1 px-2 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
                     selectedTypeIndex === index
                       ? "border-orange-500"
                       : "border-transparent"
@@ -180,7 +182,7 @@ function AIScreen({ navigation }) {
                   onPress={() => toggleGenreSelection(index)}
                 >
                   <View
-                    className={`p-3 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
+                    className={`p-1 px-2 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
                       selectedGenreIndexes.includes(index)
                         ? "border-orange-500"
                         : "border-transparent"
@@ -241,7 +243,8 @@ function AIScreen({ navigation }) {
         </View>
       </ScrollView>
       <TouchableOpacity
-        className="absolute bottom-0 left-0 right-0 mb-32 mx-4 bg-black/10 dark:bg-white/10 p-3 rounded-2xl"
+        className="absolute left-0 right-0 mx-4 bg-black/10 dark:bg-white/10 p-3 rounded-2xl"
+        style={{ bottom: tabBarHeight + 40 }}
         onPress={handleRecommendation}
       >
         <Text className="font-bold text-center dark:text-white">Recommend</Text>
@@ -288,7 +291,7 @@ export default function AIStackScreen() {
   return (
     <AIStack.Navigator>
       <AIStack.Screen
-        name="PictureLock"
+        name="TheSlate"
         component={AIScreen}
         options={{ headerShown: false }}
       />

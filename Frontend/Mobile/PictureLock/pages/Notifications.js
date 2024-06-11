@@ -5,9 +5,8 @@ import { useNavigation } from "@react-navigation/native";
 import { useUser } from "../lib/UserContext";
 
 function NotificationsScreen() {
-  const navigation = useNavigation();
-  const { refreshUserData, notifications } = useUser();
-  console.log(notifications)
+  const { notifications } = useUser();
+
   return (
     <View className="ios:mt-10 p-3 space-y-3">
       <Text className="dark:text-white font-bold text-3xl">Notifications</Text>

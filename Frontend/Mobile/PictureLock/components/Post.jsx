@@ -29,6 +29,7 @@ import {
   State,
 } from "react-native-gesture-handler";
 import * as Haptics from "expo-haptics";
+import { BlurView } from "expo-blur";
 
 function Post(props) {
   const navigation = useNavigation();
@@ -103,7 +104,7 @@ function Post(props) {
   });
 
   const stars = Array.from({ length: props.post.stars }, (_, index) => (
-    <IconButton key={index} icon="star" size={14} />
+    <IconButton color={"white"} key={index} icon="star" size={14} />
   ));
 
   const handleCommentSubmit = async () => {
@@ -219,7 +220,7 @@ function Post(props) {
                   placeholder="Comment"
                   value={text}
                   onChangeText={setText}
-                  className="dark:text-white bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md w-[85%]"
+                  className="text-white bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md w-[85%]"
                 />
                 <TouchableOpacity
                   onPress={handleCommentSubmit}
@@ -250,12 +251,12 @@ function Post(props) {
               />
             </TouchableOpacity>
           )}
-          <View className="flex flex-row space-x-2 w-full absolute bottom-0 p-2 bg-white/90 dark:bg-black/90 rounded-md">
+          <BlurView className="flex flex-row space-x-2 w-full absolute bottom-0 p-2 overflow-hidden rounded-md">
             {userpic && (
               <View className="flex w-1/10">
                 {userID === session.user.id ? (
                   <TouchableOpacity
-                    onPress={() => navigation.navigate("profile")}
+                    onPress={() => navigation.navigate("ProfileStackScreen")}
                   >
                     <Image
                       source={{ uri: userpic }}
@@ -279,11 +280,11 @@ function Post(props) {
             <View className="flex-1 w-8/10">
               <View className="flex flex-row justify-between mb-1">
                 <View className="flex flex-row items-center">
-                  <Text className="font-bold dark:text-white">{username}</Text>
-                  <Text className="dark:text-white text-xs">
+                  <Text className="font-bold text-white">{username}</Text>
+                  <Text className="text-white text-xs">
                     &nbsp;· {TimeAgo(props.post.created_at)}
                   </Text>
-                  <Text className="dark:text-white text-xs">&nbsp;·&nbsp;</Text>
+                  <Text className="text-white text-xs">&nbsp;·&nbsp;</Text>
                   <View className="flex flex-row justify-center">{stars}</View>
                 </View>
               </View>
@@ -291,26 +292,23 @@ function Post(props) {
                 <View className="flex justify-between">
                   {props.post.spoiler ? (
                     <View className="flex flex-1 pr-1">
-                      <Text className="dark:text-white text-xs">
+                      <Text className="text-white text-xs">
                         {props.post.content}
                       </Text>
                       {spoilerBlur && (
-                        <View
-                          blurRadius={90}
-                          className="w-full h-full bg-white/90 dark:bg-black/80 flex flex-row justify-center absolute rounded-md items-center"
-                        >
+                        <BlurView className="w-full h-full flex flex-row justify-center absolute rounded-md items-center overflow-hidden">
                           <TouchableOpacity
                             onPress={() => setSpoilerBlur(false)}
                           >
-                            <Text className="dark:text-white/70 font-bold">
+                            <Text className="text-white/70 font-bold">
                               Spoiler!
                             </Text>
                           </TouchableOpacity>
-                        </View>
+                        </BlurView>
                       )}
                     </View>
                   ) : (
-                    <Text className="dark:text-white text-xs pr-1">
+                    <Text className="text-white text-xs pr-1">
                       {props.post.content}
                     </Text>
                   )}
@@ -320,6 +318,7 @@ function Post(props) {
                         icon="comment"
                         size={24}
                         text={comments && comments.length}
+                        color={"white"}
                       />
                     </TouchableOpacity>
                     {liked ? (
@@ -336,6 +335,7 @@ function Post(props) {
                           icon="favorite"
                           size={24}
                           text={likes && likes.length}
+                          color={"white"}
                         />
                       </TouchableOpacity>
                     ) : (
@@ -353,6 +353,7 @@ function Post(props) {
                           icon="favorite-outline"
                           size={24}
                           text={likes && likes.length}
+                          color={"white"}
                         />
                       </TouchableOpacity>
                     )}
@@ -360,7 +361,7 @@ function Post(props) {
                 </View>
               </View>
             </View>
-          </View>
+          </BlurView>
         </View>
       </View>
     </TouchableWithoutFeedback>

@@ -12,9 +12,7 @@ const IconButton = ({ icon, text, size, color }) => {
     return (
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <MaterialIcons name={icon} size={size} color={color} />
-        <Text style={{ fontSize: 10, color: themeIconStyle }}>
-          {text}
-        </Text>
+        <Text style={{ fontSize: 10, color: color }}>{text}</Text>
       </View>
     );
   }

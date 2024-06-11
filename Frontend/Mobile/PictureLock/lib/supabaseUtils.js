@@ -271,6 +271,7 @@ export async function getUserComments(id) {
     .from("comments")
     .select("*")
     .eq("author_id", id)
+    .not("user_id", "eq", id)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -285,6 +286,7 @@ export async function getUserLikes(id) {
     .from("likes")
     .select("*")
     .eq("author_id", id)
+    .not("user_id", "eq", id)
     .order("created_at", { ascending: false });
 
   if (error) {

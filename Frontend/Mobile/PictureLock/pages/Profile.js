@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TouchableOpacity,
@@ -16,6 +16,15 @@ function Profile() {
   const navigation = useNavigation();
 
   const { session, user, pic, posts, followers, following } = useUser();
+  const [filteredPosts, setFilteredPosts] = useState([]);
+
+  // Update filteredPosts whenever posts or session.user.id changes
+  useEffect(() => {
+    if (posts && session.user.id) {
+      const filtered = posts.filter((post) => post.author === session.user.id);
+      setFilteredPosts(filtered);
+    }
+  }, [posts, session.user.id]);
 
   return (
     <View className="p-3 ios:mt-10">
@@ -27,20 +36,19 @@ function Profile() {
           <IconButton icon="settings" size={28} />
         </TouchableOpacity>
       </View>
-      <View className="flex flex-row justify-around">
+      <View className="flex flex-row justify-around mt-3">
         <View className="flex items-center">
           {pic && (
             <Image source={{ uri: pic }} className="w-24 h-24 rounded-full" />
           )}
-          <View className="flex flex-row space-x-1 justify-center">
-            {/* <Text className="dark:text-white font-bold text-lg">
-              {user.full_name}
-            </Text> */}
-          </View>
         </View>
         <View className="flex flex-row space-x-5 justify-around items-center">
           <View className="items-center">
-            <Text className="dark:text-white font-bold">{posts.length}</Text>
+            {filteredPosts && (
+              <Text className="dark:text-white font-bold">
+                {filteredPosts.length}
+              </Text>
+            )}
             <Text className="dark:text-white font-bold">Posts</Text>
           </View>
           <View className="items-center">
@@ -57,7 +65,9 @@ function Profile() {
           </View>
         </View>
       </View>
-      <ProfileTabs id={session.user.id} posts={posts} />
+      <View className="mt-3">
+        <ProfileTabs id={session.user.id} posts={filteredPosts} />
+      </View>
     </View>
   );
 }

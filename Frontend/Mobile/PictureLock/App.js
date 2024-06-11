@@ -11,6 +11,7 @@ import {
   NotificationStackScreen,
   ProfileStackScreen,
   LogInScreen,
+  ChatStackScreen,
 } from "./pages";
 import { useColorScheme, StatusBar } from "react-native";
 import { UserProvider, useUser } from "./lib/UserContext";
@@ -58,9 +59,9 @@ function HomeTabs() {
 
           if (iconName === "ai") {
             iconName = "film";
-          } else if (iconName === "notifications") {
-            iconName = "bell";
-          } else if (iconName === "profile") {
+          } else if (iconName === "chat") {
+            iconName = "message-circle";
+          } else if (iconName === "ProfileStackScreen") {
             iconName = "user";
           }
           return <Feathericons name={iconName} size={size} color={color} />;
@@ -94,12 +95,12 @@ function HomeTabs() {
         options={{ headerShown: false }}
       />
       <Tab.Screen
-        name="notifications"
-        component={NotificationStackScreen}
+        name="chat"
+        component={ChatStackScreen}
         options={{ headerShown: false }}
       />
       <Tab.Screen
-        name="profile"
+        name="ProfileStackScreen"
         component={ProfileStackScreen}
         options={{ headerShown: false }}
       />

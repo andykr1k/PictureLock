@@ -9,7 +9,7 @@ const MoviePoster = ({ item, size }) => {
     const fetchPoster = async () => {
       try {
         const data = await GetMovie(item);
-        if (data.poster_path) {
+        if (data.poster_path !== null && data.poster_path !== undefined) {
           const uri = `https://image.tmdb.org/t/p/w1280/${data.poster_path}`;
           setPosterUri(uri);
           item.poster = uri;

@@ -3,16 +3,16 @@ import {
   View,
   Text,
   TextInput,
-  ScrollView,
 } from "react-native";
 import { Switch } from "react-native-gesture-handler";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import titles from "../assets/titles_and_ids.json";
 import MoviePoster from "../components/MoviePoster";
 import IconButton from "../components/IconButton";
 import { handleCreatePost } from "../lib/supabaseUtils";
 import { useUser } from "../lib/UserContext";
 import { useNavigation } from "@react-navigation/native";
+import { SearchMovie } from "../lib/api";
 
 export default function CreatePost() {
   const navigation = useNavigation();
@@ -25,6 +25,9 @@ export default function CreatePost() {
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [spoiler, setSpoiler] = useState(false);
+  const reviewtypes = ["Write review", "Record review"];
+  const feedtypeicons = ["mode-edit", "videocam"];
+    const [selectedTypeIndex, setSelectedTypeIndex] = React.useState(0);
 
   const handleStarPress = (rating) => {
     setStars(rating);
@@ -45,11 +48,14 @@ export default function CreatePost() {
 
   const handleSearchValueChange = (e) => {
     setSearch(e);
-    const filteredTitles = titles.filter((movie) =>
-      movie.title.toLowerCase().includes(search.toLowerCase())
-    );
-    setSuggestions(filteredTitles.slice(0, 8));
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setSuggestions(await SearchMovie(search, 4));
+    };
+    fetchData();
+  }, [search]);
 
   const handleMovie = (e) => {
     setMovie(e.title);
@@ -74,16 +80,17 @@ export default function CreatePost() {
   return (
     <View className="ios:mt-10 p-3 space-y-3">
       <Text className="dark:text-white font-bold text-3xl">Post</Text>
+      <Text className="dark:text-white font-bold text-xl">Choose a film</Text>
       <TextInput
         placeholder="Search for films"
         onChangeText={handleSearchValueChange}
         className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
       ></TextInput>
       <View className="flex flex-row flex-wrap">
-        {(suggestions !== null) & (search.length > 3)
+        {(suggestions !== null) & (search.length > 0)
           ? suggestions.map((item, index) => (
               <TouchableOpacity
-                className="w-1/4"
+                className="w-1/4 p-1"
                 key={index}
                 onPress={() => handleMovie(item)}
               >
@@ -98,9 +105,9 @@ export default function CreatePost() {
                 </View>
               </TouchableOpacity>
             ))
-          : titles.slice(0, 8).map((item, index) => (
+          : titles.slice(0, 4).map((item, index) => (
               <TouchableOpacity
-                className="w-1/4"
+                className="w-1/4 p-1"
                 key={index}
                 onPress={() => handleMovie(item)}
               >
@@ -116,21 +123,55 @@ export default function CreatePost() {
               </TouchableOpacity>
             ))}
       </View>
-      <TextInput
-        placeholder="Write a review"
-        onChangeText={setReview}
-        value={review}
-        multiline={true}
-        blurOnSubmit={true}
-        className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
-      ></TextInput>
-      <View className="flex flex-row items-center">
-        <Switch onValueChange={setSpoiler} value={spoiler} />
-        <Text className="dark:text-white/50 font-bold ml-3">
-          Does this contain a spoiler?
-        </Text>
+      <Text className="dark:text-white font-bold text-xl">Review the film</Text>
+      <View className="flex flex-row space-x-2 mt-1">
+        {reviewtypes.map((type, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => setSelectedTypeIndex(index)}
+          >
+            <View
+              className={`p-1 px-2 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
+                selectedTypeIndex === index
+                  ? "border-orange-500"
+                  : "border-transparent"
+              }`}
+            >
+              <View className="flex-row items-center space-x-2">
+                <IconButton icon={feedtypeicons[index]} size={24} />
+                {selectedTypeIndex === index && (
+                  <Text className="font-bold dark:text-white">{type}</Text>
+                )}
+              </View>
+            </View>
+          </TouchableOpacity>
+        ))}
       </View>
-      <View className="flex flex-row justify-center mt-2">{renderStars()}</View>
+      {selectedTypeIndex === 0 ? (
+        <TextInput
+          placeholder="Write a review"
+          onChangeText={setReview}
+          value={review}
+          multiline={true}
+          blurOnSubmit={true}
+          className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
+        ></TextInput>
+      ) : (
+        <TouchableOpacity
+          className="w-full bg-black/10 dark:bg-white/10 p-4 rounded-md"
+        >
+          <Text className="font-bold text-center dark:text-white">Record</Text>
+        </TouchableOpacity>
+      )}
+
+      <Text className="dark:text-white font-bold text-xl">Rate the film</Text>
+      <View className="flex flex-row mt-2">{renderStars()}</View>
+      <View className="flex flex-row items-center justify-between">
+        <Text className="dark:text-white font-bold text-lg">
+          Does this review contain a spoiler?
+        </Text>
+        <Switch onValueChange={setSpoiler} value={spoiler} />
+      </View>
       <TouchableOpacity
         onPress={handlePost}
         className="w-full bg-black/10 dark:bg-white/10 p-4 rounded-md"

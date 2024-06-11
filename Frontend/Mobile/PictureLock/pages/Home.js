@@ -1,4 +1,5 @@
 import {
+  Animated,
   TouchableOpacity,
   View,
   Text,
@@ -6,21 +7,44 @@ import {
   ScrollView,
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { MovieDetails, Post, CreatePost, ProfileScreen } from "../components";
-import { RefreshControl } from "react-native-gesture-handler";
+import {
+  MovieDetails,
+  Post,
+  CreatePost,
+  ProfileScreen,
+  IconButton,
+} from "../components";
+import {
+  RefreshControl,
+  PanGestureHandler,
+  State,
+} from "react-native-gesture-handler";
 import React from "react";
 import { useUser } from "../lib/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { BlurView } from "expo-blur";
+import NotificationStackScreen from "./Notifications";
 
 function HomeScreen() {
   const navigation = useNavigation();
   const animationRef = React.useRef(null);
   const { refreshUserData, posts, following } = useUser();
-  const feedtypes = ["Everyone", "For You"];
+  const feedtypes = ["For You", "Everyone", "Trending"];
+  const feedtypeicons = ["people", "public", "trending-up"];
   const [selectedTypeIndex, setSelectedTypeIndex] = React.useState(0);
   const [filteredPosts, setFilteredPosts] = React.useState([]);
-  
+  const tabBarHeight = useBottomTabBarHeight();
+
+  const scrollY = React.useRef(new Animated.Value(0)).current;
+
+  const headerHeight = scrollY.interpolate({
+    inputRange: [0, 200],
+    outputRange: [80, 0],
+    extrapolate: "clamp",
+  });
+
   const getFollowingIds = () => {
     if (!Array.isArray(following)) {
       return [];
@@ -51,51 +75,95 @@ function HomeScreen() {
     );
   }, [posts, following]);
 
+  const handleHorizontalSwipe = ({ nativeEvent }) => {
+    if (nativeEvent.state === State.END) {
+      const { translationX } = nativeEvent;
+      if (translationX < -50) {
+        // Swiped left
+        setSelectedTypeIndex((prevIndex) =>
+          prevIndex === feedtypes.length - 1 ? prevIndex : prevIndex + 1
+        );
+      } else if (translationX > 50) {
+        // Swiped right
+        setSelectedTypeIndex((prevIndex) =>
+          prevIndex === 0 ? prevIndex : prevIndex - 1
+        );
+      }
+    }
+  };
+
   return (
-    <View className="ios:ios:mt-10 p-3 space-y-3">
-      <View className="flex flex-row justify-between">
-        <Text className="dark:text-white font-bold text-3xl">Home</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Create")}>
-          <Text className="dark:text-white font-bold text-3xl">+</Text>
-        </TouchableOpacity>
-      </View>
-      <View className="flex flex-row space-x-2">
-        {feedtypes.map((type, index) => (
+    <View className="ios:ios:mt-10 p-3 space-y-3 h-full">
+      <Animated.View className="mb-2" style={{ height: headerHeight, overflow: "hidden" }}>
+        <View className="flex flex-row justify-between items-center">
+          <Text className="dark:text-white font-bold text-3xl">Home</Text>
           <TouchableOpacity
-            key={index}
-            onPress={() => setSelectedTypeIndex(index)}
+            onPress={() => navigation.navigate("NotificationStackScreen")}
           >
-            <View
-              className={`p-3 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
-                selectedTypeIndex === index
-                  ? "border-orange-500"
-                  : "border-transparent"
-              }`}
-            >
-              <Text className="font-bold dark:text-white">{type}</Text>
-            </View>
+            <IconButton icon="notifications-none" size={28} />
           </TouchableOpacity>
-        ))}
-      </View>
-      <ScrollView
-        className="h-full"
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={false}
-            onRefresh={() => {
-              refresh();
-            }}
-          />
-        }
+        </View>
+        <View className="flex flex-row space-x-2 mt-1">
+          {feedtypes.map((type, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => setSelectedTypeIndex(index)}
+            >
+              <View
+                className={`p-1 px-2 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
+                  selectedTypeIndex === index
+                    ? "border-orange-500"
+                    : "border-transparent"
+                }`}
+              >
+                <View className="flex-row items-center space-x-2">
+                  <IconButton icon={feedtypeicons[index]} size={24} />
+                  {selectedTypeIndex === index && (
+                    <Text className="font-bold dark:text-white">{type}</Text>
+                  )}
+                </View>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </Animated.View>
+      <PanGestureHandler onHandlerStateChange={handleHorizontalSwipe}>
+        <Animated.ScrollView
+          className="h-full"
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={() => {
+                refresh();
+              }}
+            />
+          }
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+            { useNativeDriver: false }
+          )}
+          scrollEventThrottle={16}
+        >
+          {selectedTypeIndex === 1
+            ? posts.map((item, index) => <Post key={index} post={item} />)
+            : filteredPosts.map((item, index) => (
+                <Post key={index} post={item} />
+              ))}
+          <View className="p-12"></View>
+        </Animated.ScrollView>
+      </PanGestureHandler>
+      <TouchableOpacity
+        className="absolute right-0 p-5"
+        style={{ bottom: tabBarHeight + 40 }}
+        onPress={() => navigation.navigate("Create")}
       >
-        {selectedTypeIndex === 0
-          ? posts.map((item, index) => <Post key={index} post={item} />)
-          : filteredPosts.map((item, index) => (
-              <Post key={index} post={item} />
-            ))}
-        <View className="p-12"></View>
-      </ScrollView>
+        <BlurView className="w-12 h-12 rounded-full dark:bg-black/80 flex items-center justify-center overflow-hidden">
+          <Text className="dark:text-white font-light text-xl text-orange-fruit align-middle text-center">
+            +
+          </Text>
+        </BlurView>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -129,6 +197,11 @@ export default function HomeStackScreen() {
       <HomeStack.Screen
         name="ProfileScreen"
         component={ProfileScreen}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="NotificationStackScreen"
+        component={NotificationStackScreen}
         options={{ headerShown: false }}
       />
     </HomeStack.Navigator>
