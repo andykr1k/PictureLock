@@ -235,6 +235,109 @@ export async function handleDeletePost(post_id, refreshUserData) {
   }
 }
 
+export async function getConversation(id1, id2) {
+  const { data, error } = await supabase
+    .from("conversations")
+    .select("*")
+    .or(
+      `and(user1.eq.${id1},user2.eq.${id2}),and(user1.eq.${id2},user2.eq.${id1})`
+    )
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data[0];
+}
+
+
+export async function getConversations(id) {
+  const { data, error } = await supabase
+    .from("conversations")
+    .select("*")
+    .or(`user1.eq.${id},user2.eq.${id}`)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data;
+}
+
+export async function getMessages(id) {
+  const { data, error } = await supabase
+    .from("messages")
+    .select("*")
+    .eq("conversation_id", id)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data;
+}
+
+export async function getLastMessage(id) {
+  const { data, error } = await supabase
+    .from("messages")
+    .select("*")
+    .eq("conversation_id", id)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data[0];
+}
+
+export async function getFriends(search, user) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .ilike("username", `%${search}%`)
+    .not("id", "eq", user);
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data;
+}
+
+export async function handleConversation(user1, user2) {
+  const { error } = await supabase
+    .from("conversations")
+    .insert({
+      user1: user1,
+      user2: user2,
+    })
+    .select();
+
+  if (error) {
+    console.log(error);
+  }
+}
+
+export async function handleMessage(conv_id, user_id, message, post_id) {
+  const { error } = await supabase
+    .from("messages")
+    .insert({
+      conversation_id: conv_id,
+      user_id: user_id,
+      message: message,
+      post_id: post_id
+    })
+    .select();
+
+  if (error) {
+    console.log(error);
+  }
+}
+
 export async function getPosts(id) {
   const { data, error } = await supabase
     .from("posts")
@@ -379,4 +482,68 @@ export async function handleUnfollow(user_id, follow_id, refreshUserData) {
   } else {
     refreshUserData();
   }
+}
+
+export async function handleCreateList(name, user_id, refreshUserData) {
+  const { data, error } = await supabase
+    .from("lists")
+    .insert({
+      name: name,
+      user_id: user_id,
+    })
+    .select();
+
+  if (error) {
+    console.log(error);
+  } else {
+    refreshUserData();
+  }
+
+  return data[0]
+}
+
+export async function handleAddMovieToCollection(list_id, movie_poster, movie_name, movie_id, refreshUserData) {
+  const { error } = await supabase
+    .from("listobjects")
+    .insert({
+      list_id: list_id,
+      movie_poster: movie_poster,
+      movie_id: movie_id,
+      movie_name: movie_name
+    })
+    .select();
+
+  if (error) {
+    console.log(error);
+  } else {
+    refreshUserData();
+  }
+}
+
+export async function getCollections(id) {
+  const { data, error } = await supabase
+    .from("lists")
+    .select("*")
+    .eq("user_id", id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data;
+}
+
+export async function getCollectionMovies(id) {
+  const { data, error } = await supabase
+    .from("listobjects")
+    .select("*")
+    .eq("list_id", id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data;
 }

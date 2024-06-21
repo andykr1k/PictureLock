@@ -13,9 +13,9 @@ export default function RecordScreen() {
 
   if (!permission.granted) {
     return (
-      <View>
-        <Text>We need your permission to show the camera</Text>
-        <Button onPress={requestPermission} title="grant permission" />
+      <View className="flex justify-center items-center h-full">
+        <Text className="dark:text-white">We need your permission to show the camera</Text>
+        <Button onPress={requestPermission} title="Grant Camera Permissions" />
       </View>
     );
   }

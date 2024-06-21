@@ -2,28 +2,34 @@
   "expo": {
     "name": "PictureLock",
     "slug": "picturelock",
+    "privacy": "public",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/1024.png",
     "userInterfaceStyle": "automatic",
+    "platforms": ["ios", "android"],
     "splash": {
-      "image": "./assets/icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./assets/logo_outline.png",
+      "resizeMode": "center",
+      "backgroundColor": "#1A1A1A"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "CADisableMinimumFrameDurationOnPhone": true
+      "CADisableMinimumFrameDurationOnPhone": true,
+      "bundleIdentifier": "YOUR_BUNDLE_IDENTIFIER_HERE"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/1024.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/1024.png"
     },
     "plugins": [
       [

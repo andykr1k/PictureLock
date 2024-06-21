@@ -50,7 +50,7 @@ export default function ProfileScreen() {
   }, [userID, following]);
 
   return (
-    <View className="ios:mt-10 p-3 space-y-2">
+    <View className="ios:mt-10 p-3 space-y-5">
       {user && (
         <Text className="dark:text-white font-bold text-3xl">
           {user.username}
@@ -101,7 +101,7 @@ export default function ProfileScreen() {
                 onPress={() =>
                   handleUnfollow(session.user.id, userID, refreshUserData)
                 }
-                className="bg-black/10 dark:bg-white/10 mt-4 p-4 rounded-md flex items-center"
+                className="bg-black/10 dark:bg-white/10 mt-4 p-2 rounded-md flex items-center"
               >
                 <Text className="dark:text-white font-bold">Unfollow</Text>
               </TouchableOpacity>
@@ -110,7 +110,7 @@ export default function ProfileScreen() {
                 onPress={() =>
                   handleFollow(session.user.id, userID, refreshUserData)
                 }
-                className="bg-black/10 dark:bg-white/10 mt-4 p-4 rounded-md flex items-center"
+                className="bg-black/10 dark:bg-white/10 mt-4 p-2 rounded-md flex items-center"
               >
                 <Text className="dark:text-white font-bold">Follow</Text>
               </TouchableOpacity>
@@ -118,7 +118,7 @@ export default function ProfileScreen() {
           </View>
         </View>
       </View>
-      <ProfileTabs id={userID} posts={posts} />
+      <ProfileTabs id={userID} posts={posts} section={"profilescreen"}/>
     </View>
   );
 }

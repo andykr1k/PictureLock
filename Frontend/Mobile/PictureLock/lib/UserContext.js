@@ -13,6 +13,7 @@ import {
   getFollowing,
   getUserLikes,
   getUserComments,
+  getConversations,
 } from "./supabaseUtils";
 const UserContext = createContext();
 
@@ -26,6 +27,7 @@ export const UserProvider = ({ children }) => {
   const [userlikes, setUserlikes] = useState();
   const [usercomments, setUsercomments] = useState();
   const [notifications, setNotifications] = useState([]);
+  const [conversations, setConversations] = useState([]);
 
   const fetchUserData = useCallback(async (userId) => {
     const { data, error } = await supabase
@@ -42,6 +44,7 @@ export const UserProvider = ({ children }) => {
       setPosts(await fetchPosts());
       setFollowers(await getFollowers(userId));
       setFollowing(await getFollowing(userId));
+      setConversations(await getConversations(userId));
       const likes = await getUserLikes(userId);
       const comments = await getUserComments(userId);
       const likesWithType = likes.map((like) => ({
@@ -100,6 +103,7 @@ export const UserProvider = ({ children }) => {
         followers,
         following,
         notifications,
+        conversations
       }}
     >
       {children}

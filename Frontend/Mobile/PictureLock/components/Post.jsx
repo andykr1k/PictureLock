@@ -8,7 +8,7 @@ import {
   Animated,
   TouchableWithoutFeedback,
   Pressable,
-  Linking
+  Linking,
 } from "react-native";
 import IconButton from "./IconButton";
 import TimeAgo from "../functions/TimeAgo";
@@ -49,6 +49,7 @@ function Post(props) {
   const [spoilerBlur, setSpoilerBlur] = useState(true);
   const [userID, setuserID] = useState(props.post.author);
   const translateY = useRef(new Animated.Value(0)).current;
+  const nav = props.section;
 
   useEffect(() => {
     const fetchUsername = async () => {
@@ -99,8 +100,8 @@ function Post(props) {
   };
 
   const translateYClamped = translateY.interpolate({
-    inputRange: [0, 100],
-    outputRange: [0, 100],
+    inputRange: [0, 300],
+    outputRange: [0, 300],
     extrapolate: "clamp",
   });
 
@@ -132,7 +133,9 @@ function Post(props) {
 
     const url = `sms:?&body=${encodeURIComponent(message)}`;
 
-    Linking.openURL(url).catch((err) => console.error('Error opening SMS app', err));
+    Linking.openURL(url).catch((err) =>
+      console.error("Error opening SMS app", err)
+    );
   };
 
   const handleDelete = async () => {
@@ -204,7 +207,11 @@ function Post(props) {
           {props.post.movie_poster && (
             <Pressable
               onPress={() => {
-                navigation.navigate("Details", { item });
+                if (nav) {
+                  navigation.navigate("Details", { item, nav });
+                } else {
+                  navigation.navigate("DetailsProfile", { item });
+                }
               }}
             >
               <Image
@@ -323,7 +330,11 @@ function Post(props) {
                       <IconButton icon="ios-share" size={20} color={"white"} />
                     </TouchableOpacity>
                     {props.post.author === session.user.id && (
-                      <TouchableOpacity onPress={() => handleDeletePost(props.post.id, refreshUserData)}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          handleDeletePost(props.post.id, refreshUserData)
+                        }
+                      >
                         <IconButton
                           icon="delete-outline"
                           size={20}

@@ -59,7 +59,7 @@ function Notification(props) {
   }
 
   return (
-    <View className="flex flex-row items-basline mb-3 max-w-full">
+    <View className="flex flex-row items-center mb-3 max-w-full">
       <View>
         {userpic && (
           <TouchableOpacity
@@ -75,8 +75,11 @@ function Notification(props) {
         <Text className="dark:text-white text-md font-bold">
           {username}&nbsp;
         </Text>
-        <Text className="dark:text-white text-md ">
+        {/* <Text className="dark:text-white text-md ">
           commented "{props.content}"
+        </Text> */}
+        <Text className="dark:text-white text-md ">
+          commented on your post
         </Text>
         <Text className="dark:text-white text-xs">
           &nbsp; {TimeAgo(props.date)}

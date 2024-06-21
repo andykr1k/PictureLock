@@ -5,17 +5,14 @@ import MoviePoster from "./MoviePoster";
 import GetMovie from "../functions/GetMovie";
 import GetSimilarMovies from "../functions/GetSimilarMovies";
 import GetProviders from "../functions/GetProviders";
-import {
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import Loading from "./Loading";
 
 function MovieDetails() {
   const ref = useRef(null);
   const navigation = useNavigation();
   const route = useRoute();
-  const { item } = route.params;
+  const { item, nav } = route.params;
   const [data, setData] = useState(null);
   const [providers, setProviders] = useState(null);
   const [similarMovies, setSimilarMovies] = useState(null);
@@ -45,9 +42,7 @@ function MovieDetails() {
   }, [item]);
 
   if (!data || !similarMovies || !providers) {
-    return (
-      <Loading/>
-    );
+    return <Loading />;
   }
 
   return (
@@ -150,7 +145,15 @@ function MovieDetails() {
               <TouchableOpacity
                 key={item.id}
                 className="w-1/4 p-1"
-                onPress={() => navigation.navigate("Details", { item })}
+                onPress={() => {
+                  if (nav) {
+                    navigation.navigate(nav, { item, nav });
+                  } else {
+                    navigation.navigate("Details", {
+                      item,
+                    });
+                  }
+                }}
               >
                 <MoviePoster item={item} size={"small"} />
               </TouchableOpacity>

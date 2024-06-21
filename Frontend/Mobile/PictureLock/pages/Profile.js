@@ -7,7 +7,7 @@ import {
   Text,
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { IconButton, ProfileTabs } from "../components";
+import { CreateList, IconButton, PostDetails, ProfileTabs, MovieDetails, ListScreen } from "../components";
 import { useUser } from "../lib/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import SettingsScreen from "./Settings";
@@ -18,7 +18,6 @@ function Profile() {
   const { session, user, pic, posts, followers, following } = useUser();
   const [filteredPosts, setFilteredPosts] = useState([]);
 
-  // Update filteredPosts whenever posts or session.user.id changes
   useEffect(() => {
     if (posts && session.user.id) {
       const filtered = posts.filter((post) => post.author === session.user.id);
@@ -92,6 +91,26 @@ export default function ProfileStackScreen() {
       <ProfileStack.Screen
         name="Settings"
         component={SettingsScreen}
+        options={{ headerShown: false }}
+      />
+      <ProfileStack.Screen
+        name="PostDetailsProfile"
+        component={PostDetails}
+        options={{ headerShown: false }}
+      />
+      <ProfileStack.Screen
+        name="CreateList"
+        component={CreateList}
+        options={{ headerShown: false }}
+      />
+      <ProfileStack.Screen
+        name="DetailsProfile"
+        component={MovieDetails}
+        options={{ headerShown: false }}
+      />
+      <ProfileStack.Screen
+        name="ListScreenProfile"
+        component={ListScreen}
         options={{ headerShown: false }}
       />
     </ProfileStack.Navigator>

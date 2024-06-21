@@ -26,13 +26,27 @@ const MoviePoster = ({ item, size }) => {
     return null;
   }
 
-  return size === "small" ? (
-    <Image
-      key={posterUri}
-      source={{ uri: posterUri }}
-      className="w-full h-36 rounded-md"
-    />
-  ) : (
+  if (size === "xs") {
+    return (
+      <Image
+        key={posterUri}
+        source={{ uri: posterUri }}
+        className="w-12 h-16 rounded-md"
+      />
+    );
+  }
+
+  if (size === "small") {
+    return (
+      <Image
+        key={posterUri}
+        source={{ uri: posterUri }}
+        className="w-full h-36 rounded-md"
+      />
+    );
+  }
+
+  return (
     <Image
       key={posterUri}
       source={{ uri: posterUri }}

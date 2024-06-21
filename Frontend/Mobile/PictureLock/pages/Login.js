@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { supabase } from "../lib/supabase";
 import SwitchSelector from "react-native-switch-selector";
+import { IconButton } from "../components";
 
 const switchoptions = [
   { label: "Log in", value: true },
@@ -22,6 +23,9 @@ export default function LogInScreen() {
   const [confirm, setConfirm] = useState("");
   const [login, setLogin] = useState(true);
   const [name, setName] = useState("");
+  const logintypes = ["Log In", "Sign Up"];
+  const logintypeicons = ["people", "public"];
+  const [selectedTypeIndex, setSelectedTypeIndex] = React.useState(0);
 
   async function signInWithEmail() {
     const { error } = await supabase.auth.signInWithPassword({
@@ -49,27 +53,38 @@ export default function LogInScreen() {
   }
 
   return (
-    <View className="flex-1 p-3 space-y-5">
-      <View className="flex items-center mt-20">
+    <View className="flex-1 p-3 space-y-5 mt-10">
+      {/* <View className="flex justify-center items-center">
         <Image
-          className="w-40 h-40 justify-center items-center"
+          className="w-28 h-28 justify-center items-center"
           style={{ transform: [{ scale: 1.5 }] }}
           source={require("../assets/logo_outline.png")}
           resizeMode="contain"
         />
-        <Text className="font-bold text-xl dark:text-white">Picturelock</Text>
+      </View> */}
+      <View className="flex flex-row space-x-2 mt-1">
+        {logintypes.map((type, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => setSelectedTypeIndex(index)}
+          >
+            <View
+              className={`p-1 px-2 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
+                selectedTypeIndex === index
+                  ? "border-orange-500"
+                  : "border-transparent"
+              }`}
+            >
+              <View className="flex-row items-center space-x-2">
+                <IconButton icon={logintypeicons[index]} size={24} />
+                {selectedTypeIndex === index && (
+                  <Text className="font-bold dark:text-white">{type}</Text>
+                )}
+              </View>
+            </View>
+          </TouchableOpacity>
+        ))}
       </View>
-      <SwitchSelector
-        backgroundColor="orange"
-        buttonColor="red"
-        selectedColor="white"
-        borderColor="blue"
-        textColor="white"
-        fontSize={16}
-        options={switchoptions}
-        initial={0}
-        onPress={setLogin}
-      />
       {/* {!login && (
         <View className="space-y-1">
           <Text className="font-bold dark:text-white">Full Name</Text>
@@ -100,7 +115,7 @@ export default function LogInScreen() {
           placeholderTextColor="rgba(255, 255, 255, 0.6)"
         ></TextInput>
       </View>
-      {!login && (
+      {selectedTypeIndex === 1 && (
         <View className="space-y-1">
           <Text className="font-bold dark:text-white">Confirm Password</Text>
           <TextInput
@@ -113,7 +128,7 @@ export default function LogInScreen() {
         </View>
       )}
       <View className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white justify-center items-center">
-        {!login ? (
+        {selectedTypeIndex === 1 ? (
           <TouchableOpacity onPress={signUpWithEmail}>
             <Text className="font-bold dark:text-white text-lg">Sign up</Text>
           </TouchableOpacity>

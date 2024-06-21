@@ -14,6 +14,7 @@ import {
   ProfileScreen,
   IconButton,
   RecordScreen,
+  PostDetails,
 } from "../components";
 import {
   RefreshControl,
@@ -133,7 +134,7 @@ function HomeScreen() {
       </Animated.View>
       <PanGestureHandler onHandlerStateChange={handleHorizontalSwipe}>
         <FlatList
-          className="mb-20"
+          className="mb-20 overflow-visible"
           data={selectedTypeIndex === 1 ? posts : filteredPosts}
           renderItem={({ item, index }) => <Post key={index} post={item} />}
           keyExtractor={(item, index) => index.toString()}
@@ -154,8 +155,7 @@ function HomeScreen() {
         />
       </PanGestureHandler>
       <TouchableOpacity
-        className="absolute right-0 p-5"
-        style={{ bottom: tabBarHeight + 40 }}
+        className="absolute bottom-0 right-0 p-5 mb-28"
         onPress={() => navigation.navigate("Create")}
       >
         <BlurView className="w-12 h-12 rounded-full dark:bg-black/80 flex items-center justify-center overflow-hidden">
@@ -207,6 +207,11 @@ export default function HomeStackScreen() {
       <HomeStack.Screen
         name="NotificationStackScreen"
         component={NotificationStackScreen}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="PostDetailsHome"
+        component={PostDetails}
         options={{ headerShown: false }}
       />
     </HomeStack.Navigator>

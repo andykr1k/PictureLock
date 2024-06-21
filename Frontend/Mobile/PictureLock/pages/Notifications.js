@@ -10,7 +10,7 @@ function NotificationsScreen() {
   return (
     <View className="ios:mt-10 p-3 space-y-3">
       <Text className="dark:text-white font-bold text-3xl">Notifications</Text>
-      <ScrollView showsVerticalScrollIndicator={false} className="h-full">
+      <ScrollView showsVerticalScrollIndicator={false} className="h-full max-w-full">
         {notifications.map((item, index) => {
           return (
             <Notification
