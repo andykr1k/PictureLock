@@ -8,4 +8,5 @@ export { default as CreatePost } from './CreatePost'
 export { default as ProfileScreen } from "./ProfileScreen";
 export { default as ProfileTabs } from "./ProfileTabs";
 export { default as Loading } from "./Loading";
-export { default as ChatScreen } from "../pages/Chat";
+export { default as RecordScreen } from "./RecordScreen";
+export { default as Conversation } from "./Conversation";

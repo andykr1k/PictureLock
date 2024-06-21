@@ -7,6 +7,8 @@ import {
   TextInput,
   Animated,
   TouchableWithoutFeedback,
+  Pressable,
+  Linking
 } from "react-native";
 import IconButton from "./IconButton";
 import TimeAgo from "../functions/TimeAgo";
@@ -18,6 +20,7 @@ import {
   handleLike,
   handleUnlike,
   handleComment,
+  handleDeletePost,
 } from "../lib/supabaseUtils";
 import { useState, useEffect, memo, useRef } from "react";
 import { useUser } from "../lib/UserContext";
@@ -34,7 +37,6 @@ import { BlurView } from "expo-blur";
 function Post(props) {
   const navigation = useNavigation();
   const { session, refreshUserData } = useUser();
-  const [contextVisible, setContextVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [username, setUsername] = useState("");
@@ -80,14 +82,13 @@ function Post(props) {
 
   const handleGesture = Animated.event(
     [{ nativeEvent: { translationY: translateY } }],
-    { useNativeDriver: false }
+    { useNativeDriver: true }
   );
 
   const handleStateChange = ({ nativeEvent }) => {
     if (nativeEvent.state === State.END) {
       if (nativeEvent.translationY > 100) {
         setModalVisible(false);
-        setContextVisible(false);
       } else {
         Animated.spring(translateY, {
           toValue: 0,
@@ -108,80 +109,41 @@ function Post(props) {
   ));
 
   const handleCommentSubmit = async () => {
-    await handleComment(props.post.id, session.user.id, text, refreshUserData, props.post.author);
+    await handleComment(
+      props.post.id,
+      session.user.id,
+      text,
+      refreshUserData,
+      props.post.author
+    );
     setText("");
   };
 
   const handleCommentsModal = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setModalVisible(!modalVisible);
-  }
+  };
 
   const handleShare = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    setContextVisible(false);
+
+    const postUrl = `https://yourapp.com/posts/${props.post.id}`;
+    const message = `Check out this post: ${postUrl}`;
+
+    const url = `sms:?&body=${encodeURIComponent(message)}`;
+
+    Linking.openURL(url).catch((err) => console.error('Error opening SMS app', err));
   };
 
   const handleDelete = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
 
     // Implement delete functionality
-    setContextVisible(false);
-  };
-
-  const handleContextModal = async () => {
-    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    setContextVisible(!contextVisible);
   };
 
   return (
-    <TouchableWithoutFeedback onLongPress={handleContextModal}>
+    <TouchableWithoutFeedback>
       <View className="w-full mb-3 pb-3">
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={contextVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setContextVisible(!contextVisible);
-          }}
-        >
-          <PanGestureHandler
-            onGestureEvent={handleGesture}
-            onHandlerStateChange={handleStateChange}
-          >
-            <Animated.View
-              className="bg-white/90 dark:bg-black/90"
-              style={{
-                transform: [{ translateY: translateYClamped }],
-                position: "absolute",
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: "25%",
-                padding: 16,
-                borderTopLeftRadius: 20,
-                borderTopRightRadius: 20,
-              }}
-            >
-              <View className="flex flex-row justify-center">
-                <TouchableOpacity
-                  className="h-2 bg-black/10 dark:bg-white/10 w-20 rounded-md"
-                  onPress={handleContextModal}
-                />
-              </View>
-              <View className="flex mt-4 space-y-3">
-                <Text className="dark:text-white font-bold text-2xl">
-                  Share
-                </Text>
-                <Text className="dark:text-white font-bold text-2xl">Edit</Text>
-                <Text className="dark:text-white font-bold text-2xl">
-                  Delete
-                </Text>
-              </View>
-            </Animated.View>
-          </PanGestureHandler>
-        </Modal>
         <Modal
           animationType="slide"
           transparent={true}
@@ -240,7 +202,7 @@ function Post(props) {
         </Modal>
         <View className="">
           {props.post.movie_poster && (
-            <TouchableOpacity
+            <Pressable
               onPress={() => {
                 navigation.navigate("Details", { item });
               }}
@@ -249,7 +211,7 @@ function Post(props) {
                 source={{ uri: props.post.movie_poster }}
                 className="w-full h-[75vh] rounded-md"
               />
-            </TouchableOpacity>
+            </Pressable>
           )}
           <BlurView className="flex flex-row space-x-2 w-full absolute bottom-0 p-2 overflow-hidden rounded-md">
             {userpic && (
@@ -316,7 +278,7 @@ function Post(props) {
                     <TouchableOpacity onPress={handleCommentsModal}>
                       <IconButton
                         icon="comment"
-                        size={24}
+                        size={20}
                         text={comments && comments.length}
                         color={"white"}
                       />
@@ -333,7 +295,7 @@ function Post(props) {
                       >
                         <IconButton
                           icon="favorite"
-                          size={24}
+                          size={20}
                           text={likes && likes.length}
                           color={"white"}
                         />
@@ -351,8 +313,20 @@ function Post(props) {
                       >
                         <IconButton
                           icon="favorite-outline"
-                          size={24}
+                          size={20}
                           text={likes && likes.length}
+                          color={"white"}
+                        />
+                      </TouchableOpacity>
+                    )}
+                    <TouchableOpacity onPress={handleShare}>
+                      <IconButton icon="ios-share" size={20} color={"white"} />
+                    </TouchableOpacity>
+                    {props.post.author === session.user.id && (
+                      <TouchableOpacity onPress={() => handleDeletePost(props.post.id, refreshUserData)}>
+                        <IconButton
+                          icon="delete-outline"
+                          size={20}
                           color={"white"}
                         />
                       </TouchableOpacity>

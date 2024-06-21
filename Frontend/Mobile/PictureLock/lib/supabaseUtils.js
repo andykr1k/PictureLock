@@ -226,7 +226,7 @@ export async function handleDeletePost(post_id, refreshUserData) {
   const { error } = await supabase
     .from("posts")
     .delete()
-    .eq("post_id", post_id)
+    .eq("id", post_id)
 
   if (error) {
     console.log(error);

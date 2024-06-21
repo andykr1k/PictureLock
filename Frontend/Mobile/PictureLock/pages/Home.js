@@ -4,7 +4,7 @@ import {
   View,
   Text,
   useColorScheme,
-  ScrollView,
+  FlatList,
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
@@ -13,6 +13,7 @@ import {
   CreatePost,
   ProfileScreen,
   IconButton,
+  RecordScreen,
 } from "../components";
 import {
   RefreshControl,
@@ -94,7 +95,10 @@ function HomeScreen() {
 
   return (
     <View className="ios:ios:mt-10 p-3 space-y-3 h-full">
-      <Animated.View className="mb-2" style={{ height: headerHeight, overflow: "hidden" }}>
+      <Animated.View
+        className="mb-2"
+        style={{ height: headerHeight, overflow: "hidden" }}
+      >
         <View className="flex flex-row justify-between items-center">
           <Text className="dark:text-white font-bold text-3xl">Home</Text>
           <TouchableOpacity
@@ -128,8 +132,11 @@ function HomeScreen() {
         </View>
       </Animated.View>
       <PanGestureHandler onHandlerStateChange={handleHorizontalSwipe}>
-        <Animated.ScrollView
-          className="h-full"
+        <FlatList
+          className="mb-20"
+          data={selectedTypeIndex === 1 ? posts : filteredPosts}
+          renderItem={({ item, index }) => <Post key={index} post={item} />}
+          keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl
@@ -144,14 +151,7 @@ function HomeScreen() {
             { useNativeDriver: false }
           )}
           scrollEventThrottle={16}
-        >
-          {selectedTypeIndex === 1
-            ? posts.map((item, index) => <Post key={index} post={item} />)
-            : filteredPosts.map((item, index) => (
-                <Post key={index} post={item} />
-              ))}
-          <View className="p-12"></View>
-        </Animated.ScrollView>
+        />
       </PanGestureHandler>
       <TouchableOpacity
         className="absolute right-0 p-5"
@@ -197,6 +197,11 @@ export default function HomeStackScreen() {
       <HomeStack.Screen
         name="ProfileScreen"
         component={ProfileScreen}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="RecordScreen"
+        component={RecordScreen}
         options={{ headerShown: false }}
       />
       <HomeStack.Screen

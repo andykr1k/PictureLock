@@ -14,10 +14,12 @@ import * as Haptics from "expo-haptics";
 import { BlurView } from "expo-blur";
 import { getProfilePictureUrl, getUsername } from "../lib/supabaseUtils";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Conversation } from "../components";
 
 function Chat() {
   const { refreshUserData, following } = useUser();
   const [followingProfiles, setFollowingProfiles] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchFollowingProfiles = async () => {
@@ -60,12 +62,16 @@ function Chat() {
           />
         }
       >
-        <Text className="dark:text-white font-bold text-xl">
-          Start a chat
-        </Text>
+        <Text className="dark:text-white font-bold text-xl">Start a chat</Text>
         <ScrollView horizontal>
           {followingProfiles.map((profile, index) => (
-            <TouchableOpacity key={index} className="flex items-center">
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Conversation", { profile });
+              }}
+              key={index}
+              className="flex items-center"
+            >
               <Image
                 source={{ uri: profile.pic }}
                 className="w-16 h-16 rounded-full"
@@ -76,15 +82,12 @@ function Chat() {
             </TouchableOpacity>
           ))}
         </ScrollView>
-        <Text className="dark:text-white font-bold text-xl">
-          Conversations
-        </Text>
+        <Text className="dark:text-white font-bold text-xl">Conversations</Text>
         <View className="p-20"></View>
       </ScrollView>
     </View>
   );
 }
-
 
 const ChatStack = createNativeStackNavigator();
 
@@ -100,6 +103,11 @@ export default function ChatStackScreen() {
       <ChatStack.Screen
         name="ChatScreen"
         component={Chat}
+        options={{ headerShown: false }}
+      />
+      <ChatStack.Screen
+        name="Conversation"
+        component={Conversation}
         options={{ headerShown: false }}
       />
     </ChatStack.Navigator>

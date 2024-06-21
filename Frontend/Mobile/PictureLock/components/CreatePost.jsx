@@ -158,7 +158,8 @@ export default function CreatePost() {
         ></TextInput>
       ) : (
         <TouchableOpacity
-          className="w-full bg-black/10 dark:bg-white/10 p-4 rounded-md"
+          className="w-full bg-black/10 dark:bg-white/10 p-3 rounded-md"
+          onPress={() => navigation.navigate("RecordScreen")}
         >
           <Text className="font-bold text-center dark:text-white">Record</Text>
         </TouchableOpacity>

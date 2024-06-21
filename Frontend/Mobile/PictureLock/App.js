@@ -66,7 +66,7 @@ function HomeTabs() {
           }
           return <Feathericons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "#FFB54F",
+        tabBarActiveTintColor: "#FFFFFF",
         tabBarInactiveTintColor: "gray",
         tabBarLabelStyle: {
           display: "none",
