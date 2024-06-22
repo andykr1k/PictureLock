@@ -1,7 +1,8 @@
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { memo } from "react";
 
-export default function ListScreen() {
+function ListScreen() {
   const route = useRoute();
   const { listname, movies } = route.params;
   const navigation = useNavigation();
@@ -38,3 +39,5 @@ export default function ListScreen() {
     </View>
   );
 }
+
+export default memo(ListScreen);

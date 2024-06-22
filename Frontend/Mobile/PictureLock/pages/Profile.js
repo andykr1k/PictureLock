@@ -26,8 +26,8 @@ function Profile() {
   }, [posts, session.user.id]);
 
   return (
-    <View className="p-3 ios:mt-10">
-      <View className="flex flex-row items-center justify-between">
+    <View className="ios:mt-10">
+      <View className="flex flex-row items-center justify-between p-3">
         <Text className="dark:text-white font-bold text-3xl mb-2">
           {user.username}
         </Text>

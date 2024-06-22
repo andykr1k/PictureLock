@@ -1,9 +1,9 @@
 import { Image, View, Text } from "react-native";
 import { getProfilePictureUrl, getUsername } from "../lib/supabaseUtils";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import Loading from "./Loading";
 
-export default function ProfilePicture(props) {
+function ProfilePicture(props) {
   const [pic, setPic] = useState();
   const [username, setUsername] = useState();
 
@@ -32,3 +32,5 @@ export default function ProfilePicture(props) {
 
   return <Loading />;
 }
+
+export default memo(ProfilePicture);

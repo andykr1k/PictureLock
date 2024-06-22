@@ -38,6 +38,7 @@ function Chat() {
   const [search, setSearch] = useState("");
   const [friends, setFriends] = useState([]);
   const [selectedID, setSelectedID] = useState("");
+  const [convsearch, setConvsearch] = useState("");
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -179,6 +180,12 @@ function Chat() {
       <View className="flex flex-row justify-between items-center">
         <Text className="dark:text-white font-bold text-3xl">Chats</Text>
       </View>
+      <TextInput
+        placeholder="Search conversations"
+        value={convsearch}
+        onChange={setConvsearch}
+        className="bg-black/10 dark:bg-white/10 p-3 mt-3 font-bold rounded-md dark:text-white"
+      />
       <ScrollView
         className="h-full space-y-3 mt-3"
         showsVerticalScrollIndicator={false}

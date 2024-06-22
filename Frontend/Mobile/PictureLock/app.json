@@ -7,17 +7,21 @@
     "orientation": "portrait",
     "icon": "./assets/1024.png",
     "userInterfaceStyle": "automatic",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "splash": {
       "image": "./assets/logo_outline.png",
-      "resizeMode": "center",
       "backgroundColor": "#1A1A1A"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "CADisableMinimumFrameDurationOnPhone": true,
-      "bundleIdentifier": "YOUR_BUNDLE_IDENTIFIER_HERE"
+      "bundleIdentifier": "picturelockbeta"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -26,7 +30,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/1024.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/1024.png"
@@ -40,6 +48,11 @@
           "recordAudioAndroid": true
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "e1a8d6b4-e99f-4391-8da8-bd7643fb50fb"
+      }
+    }
   }
 }

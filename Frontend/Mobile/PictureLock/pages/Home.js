@@ -5,6 +5,10 @@ import {
   Text,
   useColorScheme,
   FlatList,
+  ScrollView,
+  Dimensions,
+  LayoutAnimation,
+  UIManager,
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
@@ -16,36 +20,27 @@ import {
   RecordScreen,
   PostDetails,
 } from "../components";
-import {
-  RefreshControl,
-  PanGestureHandler,
-  State,
-} from "react-native-gesture-handler";
-import React from "react";
+import { RefreshControl } from "react-native-gesture-handler";
+import React, { useState, useRef } from "react";
 import { useUser } from "../lib/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { BlurView } from "expo-blur";
 import NotificationStackScreen from "./Notifications";
 
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+
 function HomeScreen() {
   const navigation = useNavigation();
-  const animationRef = React.useRef(null);
   const { refreshUserData, posts, following } = useUser();
   const feedtypes = ["For You", "Everyone", "Trending"];
   const feedtypeicons = ["people", "public", "trending-up"];
-  const [selectedTypeIndex, setSelectedTypeIndex] = React.useState(0);
-  const [filteredPosts, setFilteredPosts] = React.useState([]);
-  const tabBarHeight = useBottomTabBarHeight();
-
-  const scrollY = React.useRef(new Animated.Value(0)).current;
-
-  const headerHeight = scrollY.interpolate({
-    inputRange: [0, 200],
-    outputRange: [80, 0],
-    extrapolate: "clamp",
-  });
+  const [selectedTypeIndex, setSelectedTypeIndex] = useState(0);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const width = Dimensions.get("window").width;
+  const scrollViewRef = useRef(null);
 
   const getFollowingIds = () => {
     if (!Array.isArray(following)) {
@@ -56,51 +51,35 @@ function HomeScreen() {
 
   async function refresh() {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    animationRef.current?.play();
     try {
       await refreshUserData();
-      const followingIds = getFollowingIds();
-      setFilteredPosts(
-        posts.filter((post) => followingIds.includes(post.author))
-      );
+      updateFilteredPosts();
     } catch (error) {
       console.error("Failed to refresh data:", error);
-    } finally {
-      animationRef.current?.reset();
     }
   }
 
-  React.useEffect(() => {
+  const updateFilteredPosts = () => {
     const followingIds = getFollowingIds();
     setFilteredPosts(
       posts.filter((post) => followingIds.includes(post.author))
     );
+  };
+
+  React.useEffect(() => {
+    updateFilteredPosts();
   }, [posts, following]);
 
-  const handleHorizontalSwipe = ({ nativeEvent }) => {
-    if (nativeEvent.state === State.END) {
-      const { translationX } = nativeEvent;
-      if (translationX < -50) {
-        // Swiped left
-        setSelectedTypeIndex((prevIndex) =>
-          prevIndex === feedtypes.length - 1 ? prevIndex : prevIndex + 1
-        );
-      } else if (translationX > 50) {
-        // Swiped right
-        setSelectedTypeIndex((prevIndex) =>
-          prevIndex === 0 ? prevIndex : prevIndex - 1
-        );
-      }
-    }
+  const handleScroll = (event) => {
+    const offsetX = event.nativeEvent.contentOffset.x;
+    const index = Math.round(offsetX / width);
+    setSelectedTypeIndex(index);
   };
 
   return (
-    <View className="ios:ios:mt-10 p-3 space-y-3 h-full">
-      <Animated.View
-        className="mb-2"
-        style={{ height: headerHeight, overflow: "hidden" }}
-      >
-        <View className="flex flex-row justify-between items-center">
+    <View className="ios:ios:mt-10 space-y-3 h-full">
+      <View>
+        <View className="flex flex-row justify-between items-center p-3">
           <Text className="dark:text-white font-bold text-3xl">Home</Text>
           <TouchableOpacity
             onPress={() => navigation.navigate("NotificationStackScreen")}
@@ -108,52 +87,109 @@ function HomeScreen() {
             <IconButton icon="notifications-none" size={28} />
           </TouchableOpacity>
         </View>
-        <View className="flex flex-row space-x-2 mt-1">
-          {feedtypes.map((type, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => setSelectedTypeIndex(index)}
-            >
-              <View
-                className={`p-1 px-2 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
-                  selectedTypeIndex === index
-                    ? "border-orange-500"
-                    : "border-transparent"
-                }`}
+        <View className="flex flex-row space-x-2 pl-3">
+          {feedtypes.map((type, index) => {
+            const inputRange = [
+              (index - 1) * width,
+              index * width,
+              (index + 1) * width,
+            ];
+            const scale = scrollX.interpolate({
+              inputRange,
+              outputRange: [0.8, 1, 0.8],
+              extrapolate: "clamp",
+            });
+            const opacity = scrollX.interpolate({
+              inputRange,
+              outputRange: [0.5, 1, 0.5],
+              extrapolate: "clamp",
+            });
+
+            return (
+              <TouchableOpacity
+                key={index}
+                onPress={() => {
+                  setSelectedTypeIndex(index);
+                  scrollViewRef.current.scrollTo({
+                    x: index * width,
+                    animated: true,
+                  });
+                }}
               >
-                <View className="flex-row items-center space-x-2">
-                  <IconButton icon={feedtypeicons[index]} size={24} />
-                  {selectedTypeIndex === index && (
-                    <Text className="font-bold dark:text-white">{type}</Text>
-                  )}
-                </View>
-              </View>
-            </TouchableOpacity>
-          ))}
+                <Animated.View
+                  style={{
+                    transform: [{ scale }],
+                    opacity,
+                    paddingVertical: 4,
+                    paddingHorizontal: 8,
+                    borderRadius: 20,
+                    borderColor:
+                      selectedTypeIndex === index ? "#FFB54F" : "transparent",
+                    borderWidth: 2,
+                  }}
+                >
+                  <View className="flex-row items-center space-x-2">
+                    <IconButton icon={feedtypeicons[index]} size={24} />
+                    {selectedTypeIndex === index && (
+                      <Text className="font-bold dark:text-white">{type}</Text>
+                    )}
+                  </View>
+                </Animated.View>
+              </TouchableOpacity>
+            );
+          })}
         </View>
-      </Animated.View>
-      <PanGestureHandler onHandlerStateChange={handleHorizontalSwipe}>
+      </View>
+      <Animated.ScrollView
+        ref={scrollViewRef}
+        decelerationRate={"fast"}
+        snapToAlignment={"center"}
+        snapToInterval={width}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+          { useNativeDriver: false, listener: handleScroll }
+        )}
+        scrollEventThrottle={16}
+      >
         <FlatList
-          className="mb-20 overflow-visible"
-          data={selectedTypeIndex === 1 ? posts : filteredPosts}
-          renderItem={({ item, index }) => <Post key={index} post={item} />}
-          keyExtractor={(item, index) => index.toString()}
+          className="mb-28 overflow-visible w-screen p-3 pt-0"
+          data={filteredPosts}
+          renderItem={({ item, index }) => (
+            <Post key={index} post={item} section={"profilescreen"} />
+          )}
+          keyExtractor={(item, index) => `${item.id}-${index}`}
           showsVerticalScrollIndicator={false}
           refreshControl={
-            <RefreshControl
-              refreshing={false}
-              onRefresh={() => {
-                refresh();
-              }}
-            />
+            <RefreshControl refreshing={false} onRefresh={refresh} />
           }
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-            { useNativeDriver: false }
-          )}
-          scrollEventThrottle={16}
         />
-      </PanGestureHandler>
+        <FlatList
+          className="mb-28 overflow-visible w-screen p-3 pt-0"
+          data={posts}
+          renderItem={({ item, index }) => (
+            <Post key={index} post={item} section={"profilescreen"} />
+          )}
+          keyExtractor={(item, index) => `${item.id}-${index}`}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={false} onRefresh={refresh} />
+          }
+        />
+        <FlatList
+          className="mb-28 overflow-visible w-screen p-3 pt-0"
+          data={posts}
+          renderItem={({ item, index }) => (
+            <Post key={index} post={item} section={"profilescreen"} />
+          )}
+          keyExtractor={(item, index) => `${item.id}-${index}`}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={false} onRefresh={refresh} />
+          }
+        />
+      </Animated.ScrollView>
       <TouchableOpacity
         className="absolute bottom-0 right-0 p-5 mb-28"
         onPress={() => navigation.navigate("Create")}

@@ -9,11 +9,11 @@ import {
   handleUnfollow,
   getPosts,
 } from "../lib/supabaseUtils";
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import { useUser } from "../lib/UserContext";
 import ProfileTabs from "./ProfileTabs";
 
-export default function ProfileScreen() {
+function ProfileScreen() {
   const { session, refreshUserData, following } = useUser();
 
   const navigation = useNavigation();
@@ -50,9 +50,9 @@ export default function ProfileScreen() {
   }, [userID, following]);
 
   return (
-    <View className="ios:mt-10 p-3 space-y-5">
+    <View className="ios:mt-10 space-y-5">
       {user && (
-        <Text className="dark:text-white font-bold text-3xl">
+        <Text className="dark:text-white font-bold text-3xl p-3">
           {user.username}
         </Text>
       )}
@@ -65,20 +65,15 @@ export default function ProfileScreen() {
                 className="w-24 h-24 rounded-full"
               />
             )}
-            {user && (
-              <View className="flex flex-row space-x-1 justify-center">
-                <Text className="dark:text-white font-bold text-lg">
-                  {user.full_name}
-                </Text>
-              </View>
-            )}
           </View>
         </View>
         <View>
           {followers && followings && posts && (
             <View className="flex flex-row space-x-5 justify-around items-center mt-3">
               <View className="items-center">
-                <Text className="dark:text-white font-bold">{posts.length}</Text>
+                <Text className="dark:text-white font-bold">
+                  {posts.length}
+                </Text>
                 <Text className="dark:text-white font-bold">Posts</Text>
               </View>
               <View className="items-center">
@@ -118,7 +113,11 @@ export default function ProfileScreen() {
           </View>
         </View>
       </View>
-      <ProfileTabs id={userID} posts={posts} section={"profilescreen"}/>
+      <View className="mt-3">
+        <ProfileTabs id={userID} posts={posts} section={"profilescreen"} />
+      </View>
     </View>
   );
 }
+
+export default memo(ProfileScreen);

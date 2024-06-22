@@ -5,7 +5,7 @@ import {
   TextInput,
 } from "react-native";
 import { Switch } from "react-native-gesture-handler";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import titles from "../assets/titles_and_ids.json";
 import MoviePoster from "../components/MoviePoster";
 import IconButton from "../components/IconButton";
@@ -14,7 +14,7 @@ import { useUser } from "../lib/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { SearchMovie } from "../lib/api";
 
-export default function CreatePost() {
+function CreatePost() {
   const navigation = useNavigation();
   const { session, refreshUserData } = useUser();
   const [review, setReview] = useState("");
@@ -182,3 +182,5 @@ export default function CreatePost() {
     </View>
   );
 }
+
+export default memo(CreatePost);

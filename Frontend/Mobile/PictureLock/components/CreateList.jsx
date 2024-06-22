@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { SearchMovie } from "../lib/api";
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import titles from "../assets/titles_and_ids.json";
 import MoviePoster from "./MoviePoster";
 import {
@@ -16,7 +16,7 @@ import {
 } from "../lib/supabaseUtils";
 import { useUser } from "../lib/UserContext";
 
-export default function CreateList() {
+function CreateList() {
   const { session, refreshUserData } = useUser();
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -139,3 +139,6 @@ export default function CreateList() {
     </View>
   );
 }
+
+
+export default memo(CreateList);

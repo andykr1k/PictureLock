@@ -6,17 +6,17 @@ import {
   getProfilePictureUrl,
   getUsername,
 } from "../lib/supabaseUtils";
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import TimeAgo from "../functions/TimeAgo";
 
-export default function ConvItem(props) {
+function ConvItem(props) {
   const [item, setItem] = useState(props.item);
   const [recipient, setRecipient] = useState();
   const [last, setLast] = useState();
   const [username, setUsername] = useState();
   const [pic, setPic] = useState();
-  const { session } = useUser();
+  const { session, user } = useUser();
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export default function ConvItem(props) {
       onPress={() => navigation.navigate("Conversation", { item })}
       className="p-2 pl-0 bg-black/10 dark:bg-white/10 rounded-md"
     >
-      <View className="flex-row items-center space-x-2 ml-2">
+      <View className="flex-row space-x-2 ml-2">
         {pic && (
           <Image source={{ uri: pic }} className="w-16 h-16 rounded-full" />
         )}
@@ -68,7 +68,7 @@ export default function ConvItem(props) {
           {last && (
             <View className="flex-row space-x-1">
               {session.user.id === last.user_id ? (
-                <Text className="dark:text-white text-md">Me:</Text>
+                <Text className="dark:text-white text-md">{user.username}:</Text>
               ) : (
                 <Text className="dark:text-white text-md">{username}:</Text>
               )}
@@ -80,3 +80,5 @@ export default function ConvItem(props) {
     </TouchableOpacity>
   );
 }
+
+export default memo(ConvItem);

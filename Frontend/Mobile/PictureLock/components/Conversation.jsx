@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import {
   View,
   Text,
@@ -15,7 +15,7 @@ import { useUser } from "../lib/UserContext";
 import { getProfilePictureUrl, getUsername } from "../lib/supabaseUtils";
 import IconButton from "./IconButton";
 
-export default function Conversation() {
+function Conversation() {
   const [messages, setMessages] = useState([]);
   const route = useRoute();
   const { item } = route.params;
@@ -128,3 +128,5 @@ export default function Conversation() {
     </KeyboardAvoidingView>
   );
 }
+
+export default memo(Conversation);

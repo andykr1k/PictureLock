@@ -4,10 +4,14 @@ import {
   TouchableOpacity,
   TextInput,
   useColorScheme,
+  Animated,
+  ScrollView,
+  Dimensions,
+  LayoutAnimation,
+  UIManager,
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React, { useState, useEffect } from "react";
-import { ScrollView } from "react-native-gesture-handler";
+import React, { useState, useRef, useEffect } from "react";
 import {
   MoviePoster,
   MovieDetails,
@@ -26,6 +30,9 @@ import { useUser } from "../lib/UserContext";
 import { getFriends } from "../lib/supabaseUtils";
 import { IconButton } from "../components";
 
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+
 function SearchScreen() {
   const { session } = useUser();
   const navigation = useNavigation();
@@ -42,6 +49,9 @@ function SearchScreen() {
   const [selectedTypeIndex, setSelectedTypeIndex] = useState(0);
   const [friendsearch, setFriendsearch] = useState("");
   const [friends, setFriends] = useState([]);
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const width = Dimensions.get("window").width;
+  const scrollViewRef = useRef(null);
 
   const handleSearchValueChange = (e) => {
     setSearch(e);
@@ -74,34 +84,83 @@ function SearchScreen() {
     fetchData();
   }, []);
 
+  const handleScroll = (event) => {
+    const offsetX = event.nativeEvent.contentOffset.x;
+    const index = Math.round(offsetX / width);
+    setSelectedTypeIndex(index);
+  };
+
   return (
-    <View className="ios:mt-10 p-3 space-y-3 max-w-full">
-      <Text className="dark:text-white font-bold text-3xl">Search</Text>
-      <View className="flex flex-row space-x-2 mt-1">
-        {searchtypes.map((type, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => setSelectedTypeIndex(index)}
-          >
-            <View
-              className={`p-1 px-2 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
-                selectedTypeIndex === index
-                  ? "border-orange-500"
-                  : "border-transparent"
-              }`}
+    <View className="ios:mt-10 space-y-3 max-w-full">
+      <Text className="dark:text-white font-bold text-3xl p-3 pb-0">
+        Search
+      </Text>
+      <View className="flex flex-row space-x-2 pl-3">
+        {searchtypes.map((type, index) => {
+          const inputRange = [
+            (index - 1) * width,
+            index * width,
+            (index + 1) * width,
+          ];
+          const scale = scrollX.interpolate({
+            inputRange,
+            outputRange: [0.8, 1, 0.8],
+            extrapolate: "clamp",
+          });
+          const opacity = scrollX.interpolate({
+            inputRange,
+            outputRange: [0.5, 1, 0.5],
+            extrapolate: "clamp",
+          });
+
+          return (
+            <TouchableOpacity
+              key={index}
+              onPress={() => {
+                setSelectedTypeIndex(index);
+                scrollViewRef.current.scrollTo({
+                  x: index * width,
+                  animated: true,
+                });
+              }}
             >
-              <View className="flex-row items-center space-x-2">
-                <IconButton icon={searchtypeicons[index]} size={24} />
-                {selectedTypeIndex === index && (
-                  <Text className="font-bold dark:text-white">{type}</Text>
-                )}
-              </View>
-            </View>
-          </TouchableOpacity>
-        ))}
+              <Animated.View
+                style={{
+                  transform: [{ scale }],
+                  opacity,
+                  paddingVertical: 4,
+                  paddingHorizontal: 8,
+                  borderRadius: 20,
+                  borderColor:
+                    selectedTypeIndex === index ? "#FFB54F" : "transparent",
+                  borderWidth: 2,
+                }}
+              >
+                <View className="flex-row items-center space-x-2">
+                  <IconButton icon={searchtypeicons[index]} size={24} />
+                  {selectedTypeIndex === index && (
+                    <Text className="font-bold dark:text-white">{type}</Text>
+                  )}
+                </View>
+              </Animated.View>
+            </TouchableOpacity>
+          );
+        })}
       </View>
-      {selectedTypeIndex === 0 ? (
-        <View>
+      <Animated.ScrollView
+        ref={scrollViewRef}
+        decelerationRate={"fast"}
+        snapToAlignment={"center"}
+        snapToInterval={width}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+          { useNativeDriver: false, listener: handleScroll }
+        )}
+        scrollEventThrottle={16}
+      >
+        <View className="w-screen p-3 pt-0">
           <TextInput
             placeholder="Search for films"
             onChangeText={handleSearchValueChange}
@@ -191,13 +250,11 @@ function SearchScreen() {
                   })}
                 </View>
               )}
-
               <View className="p-40"></View>
             </ScrollView>
           )}
         </View>
-      ) : (
-        <View>
+        <View className="w-screen p-3 pt-0">
           <TextInput
             placeholder="Search for friends"
             value={friendsearch}
@@ -205,17 +262,19 @@ function SearchScreen() {
             className="text-white bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md"
           />
           <ScrollView
-            className="space-x-2 mt-3 h-full"
+            className="space-y-2 mt-3 h-full"
             showsVerticalScrollIndicator={false}
           >
             {friends &&
               friends.map((item, index) => (
-                  <ProfileSearchComponent key={item.id} id={item.id} />
+                <View key={item.id}>
+                  <ProfileSearchComponent id={item.id} />
+                </View>
               ))}
-              <View className="mb-40"></View>
+            <View className="mb-40"></View>
           </ScrollView>
         </View>
-      )}
+      </Animated.ScrollView>
     </View>
   );
 }
@@ -229,23 +288,22 @@ export default function SearchStackScreen() {
       screenOptions={{
         headerTintColor: "#FFB54F",
         headerTitleStyle: { color: colorScheme === "dark" ? "white" : "black" },
+        headerStyle: {
+          backgroundColor: colorScheme === "dark" ? "#1c1c1c" : "white",
+        },
       }}
     >
       <SearchStack.Screen
-        name="Search"
+        name="SearchScreen"
         component={SearchScreen}
         options={{ headerShown: false }}
-      />
-      <SearchStack.Screen
-        options={{ headerShown: false }}
-        name="Details"
-        component={MovieDetails}
       />
       <SearchStack.Screen
         name="ProfileScreenSearch"
         component={ProfileScreen}
         options={{ headerShown: false }}
       />
+      <SearchStack.Screen name="Details" component={MovieDetails} />
     </SearchStack.Navigator>
   );
 }

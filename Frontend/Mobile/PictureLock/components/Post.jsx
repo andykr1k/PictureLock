@@ -128,7 +128,7 @@ function Post(props) {
   const handleShare = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
 
-    const postUrl = `https://yourapp.com/posts/${props.post.id}`;
+    const postUrl = `https://p.com/posts/${props.post.id}`;
     const message = `Check out this post: ${postUrl}`;
 
     const url = `sms:?&body=${encodeURIComponent(message)}`;

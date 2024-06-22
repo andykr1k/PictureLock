@@ -1,7 +1,8 @@
 import { View } from "react-native";
 import LottieView from "lottie-react-native";
+import { memo } from "react";
 
-export default function Loading() {
+function Loading() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <LottieView
@@ -13,3 +14,5 @@ export default function Loading() {
     </View>
   );
 }
+
+export default memo(Loading);
