@@ -6,8 +6,19 @@ function ListScreen() {
   const route = useRoute();
   const { listname, movies } = route.params;
   const navigation = useNavigation();
-  const nav = "DetailsProfile";
+  const [nav, setNav] = useState();
 
+  const getRouteName = () => {
+    if (route.name.includes("Profile")) {
+      setNav("DetailsProfile");
+    } else if (route.name.includes("Search")) {
+      setNav("DetailsSearch");
+    } else if (route.name.includes("Home")) {
+      setNav("DetailsHome");
+    }
+  };
+
+  getRouteName();
   return (
     <View className="ios:ios:mt-10 p-3 space-y-3 h-full">
       <Text className="dark:text-white font-bold text-3xl">{listname}</Text>
@@ -18,13 +29,7 @@ function ListScreen() {
               key={item.id}
               className="w-1/4 p-1"
               onPress={() => {
-                if (nav) {
-                  navigation.navigate("DetailsProfile", { item, nav });
-                } else {
-                  navigation.navigate("Details", {
-                    item,
-                  });
-                }
+                  navigation.navigate(nav, { item });
               }}
             >
               <Image

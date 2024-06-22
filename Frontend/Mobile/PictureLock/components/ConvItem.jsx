@@ -47,8 +47,8 @@ function ConvItem(props) {
 
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate("Conversation", { item })}
-      className="p-2 pl-0 bg-black/10 dark:bg-white/10 rounded-md"
+      onPress={() => navigation.navigate("ConversationChat", { item })}
+      className="p-2 pl-0 bg-black/10 dark:bg-white/10 rounded-md mb-2"
     >
       <View className="flex-row space-x-2 ml-2">
         {pic && (

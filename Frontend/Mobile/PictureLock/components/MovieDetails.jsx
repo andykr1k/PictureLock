@@ -12,10 +12,21 @@ function MovieDetails() {
   const ref = useRef(null);
   const navigation = useNavigation();
   const route = useRoute();
-  const { item, nav } = route.params;
+  const { item } = route.params;
   const [data, setData] = useState(null);
   const [providers, setProviders] = useState(null);
   const [similarMovies, setSimilarMovies] = useState(null);
+  const [nav, setNav] = useState();
+
+  const getRouteName = () => {
+    if (route.name.includes("Profile")) {
+      setNav("DetailsProfile");
+    } else if (route.name.includes("Search")) {
+      setNav("DetailsSearch");
+    } else if (route.name.includes("Home")) {
+      setNav("DetailsHome");
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,12 +34,13 @@ function MovieDetails() {
         const data = await GetMovie(item);
         const similar = await GetSimilarMovies(item);
         const providers = await GetProviders(item);
-        const filteredSimilarMovies = similar.results.filter(
+        const filteredSimilarMovies = similar.results?.filter(
           (movie) => movie.poster_path !== null
         );
         setData(data);
         setSimilarMovies({ ...similar, results: filteredSimilarMovies });
         setProviders(providers);
+        getRouteName();
       } catch (error) {
         console.error("Error fetching movie data:", error);
       }
@@ -146,13 +158,7 @@ function MovieDetails() {
                 key={item.id}
                 className="w-1/4 p-1"
                 onPress={() => {
-                  if (nav) {
-                    navigation.navigate(nav, { item, nav });
-                  } else {
-                    navigation.navigate("Details", {
-                      item,
-                    });
-                  }
+                    navigation.navigate(nav, { item });
                 }}
               >
                 <MoviePoster item={item} size={"small"} />

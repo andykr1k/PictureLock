@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
   Text,
@@ -9,13 +8,9 @@ import {
   Alert,
 } from "react-native";
 import { supabase } from "../lib/supabase";
-import SwitchSelector from "react-native-switch-selector";
 import { IconButton } from "../components";
+import { useNavigation } from "@react-navigation/native";
 
-const switchoptions = [
-  { label: "Log in", value: true },
-  { label: "Sign up", value: false },
-];
 
 export default function LogInScreen() {
   const [email, setEmail] = useState("");
@@ -46,6 +41,8 @@ export default function LogInScreen() {
       });
       if (error) {
         Alert.alert(error.message);
+      } else {
+        navigation.navigate("SetUpAccountProfile");
       }
     } else {
       Alert.alert("Please make sure your passwords match!");

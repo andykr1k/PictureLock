@@ -14,7 +14,7 @@ export default function RecommendationPage() {
   const [suggestionclicked, setSuggestionclicked] = useState(false);
 
   useEffect(() => {
-    const filteredTitles = titles.filter((title) =>
+    const filteredTitles = titles?.filter((title) =>
       title.toLowerCase().includes(search.toLowerCase())
     );
     setSuggestions(filteredTitles);

@@ -1,17 +1,28 @@
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useState, useEffect, memo } from "react";
 import { getCollectionMovies } from "../lib/supabaseUtils";
 import MoviePoster from "./MoviePoster";
 import Loading from "./Loading";
 
 function List(props) {
+  const route = useRoute();
   const [listname, setListname] = useState(props.name);
   const [listid, setListid] = useState(props.list_id);
   const [movies, setMovies] = useState([]);
   const navigation = useNavigation();
-  const nav = "DetailsProfile";
-  
+  const [nav, setNav] = useState();
+
+  const getRouteName = () => {
+    if (route.name.includes("Profile")) {
+      setNav("DetailsProfile");
+    } else if (route.name.includes("Search")) {
+      setNav("DetailsSearch");
+    } else if (route.name.includes("Home")) {
+      setNav("DetailsHome");
+    }
+  };
+
   useEffect(() => {
     const fetchMovies = async () => {
       try {
@@ -27,6 +38,7 @@ function List(props) {
     };
 
     fetchMovies();
+    getRouteName();
   }, [listid]);
 
   return (
@@ -55,7 +67,7 @@ function List(props) {
               key={item.id}
               className="w-1/4 p-1"
               onPress={() => {
-                navigation.navigate("DetailsProfile", { item, nav });
+                navigation.navigate(nav, { item });
               }}
             >
               <Image

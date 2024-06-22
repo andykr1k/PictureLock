@@ -15,7 +15,6 @@ import ProfileTabs from "./ProfileTabs";
 
 function ProfileScreen() {
   const { session, refreshUserData, following } = useUser();
-
   const navigation = useNavigation();
   const route = useRoute();
   const { userID, userpic } = route.params;
@@ -24,6 +23,17 @@ function ProfileScreen() {
   const [followings, setFollowings] = useState();
   const [isFollowing, setIsFollowing] = useState();
   const [posts, setPosts] = useState();
+  const [nav, setNav] = useState()
+
+  const getRouteName = () => {
+    if (route.name.includes("Profile")) {
+      setNav("FollowScreenProfile");
+    } else if (route.name.includes("Search")) {
+      setNav("FollowScreenSearch");
+    } else if (route.name.includes("Home")) {
+      setNav("FollowScreenHome");
+    }
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -47,6 +57,7 @@ function ProfileScreen() {
     };
 
     fetchUser();
+    getRouteName();
   }, [userID, following]);
 
   return (
@@ -76,41 +87,53 @@ function ProfileScreen() {
                 </Text>
                 <Text className="dark:text-white font-bold">Posts</Text>
               </View>
-              <View className="items-center">
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate(nav, { followers });
+                }}
+                className="items-center"
+              >
                 <Text className="dark:text-white font-bold">
-                  {followers.length}
+                  {followers?.length}
                 </Text>
                 <Text className="dark:text-white font-bold">Followers</Text>
-              </View>
-              <View className="items-center">
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate(nav, { following });
+                }}
+                className="items-center"
+              >
                 <Text className="dark:text-white font-bold">
-                  {followings.length}
+                  {following?.length}
                 </Text>
                 <Text className="dark:text-white font-bold">Following</Text>
-              </View>
+              </TouchableOpacity>
             </View>
           )}
-          <View>
-            {isFollowing ? (
-              <TouchableOpacity
-                onPress={() =>
-                  handleUnfollow(session.user.id, userID, refreshUserData)
-                }
-                className="bg-black/10 dark:bg-white/10 mt-4 p-2 rounded-md flex items-center"
-              >
-                <Text className="dark:text-white font-bold">Unfollow</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                onPress={() =>
-                  handleFollow(session.user.id, userID, refreshUserData)
-                }
-                className="bg-black/10 dark:bg-white/10 mt-4 p-2 rounded-md flex items-center"
-              >
-                <Text className="dark:text-white font-bold">Follow</Text>
-              </TouchableOpacity>
-            )}
-          </View>
+          {session.user.id !== userID && (
+            <View>
+              {isFollowing ? (
+                <TouchableOpacity
+                  onPress={() =>
+                    handleUnfollow(session.user.id, userID, refreshUserData)
+                  }
+                  className="bg-black/10 dark:bg-white/10 mt-4 p-2 rounded-md flex items-center"
+                >
+                  <Text className="dark:text-white font-bold">Unfollow</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() =>
+                    handleFollow(session.user.id, userID, refreshUserData)
+                  }
+                  className="bg-black/10 dark:bg-white/10 mt-4 p-2 rounded-md flex items-center"
+                >
+                  <Text className="dark:text-white font-bold">Follow</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
         </View>
       </View>
       <View className="mt-3">

@@ -74,7 +74,7 @@ function CreatePost() {
       refreshUserData,
       spoiler
     );
-    navigation.navigate("PictureLock");
+    navigation.navigate("PictureLockHome");
   };
 
   return (
@@ -159,7 +159,7 @@ function CreatePost() {
       ) : (
         <TouchableOpacity
           className="w-full bg-black/10 dark:bg-white/10 p-3 rounded-md"
-          onPress={() => navigation.navigate("RecordScreen")}
+          onPress={() => navigation.navigate("RecordScreenHome")}
         >
           <Text className="font-bold text-center dark:text-white">Record</Text>
         </TouchableOpacity>

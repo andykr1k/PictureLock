@@ -3,13 +3,25 @@ import { getProfilePictureUrl, getUser } from "../lib/supabaseUtils";
 import { memo, useEffect, useState } from "react";
 import Loading from "./Loading";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 function ProfileSearchComponent(props) {
   const navigation = useNavigation();
   const userID = props.id;
+  const route = useRoute();
   const [userpic, setUserpic] = useState();
   const [user, setUser] = useState();
+  const [nav, setNav] = useState();
+
+  const getRouteName = () => {
+    if (route.name.includes("Profile")) {
+      setNav("UserScreenProfile");
+    } else if (route.name.includes("Search")) {
+      setNav("UserScreenSearch");
+    } else if (route.name.includes("Home")) {
+      setNav("UserScreenHome");
+    }
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -19,15 +31,14 @@ function ProfileSearchComponent(props) {
     };
 
     fetchUser();
+    getRouteName();
   }, [userID]);
 
   if (userpic && user)
     return (
       <TouchableOpacity
         className="p-3 bg-black/10 dark:bg-white/10 rounded-md"
-        onPress={() =>
-          navigation.navigate("ProfileScreenSearch", { userID, userpic })
-        }
+        onPress={() => navigation.navigate(nav, { userID, userpic })}
       >
         <View className="flex-row space-x-3">
           <Image source={{ uri: userpic }} className="w-8 h-8 rounded-full" />

@@ -1,22 +1,22 @@
 import { Text, View, TouchableOpacity, Image } from "react-native";
 import { memo, useState, useEffect } from "react";
-import { getProfilePictureUrl, getUsername } from "../lib/supabaseUtils";
+import { getProfilePictureUrl, getUser } from "../lib/supabaseUtils";
 import { useNavigation } from "@react-navigation/native";
 import { useUser } from "../lib/UserContext";
 import TimeAgo from "../functions/TimeAgo";
 
 function Notification(props) {
   const navigation = useNavigation();
-
   const { session, refreshUserData } = useUser();
-
+  const [userID, setUserID] = useState("");
   const [username, setUsername] = useState("");
   const [userpic, setUserpic] = useState("");
 
   useEffect(() => {
-    const fetchUsername = async () => {
-      const username = await getUsername(props.id);
-      setUsername(username);
+    const fetchUser = async () => {
+      const user = await getUser(props.id);
+      setUsername(user[0].username);
+      setUserID(user[0].id);
     };
 
     const fetchUserPicture = async () => {
@@ -24,7 +24,7 @@ function Notification(props) {
       setUserpic(pic);
     };
 
-    fetchUsername();
+    fetchUser();
     fetchUserPicture();
   }, [props]);
 
@@ -35,7 +35,7 @@ function Notification(props) {
           {userpic && (
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate("ProfileScreen", { userID, userpic })
+                navigation.navigate("UserScreenHome", { userID, userpic })
               }
             >
               <Image
@@ -64,7 +64,7 @@ function Notification(props) {
         {userpic && (
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate("ProfileScreen", { userID, userpic })
+              navigation.navigate("UserScreenHome", { userID, userpic })
             }
           >
             <Image source={{ uri: userpic }} className="w-8 h-8 rounded-full" />
@@ -78,9 +78,7 @@ function Notification(props) {
         {/* <Text className="dark:text-white text-md ">
           commented "{props.content}"
         </Text> */}
-        <Text className="dark:text-white text-md ">
-          commented on your post
-        </Text>
+        <Text className="dark:text-white text-md ">commented on your post</Text>
         <Text className="dark:text-white text-xs">
           &nbsp; {TimeAgo(props.date)}
         </Text>

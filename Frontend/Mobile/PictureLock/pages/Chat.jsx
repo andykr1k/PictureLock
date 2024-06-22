@@ -198,8 +198,8 @@ function Chat() {
           />
         }
       >
-        {conversations.map((item, index) => (
-          <ConvItem key={index} item={item} />
+        {conversations?.map((item, index) => (
+          <ConvItem key={item.id} item={item} />
         ))}
         <View className="p-20"></View>
       </ScrollView>
@@ -234,7 +234,7 @@ export default function ChatStackScreen() {
         options={{ headerShown: false }}
       />
       <ChatStack.Screen
-        name="Conversation"
+        name="ConversationChat"
         component={Conversation}
         options={{ headerShown: false }}
       />

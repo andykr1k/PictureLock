@@ -61,7 +61,7 @@ function AIScreen({ navigation }) {
   const togglePlatformSelection = (index) => {
     setSelectedPlatformIndexes((prevIndexes) => {
       if (prevIndexes.includes(index)) {
-        return prevIndexes.filter((i) => i !== index);
+        return prevIndexes?.filter((i) => i !== index);
       } else {
         return [...prevIndexes, index];
       }
@@ -71,7 +71,7 @@ function AIScreen({ navigation }) {
   const toggleGenreSelection = (index) => {
     setSelectedGenreIndexes((prevIndexes) => {
       if (prevIndexes.includes(index)) {
-        return prevIndexes.filter((i) => i !== index);
+        return prevIndexes?.filter((i) => i !== index);
       } else {
         return [...prevIndexes, index];
       }
@@ -97,7 +97,7 @@ function AIScreen({ navigation }) {
 
   const handleSearchValueChange = (e) => {
     setSearch(e);
-    const filteredTitles = titles.filter((movie) =>
+    const filteredTitles = titles?.filter((movie) =>
       movie.title.toLowerCase().includes(search.toLowerCase())
     );
     setSuggestions(filteredTitles.slice(0, 8));

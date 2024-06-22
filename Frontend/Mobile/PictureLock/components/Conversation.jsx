@@ -62,8 +62,8 @@ function Conversation() {
   const sendMessage = async () => {
     if (message.trim()) {
       await handleMessage(item.id, session.user.id, message);
-      setMessage(""); // Clear the input field
-      fetchMessages(); // Re-fetch the messages
+      setMessage("");
+      fetchMessages();
     }
   };
 
@@ -86,7 +86,7 @@ function Conversation() {
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
       >
-        <View className="space-y-3">
+        <View className="space-y-3 mt-3">
           {messages &&
             messages.map((message) => (
               <View key={message.id}>

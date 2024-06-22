@@ -19,6 +19,7 @@ import {
   IconButton,
   RecordScreen,
   PostDetails,
+  FollowScreen,
 } from "../components";
 import { RefreshControl } from "react-native-gesture-handler";
 import React, { useState, useRef } from "react";
@@ -82,7 +83,7 @@ function HomeScreen() {
         <View className="flex flex-row justify-between items-center p-3">
           <Text className="dark:text-white font-bold text-3xl">Home</Text>
           <TouchableOpacity
-            onPress={() => navigation.navigate("NotificationStackScreen")}
+            onPress={() => navigation.navigate("NotificationStackScreenHome")}
           >
             <IconButton icon="notifications-none" size={28} />
           </TouchableOpacity>
@@ -192,7 +193,7 @@ function HomeScreen() {
       </Animated.ScrollView>
       <TouchableOpacity
         className="absolute bottom-0 right-0 p-5 mb-28"
-        onPress={() => navigation.navigate("Create")}
+        onPress={() => navigation.navigate("CreateHome")}
       >
         <BlurView className="w-12 h-12 rounded-full dark:bg-black/80 flex items-center justify-center overflow-hidden">
           <Text className="dark:text-white font-light text-xl text-orange-fruit align-middle text-center">
@@ -221,33 +222,38 @@ export default function HomeStackScreen() {
         options={{ headerShown: false }}
       />
       <HomeStack.Screen
-        name="Create"
+        name="CreateHome"
         component={CreatePost}
         options={{ headerShown: false }}
       />
       <HomeStack.Screen
-        name="Details"
+        name="DetailsHome"
         component={MovieDetails}
         options={{ headerShown: false }}
       />
       <HomeStack.Screen
-        name="ProfileScreen"
+        name="UserScreenHome"
         component={ProfileScreen}
         options={{ headerShown: false }}
       />
       <HomeStack.Screen
-        name="RecordScreen"
+        name="RecordScreenHome"
         component={RecordScreen}
         options={{ headerShown: false }}
       />
       <HomeStack.Screen
-        name="NotificationStackScreen"
+        name="NotificationStackScreenHome"
         component={NotificationStackScreen}
         options={{ headerShown: false }}
       />
       <HomeStack.Screen
         name="PostDetailsHome"
         component={PostDetails}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="FollowScreenHome"
+        component={FollowScreen}
         options={{ headerShown: false }}
       />
     </HomeStack.Navigator>

@@ -17,3 +17,5 @@ export { default as ProfileSearchComponent } from "./ProfileSearchComponent";
 export { default as CreateList } from "./CreateList";
 export { default as List } from "./List";
 export { default as ListScreen } from "./ListScreen";
+export { default as CreateAccountScreen } from "./CreateAccountScreen";
+export { default as FollowScreen } from "./FollowScreen";

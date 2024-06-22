@@ -10,7 +10,7 @@ import {
   UIManager,
 } from "react-native";
 import { useUser } from "../lib/UserContext";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { getCollections } from "../lib/supabaseUtils";
 import List from "./List";
 
@@ -24,10 +24,21 @@ const ProfileTabs = (props) => {
   const [userID, setUserID] = useState(props.id);
   const { session } = useUser();
   const navigation = useNavigation();
-  const nav = props.section;
+  const route = useRoute();
   const width = Dimensions.get("window").width;
   const scrollViewRef = useRef(null);
   const borderRef = useRef(null);
+  const [nav, setNav] = useState();
+
+  const getRouteName = () => {
+    if (route.name.includes("Profile")) {
+      setNav("PostDetailsProfile");
+    } else if (route.name.includes("Search")) {
+      setNav("PostDetailsSearch");
+    } else if (route.name.includes("Home")) {
+      setNav("PostDetailsHome");
+    }
+  };
 
   useEffect(() => {
     const fetchLists = async () => {
@@ -35,10 +46,10 @@ const ProfileTabs = (props) => {
       setLists(data);
     };
     fetchLists();
+    getRouteName();
   }, [userID]);
 
   useEffect(() => {
-    // Set initial border position
     if (borderRef.current) {
       switch (selectedTab) {
         case "Reviews":
@@ -169,14 +180,7 @@ const ProfileTabs = (props) => {
                     key={item.id}
                     className="w-1/4 h-36 p-1"
                     onPress={() => {
-                      if (nav) {
-                        navigation.navigate("PostDetailsHome", { item });
-                      } else {
-                        navigation.navigate("PostDetailsProfile", {
-                          item,
-                          nav,
-                        });
-                      }
+                        navigation.navigate(nav, { item });
                     }}
                   >
                     <Image
@@ -199,7 +203,7 @@ const ProfileTabs = (props) => {
             <TouchableOpacity
               className="w-full bg-black/10 dark:bg-white/10 p-4 rounded-md"
               onPress={() => {
-                navigation.navigate("CreateList");
+                navigation.navigate("CreateListHome");
               }}
             >
               <Text className="font-bold text-center dark:text-white">

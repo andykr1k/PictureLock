@@ -25,7 +25,7 @@ import {
 import { useState, useEffect, memo, useRef } from "react";
 import { useUser } from "../lib/UserContext";
 import Comment from "./Comment";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   TouchableOpacity,
   PanGestureHandler,
@@ -49,7 +49,17 @@ function Post(props) {
   const [spoilerBlur, setSpoilerBlur] = useState(true);
   const [userID, setuserID] = useState(props.post.author);
   const translateY = useRef(new Animated.Value(0)).current;
-  const nav = props.section;
+  const [nav, setNav] = useState();
+  const route = useRoute();
+  const getRouteName = () => {
+    if (route.name.includes("Profile")) {
+      setNav("DetailsProfile");
+    } else if (route.name.includes("Search")) {
+      setNav("DetailsSearch");
+    } else if (route.name.includes("Home")) {
+      setNav("DetailsHome");
+    }
+  };
 
   useEffect(() => {
     const fetchUsername = async () => {
@@ -128,7 +138,7 @@ function Post(props) {
   const handleShare = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
 
-    const postUrl = `https://p.com/posts/${props.post.id}`;
+    const postUrl = `picturelock://posts/${props.post.id}`;
     const message = `Check out this post: ${postUrl}`;
 
     const url = `sms:?&body=${encodeURIComponent(message)}`;
@@ -140,8 +150,6 @@ function Post(props) {
 
   const handleDelete = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-
-    // Implement delete functionality
   };
 
   return (
@@ -207,11 +215,7 @@ function Post(props) {
           {props.post.movie_poster && (
             <Pressable
               onPress={() => {
-                if (nav) {
-                  navigation.navigate("Details", { item, nav });
-                } else {
-                  navigation.navigate("DetailsProfile", { item });
-                }
+                  navigation.navigate(nav, { item });
               }}
             >
               <Image
@@ -235,7 +239,7 @@ function Post(props) {
                 ) : (
                   <TouchableOpacity
                     onPress={() =>
-                      navigation.navigate("ProfileScreen", { userID, userpic })
+                      navigation.navigate("UserScreenHome", { userID, userpic })
                     }
                   >
                     <Image
@@ -286,7 +290,7 @@ function Post(props) {
                       <IconButton
                         icon="comment"
                         size={20}
-                        text={comments && comments.length}
+                        text={comments && comments?.length}
                         color={"white"}
                       />
                     </TouchableOpacity>
@@ -303,7 +307,7 @@ function Post(props) {
                         <IconButton
                           icon="favorite"
                           size={20}
-                          text={likes && likes.length}
+                          text={likes && likes?.length}
                           color={"white"}
                         />
                       </TouchableOpacity>
@@ -321,7 +325,7 @@ function Post(props) {
                         <IconButton
                           icon="favorite-outline"
                           size={20}
-                          text={likes && likes.length}
+                          text={likes && likes?.length}
                           color={"white"}
                         />
                       </TouchableOpacity>

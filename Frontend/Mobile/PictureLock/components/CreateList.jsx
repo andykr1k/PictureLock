@@ -37,7 +37,7 @@ function CreateList() {
     );
     if (index !== -1) {
       setSelectedMovies(
-        selectedMovies.filter((selectedMovie, i) => i !== index)
+        selectedMovies?.filter((selectedMovie, i) => i !== index)
       );
     } else {
       setSelectedMovies([...selectedMovies, movie]);
@@ -69,21 +69,24 @@ function CreateList() {
         onChangeText={setName}
         className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
       />
-      {selectedMovies.length > 0 && (
-        <View className="flex flex-row flex-wrap">
-          {selectedMovies.map((selectedMovie, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => handleMovie(selectedMovie)}
-              className="p-1"
-            >
-              <View className="border-2 rounded-md border-orange-500">
-                <MoviePoster item={selectedMovie} size={"xs"} />
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
+      <View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View className="flex-row">
+            {selectedMovies.map((selectedMovie) => (
+              <TouchableOpacity
+                key={selectedMovie.id}
+                onPress={() => handleMovie(selectedMovie)}
+                className="p-1"
+              >
+                <View className="border-2 rounded-md border-orange-500">
+                  <MoviePoster item={selectedMovie} size={"xs"} />
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </ScrollView>
+      </View>
+
       <TextInput
         placeholder="Search for films"
         onChangeText={setSearch}

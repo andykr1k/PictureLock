@@ -18,6 +18,7 @@ import {
   Loading,
   ProfileSearchComponent,
   ProfileScreen,
+  FollowScreen,
 } from "../components";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -175,7 +176,9 @@ function SearchScreen() {
                       <TouchableOpacity
                         className="w-1/4 p-1"
                         key={item.id}
-                        onPress={() => navigation.navigate("Details", { item })}
+                        onPress={() =>
+                          navigation.navigate("DetailsSearch", { item })
+                        }
                       >
                         <MoviePoster item={item} size={"small"} />
                       </TouchableOpacity>
@@ -202,7 +205,9 @@ function SearchScreen() {
                       <TouchableOpacity
                         className="w-1/4 p-1"
                         key={item.id}
-                        onPress={() => navigation.navigate("Details", { item })}
+                        onPress={() =>
+                          navigation.navigate("DetailsSearch", { item })
+                        }
                       >
                         <MoviePoster item={item} size={"small"} />
                       </TouchableOpacity>
@@ -222,7 +227,9 @@ function SearchScreen() {
                       <TouchableOpacity
                         className="w-1/4 p-1"
                         key={item.id}
-                        onPress={() => navigation.navigate("Details", { item })}
+                        onPress={() =>
+                          navigation.navigate("DetailsSearch", { item })
+                        }
                       >
                         <MoviePoster item={item} size={"small"} />
                       </TouchableOpacity>
@@ -242,7 +249,9 @@ function SearchScreen() {
                       <TouchableOpacity
                         className="w-1/4 p-1"
                         key={item.id}
-                        onPress={() => navigation.navigate("Details", { item })}
+                        onPress={() =>
+                          navigation.navigate("DetailsSearch", { item })
+                        }
                       >
                         <MoviePoster item={item} size={"small"} />
                       </TouchableOpacity>
@@ -268,7 +277,10 @@ function SearchScreen() {
             {friends &&
               friends.map((item, index) => (
                 <View key={item.id}>
-                  <ProfileSearchComponent id={item.id} />
+                  <ProfileSearchComponent
+                    id={item.id}
+                    nav={"UserScreenSearch"}
+                  />
                 </View>
               ))}
             <View className="mb-40"></View>
@@ -299,11 +311,20 @@ export default function SearchStackScreen() {
         options={{ headerShown: false }}
       />
       <SearchStack.Screen
-        name="ProfileScreenSearch"
+        name="UserScreenSearch"
         component={ProfileScreen}
         options={{ headerShown: false }}
       />
-      <SearchStack.Screen name="Details" component={MovieDetails} />
+      <SearchStack.Screen
+        name="DetailsSearch"
+        component={MovieDetails}
+        options={{ headerShown: false }}
+      />
+      <SearchStack.Screen
+        name="FollowScreenSearch"
+        component={FollowScreen}
+        options={{ headerShown: false }}
+      />
     </SearchStack.Navigator>
   );
 }
