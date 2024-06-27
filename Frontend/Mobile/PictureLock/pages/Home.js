@@ -20,7 +20,7 @@ import {
   FollowScreen,
   ListScreen,
 } from "../components";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useUser } from "../lib/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
@@ -33,14 +33,25 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 
 function HomeScreen() {
   const navigation = useNavigation();
-  const { refreshUserData, posts, following } = useUser();
+  const { refreshUserData, posts, following, refresh } = useUser();
   const feedtypes = ["For You", "Everyone", "Trending"];
   const feedtypeicons = ["people", "public", "trending-up"];
   const [selectedTypeIndex, setSelectedTypeIndex] = useState(0);
+  const [constantPosts, setConstantPosts] = useState(posts);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const scrollX = useRef(new Animated.Value(0)).current;
   const width = Dimensions.get("window").width;
   const scrollViewRef = useRef(null);
+
+  useEffect(() => {
+    console.log(refresh)
+    refreshData()
+  }, [refresh]);
+
+  useEffect(() => {
+    setConstantPosts(posts);
+    updateFilteredPosts();
+  }, [posts, following]);
 
   const getFollowingIds = () => {
     if (!Array.isArray(following)) {
@@ -49,7 +60,7 @@ function HomeScreen() {
     return following.map((f) => f.id);
   };
 
-  async function refresh() {
+  async function refreshData() {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     try {
       await refreshUserData("posts");
@@ -62,13 +73,9 @@ function HomeScreen() {
   const updateFilteredPosts = () => {
     const followingIds = getFollowingIds();
     setFilteredPosts(
-      posts?.filter((post) => followingIds.includes(post.author))
+      constantPosts?.filter((post) => followingIds.includes(post.author))
     );
   };
-
-  React.useEffect(() => {
-    updateFilteredPosts();
-  }, [posts, following]);
 
   const handleScroll = (event) => {
     const offsetX = event.nativeEvent.contentOffset.x;
@@ -157,13 +164,11 @@ function HomeScreen() {
           <FlatList
             className="mb-28 overflow-visible w-screen p-3 pt-0"
             data={filteredPosts}
-            renderItem={({ item, index }) => (
-              <Post key={index} post={item} />
-            )}
+            renderItem={({ item, index }) => <Post key={index} post={item} />}
             keyExtractor={(item, index) => `${item.id}-${index}`}
             showsVerticalScrollIndicator={false}
             refreshControl={
-              <RefreshControl refreshing={false} onRefresh={refresh} />
+              <RefreshControl refreshing={false} onRefresh={refreshData} />
             }
           />
         ) : (
@@ -176,14 +181,12 @@ function HomeScreen() {
 
         <FlatList
           className="mb-28 overflow-visible w-screen p-3 pt-0"
-          data={posts}
-          renderItem={({ item, index }) => (
-            <Post key={index} post={item} />
-          )}
+          data={constantPosts}
+          renderItem={({ item, index }) => <Post key={index} post={item} />}
           keyExtractor={(item, index) => `${item.id}-${index}`}
           showsVerticalScrollIndicator={false}
           refreshControl={
-            <RefreshControl refreshing={false} onRefresh={refresh} />
+            <RefreshControl refreshing={false} onRefresh={refreshData} />
           }
         />
         <View className="overflow-visible w-screen">

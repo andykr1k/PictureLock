@@ -14,14 +14,14 @@ function Notification(props) {
   const [item, setItem] = useState(null);
 
   useEffect(() => {
-    const foundPost = posts.find((post) => post.id === props.post_id);
+    const foundPost = posts?.find((post) => post.id === props.post_id);
     if (foundPost) {
       setItem(foundPost);
     }
     const fetchUser = async () => {
       const user = await getUser(props.id);
-      setUsername(user[0].username);
-      setUserID(user[0].id);
+      setUsername(user[0]?.username);
+      setUserID(user[0]?.id);
     };
 
     const fetchUserPicture = async () => {
@@ -31,7 +31,7 @@ function Notification(props) {
 
     fetchUser();
     fetchUserPicture();
-  }, [props]);
+  }, [posts]);
 
   if (props.status === "like") {
     return (

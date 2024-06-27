@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Linking,
   Pressable,
-  useColorScheme
+  useColorScheme,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { BlurView } from "expo-blur";
@@ -33,12 +33,14 @@ import Comment from "./Comment";
 
 function Post(props) {
   const navigation = useNavigation();
-  const { session, refreshUserData } = useUser();
+  const { session, refreshUserData, refresh, setRefresh } = useUser();
   const [modalVisible, setModalVisible] = useState(false);
   const [username, setUsername] = useState("");
   const [userpic, setUserpic] = useState("");
   const [comments, setComments] = useState(null);
+  const [commentcount, setCommentcount] = useState(null);
   const [likes, setLikes] = useState(null);
+  const [likecount, setLikecount] = useState(null);
   const [liked, setLiked] = useState(false);
   const [text, setText] = useState("");
   const [item, setItem] = useState({ id: props.post.movie_id });
@@ -71,23 +73,33 @@ function Post(props) {
     if (nativeEvent.state === State.ACTIVE) {
       const { x, y } = nativeEvent;
       handleLikePost();
-      setHeartPosition({ x: x-32, y: y-32 });
+      setHeartPosition({ x: x - 32, y: y - 32 });
       setHeartVisible(true);
       animateHeart();
       setTimeout(() => setHeartVisible(false), 1000);
     }
   };
 
+  const handleUnikePost = async () => {
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    if (liked) {
+      await handleUnlike(props.post.id, session.user.id, refreshUserData);
+      setLiked(false);
+      setLikecount(likecount - 1);
+    }
+  };
+
   const handleLikePost = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     if (!liked) {
-      handleLike(
+      await handleLike(
         props.post.id,
         session.user.id,
         refreshUserData,
         props.post.author
       );
       setLiked(true);
+      setLikecount(likecount + 1);
     }
   };
 
@@ -106,6 +118,8 @@ function Post(props) {
         setLiked(
           fetchedLikes?.some((like) => like.user_id === session.user.id)
         );
+        setLikecount(fetchedLikes?.length);
+        setCommentcount(fetchedComments?.length);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -115,7 +129,7 @@ function Post(props) {
     const [nav, userscreennav] = getRouteName();
     setNav(nav);
     setUserscreennav(userscreennav);
-  }, [props.post]);
+  }, [props.post, refresh]);
 
   const stars = Array.from({ length: props.post.stars }, (_, index) => (
     <IconButton color={"white"} key={index} icon="star" size={14} />
@@ -130,6 +144,7 @@ function Post(props) {
       props.post.author
     );
     setText("");
+    setRefresh(Date.now())
   };
 
   const handleCommentsModal = async () => {
@@ -209,7 +224,7 @@ function Post(props) {
                   onPress={handleCommentsModal}
                 />
                 <Text className="dark:text-white font-bold text-center">
-                  {comments ? `${comments.length} comments` : "0 comments"}
+                  {comments ? `${commentcount} comments` : "0 comments"}
                 </Text>
               </View>
               <ScrollView
@@ -315,42 +330,25 @@ function Post(props) {
                         <IconButton
                           icon="comment"
                           size={20}
-                          text={comments && comments?.length}
+                          text={comments && commentcount}
                           color={colorScheme === "dark" ? "white" : "black"}
                         />
                       </TouchableOpacity>
                       {liked ? (
-                        <TouchableOpacity
-                          onPress={() =>
-                            handleUnlike(
-                              props.post.id,
-                              session.user.id,
-                              refreshUserData
-                            )
-                          }
-                        >
+                        <TouchableOpacity onPress={handleUnikePost}>
                           <IconButton
                             icon="favorite"
                             size={20}
-                            text={likes && likes?.length}
+                            text={likes && likecount}
                             color={colorScheme === "dark" ? "white" : "black"}
                           />
                         </TouchableOpacity>
                       ) : (
-                        <TouchableOpacity
-                          onPress={() =>
-                            handleLike(
-                              props.post.id,
-                              session.user.id,
-                              refreshUserData,
-                              props.post.author
-                            )
-                          }
-                        >
+                        <TouchableOpacity onPress={handleLikePost}>
                           <IconButton
                             icon="favorite-outline"
                             size={20}
-                            text={likes && likes?.length}
+                            text={likes && likecount}
                             color={colorScheme === "dark" ? "white" : "black"}
                           />
                         </TouchableOpacity>
@@ -459,42 +457,25 @@ function Post(props) {
                           <IconButton
                             icon="comment"
                             size={20}
-                            text={comments && comments?.length}
+                            text={comments && commentcount}
                             color={"white"}
                           />
                         </TouchableOpacity>
                         {liked ? (
-                          <TouchableOpacity
-                            onPress={() =>
-                              handleUnlike(
-                                props.post.id,
-                                session.user.id,
-                                refreshUserData
-                              )
-                            }
-                          >
+                          <TouchableOpacity onPress={handleUnikePost}>
                             <IconButton
                               icon="favorite"
                               size={20}
-                              text={likes && likes?.length}
+                              text={likes && likecount}
                               color={"white"}
                             />
                           </TouchableOpacity>
                         ) : (
-                          <TouchableOpacity
-                            onPress={() =>
-                              handleLike(
-                                props.post.id,
-                                session.user.id,
-                                refreshUserData,
-                                props.post.author
-                              )
-                            }
-                          >
+                          <TouchableOpacity onPress={handleLikePost}>
                             <IconButton
                               icon="favorite-outline"
                               size={20}
-                              text={likes && likes?.length}
+                              text={likes && likecount}
                               color={"white"}
                             />
                           </TouchableOpacity>

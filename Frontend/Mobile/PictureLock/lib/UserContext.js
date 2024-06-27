@@ -23,6 +23,7 @@ export const UserProvider = ({ children }) => {
   const [session, setSession] = useState(null);
   const [user, setUser] = useState(null);
   const [pic, setPic] = useState(null);
+  const [refresh, setRefresh] = useState(null);
   const [posts, setPosts] = useState([]);
   const [followers, setFollowers] = useState();
   const [following, setFollowing] = useState();
@@ -77,6 +78,24 @@ export const UserProvider = ({ children }) => {
 
         case "lists":
           setLists(await getCollections(userId));
+          break;
+
+        case "likes":
+          const like = await getUserLikes(userId);
+          const likeType = like?.map((like) => ({
+            ...like,
+            type: "like",
+          }));
+          setUserlikes(likeType);
+          break;
+
+        case "comments":
+          const comment = await getUserComments(userId);
+          const commentType = comment?.map((comment) => ({
+            ...comment,
+            type: "comment",
+          }));
+          setUsercomments(commentType);
           break;
 
         default:
@@ -165,6 +184,8 @@ export const UserProvider = ({ children }) => {
         notifications,
         conversations,
         lists,
+        refresh,
+        setRefresh
       }}
     >
       {children}

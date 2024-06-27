@@ -31,7 +31,7 @@ export async function getUsername(id) {
     return null;
   }
 
-  if (!data || data.length === 0) {
+  if (!data || data?.length === 0) {
     console.error("No data found for profile with ID:", id);
     return null;
   }
@@ -167,7 +167,7 @@ export async function handleComment(
   if (error) {
     console.log(error);
   } else {
-    refreshUserData("posts");
+    refreshUserData("comments");
   }
 }
 
@@ -180,7 +180,7 @@ export async function handleDeleteComment(comment_id, refreshUserData) {
   if (error) {
     console.log(error);
   } else {
-    refreshUserData("posts");
+    refreshUserData("comments");
   }
 }
 
@@ -197,7 +197,7 @@ export async function handleLike(post_id, user_id, refreshUserData, author) {
   if (error) {
     console.log(error);
   } else {
-    refreshUserData("posts");
+    refreshUserData("likes");
   }
 }
 
@@ -211,7 +211,7 @@ export async function handleUnlike(post_id, user_id, refreshUserData) {
   if (error) {
     console.log(error);
   } else {
-    refreshUserData("posts");
+    refreshUserData("likes");
   }
 }
 

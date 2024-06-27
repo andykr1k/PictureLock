@@ -15,11 +15,11 @@ import { handleCreatePost } from "../lib/supabaseUtils";
 import { useUser } from "../lib/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { SearchMovie } from "../lib/api";
-import Loading from './Loading';
+import Loading from "./Loading";
 
 function CreatePost() {
   const navigation = useNavigation();
-  const { session, refreshUserData } = useUser();
+  const { session, refreshUserData, setRefresh } = useUser();
   const [review, setReview] = useState("");
   const [stars, setStars] = useState(0);
   const [movie, setMovie] = useState("");
@@ -79,12 +79,13 @@ function CreatePost() {
       refreshUserData,
       spoiler
     );
-    navigation.navigate("PictureLockHome");
+    await setRefresh(Date.now());
+    await navigation.navigate("PictureLockHome");
     await setLoading(false);
   };
 
   if (loading) {
-    return <Loading />
+    return <Loading />;
   }
 
   return (

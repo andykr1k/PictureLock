@@ -11,7 +11,7 @@ import IconButton from "./IconButton";
 import * as Haptics from "expo-haptics";
 
 function Comment(props) {
-  const { session, refreshUserData } = useUser();
+  const { session, refreshUserData, setRefresh } = useUser();
   const [username, setUsername] = useState("");
   const [userpic, setUserpic] = useState("");
   const [mine, setMine] = useState(props.post.user_id === session.user.id);
@@ -36,6 +36,7 @@ function Comment(props) {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     await setDeleted(true);
     await handleDeleteComment(props.post.id, refreshUserData);
+    setRefresh(Date.now())
   };
 
   if (deleted) {
