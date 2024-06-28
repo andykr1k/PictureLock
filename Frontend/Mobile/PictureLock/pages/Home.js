@@ -20,11 +20,11 @@ import {
   FollowScreen,
   ListScreen,
 } from "../components";
-import { RefreshControl } from "react-native-gesture-handler";
 import React, { useState, useRef } from "react";
 import { useUser } from "../lib/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
+import { RefreshControl } from "react-native-gesture-handler";
 import { BlurView } from "expo-blur";
 import NotificationStackScreen from "./Notifications";
 
@@ -52,7 +52,7 @@ function HomeScreen() {
   async function refresh() {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     try {
-      await refreshUserData();
+      await refreshUserData("posts");
       updateFilteredPosts();
     } catch (error) {
       console.error("Failed to refresh data:", error);

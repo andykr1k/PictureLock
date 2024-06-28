@@ -2,9 +2,17 @@ import { View, ScrollView, Text } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Notification } from "../components";
 import { useUser } from "../lib/UserContext";
+import { useEffect } from "react";
 
 function NotificationsScreen() {
-  const { notifications } = useUser();
+  const { notifications, refreshUserData } = useUser();
+
+  useEffect(() => {
+    const refresh = async () => {
+      await refreshUserData("posts");
+    };
+    refresh();
+  }, []);
 
   return (
     <View className="ios:mt-10 p-3 space-y-3">

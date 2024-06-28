@@ -36,12 +36,14 @@ import {
   getFriends,
 } from "../lib/supabaseUtils";
 import { IconButton } from "../components";
+import * as Haptics from "expo-haptics";
+import { RefreshControl } from "react-native-gesture-handler";
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
 
 function SearchScreen() {
-  const { session } = useUser();
+  const { session, refreshUserData } = useUser();
   const navigation = useNavigation();
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -61,6 +63,15 @@ function SearchScreen() {
   const scrollX = useRef(new Animated.Value(0)).current;
   const width = Dimensions.get("window").width;
   const scrollViewRef = useRef(null);
+
+  async function refresh() {
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    try {
+      await refreshUserData("lists");
+    } catch (error) {
+      console.error("Failed to refresh data:", error);
+    }
+  }
 
   const handleSearchValueChange = (e) => {
     setSearch(e);
@@ -318,6 +329,9 @@ function SearchScreen() {
             className="space-y-2 mt-3 h-full"
             contentContainerStyle={{ paddingBottom: 250 }}
             showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl refreshing={false} onRefresh={refresh} />
+            }
           >
             {collections &&
               collections.map((list) => (

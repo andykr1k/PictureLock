@@ -1,13 +1,10 @@
 import React from "react";
-import {
-  View,
-  Text,
-  FlatList,
-} from "react-native";
+import { View, Text, FlatList } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { useUser } from "../lib/UserContext";
 import { RefreshControl } from "react-native-gesture-handler";
 import ProfileSearchComponent from "./ProfileSearchComponent";
+import * as Haptics from "expo-haptics";
 
 function FollowScreen() {
   const route = useRoute();
@@ -17,8 +14,8 @@ function FollowScreen() {
   async function refresh() {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     try {
-      await refreshUserData();
-      updateFilteredPosts();
+      await refreshUserData("following");
+      await refreshUserData("followers");
     } catch (error) {
       console.error("Failed to refresh data:", error);
     }

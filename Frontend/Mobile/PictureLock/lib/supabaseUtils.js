@@ -72,7 +72,7 @@ export async function handleUploadProfilePicture(
       if (error) {
         console.error("Error uploading file:", error);
       } else {
-        refreshUserData();
+        refreshUserData("profile");
       }
     } else {
       console.error("No profile image provided.");
@@ -91,7 +91,7 @@ export async function handleNameUpdate(name, id, refreshUserData) {
   if (error) {
     console.log(error);
   } else {
-    refreshUserData();
+    refreshUserData("profile");
   }
 }
 
@@ -104,7 +104,7 @@ export async function handleUsernameUpdate(username, id, refreshUserData) {
   if (error) {
     console.log(error);
   } else {
-    refreshUserData();
+    refreshUserData("profile");
   }
 }
 
@@ -143,7 +143,7 @@ export async function handleCreatePost(
   if (error) {
     console.log(error);
   } else {
-    refreshUserData();
+    refreshUserData("posts");
   }
 }
 
@@ -167,7 +167,7 @@ export async function handleComment(
   if (error) {
     console.log(error);
   } else {
-    refreshUserData();
+    refreshUserData("posts");
   }
 }
 
@@ -180,7 +180,7 @@ export async function handleDeleteComment(comment_id, refreshUserData) {
   if (error) {
     console.log(error);
   } else {
-    refreshUserData();
+    refreshUserData("posts");
   }
 }
 
@@ -197,7 +197,7 @@ export async function handleLike(post_id, user_id, refreshUserData, author) {
   if (error) {
     console.log(error);
   } else {
-    refreshUserData();
+    refreshUserData("posts");
   }
 }
 
@@ -211,7 +211,7 @@ export async function handleUnlike(post_id, user_id, refreshUserData) {
   if (error) {
     console.log(error);
   } else {
-    refreshUserData();
+    refreshUserData("posts");
   }
 }
 
@@ -234,7 +234,7 @@ export async function handleDeletePost(post_id, refreshUserData) {
   if (error) {
     console.log(error);
   } else {
-    refreshUserData();
+    refreshUserData("posts");
   }
 }
 
@@ -319,7 +319,7 @@ export async function DeleteConversation(conv_id, refreshUserData) {
   if (error) {
     console.log(error);
   } else {
-    refreshUserData();
+    refreshUserData("conversations");
   }
 }
 
@@ -481,7 +481,7 @@ export async function handleFollow(user_id, follow_id, refreshUserData) {
   if (error) {
     console.log(error);
   } else {
-    refreshUserData();
+    refreshUserData("following");
   }
 }
 
@@ -495,7 +495,7 @@ export async function handleUnfollow(user_id, follow_id, refreshUserData) {
   if (error) {
     console.log(error);
   } else {
-    refreshUserData();
+    refreshUserData("following");
   }
 }
 
@@ -511,7 +511,7 @@ export async function handleCreateList(name, user_id, refreshUserData) {
   if (error) {
     console.log(error);
   } else {
-    refreshUserData();
+    refreshUserData("lists");
   }
 
   return data[0];
@@ -522,7 +522,7 @@ export async function DeleteList(list_id, refreshUserData) {
   if (error) {
     console.log(error);
   } else {
-    refreshUserData();
+    refreshUserData("lists");
   }
 }
 
@@ -546,7 +546,7 @@ export async function handleAddMovieToCollection(
   if (error) {
     console.log(error);
   } else {
-    refreshUserData();
+    refreshUserData("collections");
   }
 }
 

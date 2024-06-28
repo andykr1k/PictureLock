@@ -45,7 +45,7 @@ function Chat() {
   async function refresh() {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     try {
-      await refreshUserData();
+      await refreshUserData("conversations");
     } catch (error) {
       console.error("Failed to refresh data:", error);
     }
@@ -55,7 +55,7 @@ function Chat() {
     await handleConversation(session.user.id, id);
     let item = await getConversation(session.user.id, id);
     setModalVisible(false);
-    refreshUserData();
+    refreshUserData("conversations");
     setSearch("");
     setSelectedID("");
     return item;
