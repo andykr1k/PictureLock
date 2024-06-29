@@ -8,14 +8,14 @@ import {
 } from "../lib/supabaseUtils";
 import { useUser } from "../lib/UserContext";
 import IconButton from "./IconButton";
+import * as Haptics from "expo-haptics";
 
 function Comment(props) {
   const { session, refreshUserData } = useUser();
-
   const [username, setUsername] = useState("");
   const [userpic, setUserpic] = useState("");
-
   const [mine, setMine] = useState(props.post.user_id === session.user.id);
+  const [deleted, setDeleted] = useState(false);
 
   useEffect(() => {
     const fetchUsername = async () => {
@@ -31,6 +31,16 @@ function Comment(props) {
     fetchUsername();
     fetchUserPicture();
   }, [props.post]);
+
+  const handleDelete = async () => {
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    await setDeleted(true);
+    await handleDeleteComment(props.post.id, refreshUserData);
+  };
+
+  if (deleted) {
+    return null;
+  }
 
   return (
     <View className="flex flex-row justify-between mb-2 max-w-full">
@@ -51,10 +61,7 @@ function Comment(props) {
         </View>
       </View>
       {mine && (
-        <TouchableOpacity
-          className="mt-3 mr-1"
-          onPress={() => handleDeleteComment(props.post.id, refreshUserData)}
-        >
+        <TouchableOpacity className="mt-3 mr-1" onPress={handleDelete}>
           <IconButton icon="delete" size={14} />
         </TouchableOpacity>
       )}

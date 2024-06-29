@@ -115,13 +115,13 @@ function Chat() {
           </View>
           <View>
             <ScrollView className="space-x-2 p-3 pb-10">
-              <View className="flex flex-row flex-wrap justify-between">
+              <View className="flex flex-row flex-wrap">
                 {filteredFriends &&
                   filteredFriends.map((item, index) => (
                     <TouchableOpacity
                       onPress={() => handleSelectedID(item.id)}
                       key={item.id}
-                      className="mb-2"
+                      className="w-1/5 mb-2"
                     >
                       <ProfilePicture selectedID={selectedID} id={item.id} />
                     </TouchableOpacity>
@@ -165,8 +165,8 @@ function Chat() {
         onPress={handleModal}
         className="absolute bottom-0 right-0 p-5 mb-28"
       >
-        <View className="w-12 h-12 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center overflow-hidden">
-          <Text className="dark:text-white font-light text-xl text-orange-500 align-middle text-center">
+        <View className="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center overflow-hidden">
+          <Text className="text-white font-light text-xl align-middle text-center">
             +
           </Text>
         </View>

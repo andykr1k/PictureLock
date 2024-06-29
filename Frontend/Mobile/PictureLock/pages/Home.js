@@ -196,8 +196,8 @@ function HomeScreen() {
         className="absolute bottom-0 right-0 p-5 mb-28"
         onPress={() => navigation.navigate("CreateHome")}
       >
-        <BlurView className="w-12 h-12 rounded-full dark:bg-black/80 flex items-center justify-center overflow-hidden">
-          <Text className="dark:text-white font-light text-xl text-orange-500 align-middle text-center">
+        <BlurView className="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center overflow-hidden">
+          <Text className="font-light text-xl text-white align-middle text-center">
             +
           </Text>
         </BlurView>

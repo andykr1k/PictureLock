@@ -15,6 +15,7 @@ import { handleCreatePost } from "../lib/supabaseUtils";
 import { useUser } from "../lib/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { SearchMovie } from "../lib/api";
+import Loading from './Loading';
 
 function CreatePost() {
   const navigation = useNavigation();
@@ -30,6 +31,7 @@ function CreatePost() {
   const reviewtypes = ["Write review", "Record review"];
   const feedtypeicons = ["mode-edit", "videocam"];
   const [selectedTypeIndex, setSelectedTypeIndex] = React.useState(0);
+  const [loading, setLoading] = useState(false);
 
   const handleStarPress = (rating) => {
     setStars(rating);
@@ -66,6 +68,7 @@ function CreatePost() {
   };
 
   const handlePost = async () => {
+    await setLoading(true);
     await handleCreatePost(
       movie,
       movieID,
@@ -77,7 +80,12 @@ function CreatePost() {
       spoiler
     );
     navigation.navigate("PictureLockHome");
+    await setLoading(false);
   };
+
+  if (loading) {
+    return <Loading />
+  }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -136,9 +144,9 @@ function CreatePost() {
               onPress={() => setSelectedTypeIndex(index)}
             >
               <View
-                className={`p-1 px-2 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
+                className={`p-1 rounded-2xl border-2 ${
                   selectedTypeIndex === index
-                    ? "border-orange-500"
+                    ? "px-2 border-orange-500"
                     : "border-transparent"
                 }`}
               >

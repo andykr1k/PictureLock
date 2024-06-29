@@ -10,6 +10,7 @@ import {
 import { useState, useEffect, memo } from "react";
 import TimeAgo from "../functions/TimeAgo";
 import IconButton from "./IconButton";
+import * as Haptics from "expo-haptics";
 
 function ConvItem(props) {
   const [item, setItem] = useState(props.item);
@@ -47,10 +48,22 @@ function ConvItem(props) {
     setRecipientData();
   }, [props.item, session]);
 
+  const [deleted, setDeleted] = useState(false);
+
+  const handleDelete = async () => {
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    await setDeleted(true);
+    await DeleteConversation(item.id, refreshUserData);
+  };
+
+  if (deleted) {
+    return null;
+  }
+
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate("ConversationChat", { item })}
-      className="p-2 pl-0 bg-black/10 dark:bg-white/10 rounded-md mb-2"
+      className="p-1 pl-0 rounded-md mb-2"
     >
       <View className="flex-row items-center ml-2">
         {pic && (
@@ -80,10 +93,7 @@ function ConvItem(props) {
             </View>
           )}
         </View>
-        <TouchableOpacity
-          onPress={() => DeleteConversation(item.id, refreshUserData)}
-          className="mr-2"
-        >
+        <TouchableOpacity onPress={handleDelete} className="mr-2">
           <IconButton icon="delete" size={18} />
         </TouchableOpacity>
       </View>

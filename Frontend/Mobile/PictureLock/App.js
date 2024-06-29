@@ -43,6 +43,7 @@ function HomeTabs() {
   const { session, user } = useUser();
   const Tab = createBottomTabNavigator();
   const [isLoading, setIsLoading] = React.useState(true);
+  const colorScheme = useColorScheme();
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
@@ -81,7 +82,7 @@ function HomeTabs() {
           }
           return <Feathericons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "#F97316",
+        tabBarActiveTintColor: colorScheme === "dark" ? "white" : "#F97316",
         tabBarInactiveTintColor: "gray",
         tabBarLabelStyle: {
           display: "none",

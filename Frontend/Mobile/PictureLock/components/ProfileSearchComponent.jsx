@@ -64,7 +64,7 @@ function ProfileSearchComponent(props) {
   if (userpic && user)
     return (
       <TouchableOpacity
-        className="p-3 bg-black/10 dark:bg-white/10 rounded-md flex-row items-center justify-between"
+        className="p-1 rounded-md flex-row items-center justify-between"
         onPress={() => navigation.navigate(nav, { userID, userpic })}
       >
         <View className="flex-row space-x-3">

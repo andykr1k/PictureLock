@@ -25,7 +25,7 @@ function ProfilePicture(props) {
             props.selectedID === props.id ? "border-orange-500" : "border-transparent"
           }`}
         />
-        <Text className="dark:text-white font-bold text-center mt-1">{username}</Text>
+        <Text className="dark:text-white font-bold text-center mt-1 text-xs">{username}</Text>
       </View>
     );
   }

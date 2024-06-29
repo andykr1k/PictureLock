@@ -7,16 +7,15 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Recommend from "../functions/Recommendation";
 import GetMovieDetails from "../functions/GetMovieDetails";
 import titles from "../assets/titles_and_ids.json";
 import { MovieDetails, MoviePoster } from "../components";
+import { SearchMovie } from "../lib/api";
 
 function AIScreen({ navigation }) {
   const filmtypes = ["TV Show", "Movie"];
-  const tabBarHeight = useBottomTabBarHeight();
 
   const platforms = [
     {
@@ -96,12 +95,9 @@ function AIScreen({ navigation }) {
     }
   };
 
-  const handleSearchValueChange = (e) => {
+  const handleSearchValueChange = async(e) => {
     setSearch(e);
-    const filteredTitles = titles?.filter((movie) =>
-      movie.title.toLowerCase().includes(search.toLowerCase())
-    );
-    setSuggestions(filteredTitles?.slice(0, 8));
+    setSuggestions(await SearchMovie(e, 10));
   };
 
   const handleMovieNameChange = async (e) => {
@@ -242,14 +238,15 @@ function AIScreen({ navigation }) {
                 ))}
           </View>
         </View>
+        <TouchableOpacity
+          className="bg-black/10 dark:bg-white/10 p-3 rounded-2xl"
+          onPress={handleRecommendation}
+        >
+          <Text className="font-bold text-center dark:text-white">
+            Recommend
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
-      <TouchableOpacity
-        className="absolute left-0 right-0 mx-4 bg-black/10 dark:bg-white/10 p-3 rounded-2xl"
-        style={{ bottom: tabBarHeight + 40 }}
-        onPress={handleRecommendation}
-      >
-        <Text className="font-bold text-center dark:text-white">Recommend</Text>
-      </TouchableOpacity>
     </View>
   );
 }

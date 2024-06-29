@@ -8,8 +8,6 @@ export default function LogInScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
-  const [login, setLogin] = useState(true);
-  const [name, setName] = useState("");
   const logintypes = ["Log In", "Sign Up"];
   const logintypeicons = ["people", "public"];
   const [selectedTypeIndex, setSelectedTypeIndex] = React.useState(0);

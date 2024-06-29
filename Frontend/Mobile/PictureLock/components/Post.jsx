@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Linking,
   Pressable,
+  useColorScheme
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { BlurView } from "expo-blur";
@@ -45,6 +46,7 @@ function Post(props) {
   const [spoiler, setSpoiler] = useState(props.post.spoiler);
   const [content, setContent] = useState(props.post.content);
   const [userID, setuserID] = useState(props.post.author);
+  const [deleted, setDeleted] = useState(false);
   const [nav, setNav] = useState();
   const route = useRoute();
   const [userscreennav, setUserscreennav] = useState();
@@ -52,6 +54,7 @@ function Post(props) {
   const [heartPosition, setHeartPosition] = useState({ x: 0, y: 0 });
   const opacityValue = useRef(new Animated.Value(0)).current;
   const sizeValue = useRef(new Animated.Value(0)).current;
+  const colorScheme = useColorScheme();
 
   const getRouteName = () => {
     if (route.name.includes("Profile")) {
@@ -68,7 +71,7 @@ function Post(props) {
     if (nativeEvent.state === State.ACTIVE) {
       const { x, y } = nativeEvent;
       handleLikePost();
-      setHeartPosition({ x: x-60, y: y-60 });
+      setHeartPosition({ x: x-32, y: y-32 });
       setHeartVisible(true);
       animateHeart();
       setTimeout(() => setHeartVisible(false), 1000);
@@ -146,15 +149,17 @@ function Post(props) {
 
   const handleDelete = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    await setDeleted(true);
     await handleDeletePost(props.post.id, refreshUserData);
+    if (route.name.includes("Profile")) {
+      navigation.navigate("Profile");
+    }
   };
 
   const animateHeart = () => {
-    // Reset values to start animation from initial state
     opacityValue.setValue(0);
     sizeValue.setValue(0);
 
-    // Configure animations
     Animated.sequence([
       Animated.parallel([
         Animated.timing(opacityValue, {
@@ -176,6 +181,10 @@ function Post(props) {
     ]).start();
   };
 
+  if (deleted) {
+    return null;
+  }
+
   return (
     <View className="relative">
       <TapGestureHandler
@@ -193,8 +202,8 @@ function Post(props) {
             swipeDirection={["down"]}
             className="rounded-2xl m-0"
           >
-            <View className="bg-white/90 dark:bg-black/90 absolute bottom-0 left-0 right-0 rounded-2xl">
-              <View className="flex items-center justify-center p-3 pb-1 space-y-1">
+            <View className="bg-white/90 dark:bg-black/90 absolute bottom-0 left-0 right-0 rounded-2xl pb-5">
+              <View className="flex items-center justify-center p-3 pb-0 space-y-1">
                 <TouchableOpacity
                   className="h-2 bg-black/10 dark:bg-white/10 w-20 rounded-md"
                   onPress={handleCommentsModal}
@@ -229,7 +238,10 @@ function Post(props) {
           </Modal>
           {props.post.movie_poster === "" ||
           props.post.movie_poster === null ? (
-            <BlurView className="flex flex-row space-x-2 w-full p-2 overflow-hidden rounded-md bg-black/10 dark:bg-white/10">
+            <BlurView
+              intensity={20}
+              className="flex flex-row space-x-2 w-full p-2 overflow-hidden rounded-md bg-black/10 dark:bg-white/10"
+            >
               {userpic && (
                 <View className="flex w-1/10">
                   <TouchableOpacity
@@ -250,15 +262,14 @@ function Post(props) {
                 </View>
               )}
               <View className="flex-1 w-8/10">
-                <View className="flex flex-row justify-between">
+                <View className="flex flex-row justify-between mb-1">
                   <View className="flex flex-row items-center">
-                    <Text className="font-bold text-white">{username}</Text>
-                    <Text className="text-white text-xs">
-                      &nbsp;· {TimeAgo(props.post.created_at)}
+                    <Text className="font-bold dark:text-white">
+                      {username}
                     </Text>
                     {stars.length > 0 && (
                       <>
-                        <Text className="text-white text-xs">
+                        <Text className="dark:text-white text-xs">
                           &nbsp;·&nbsp;
                         </Text>
                         <View className="flex flex-row justify-center">
@@ -266,6 +277,9 @@ function Post(props) {
                         </View>
                       </>
                     )}
+                    <Text className="dark:text-white text-xs">
+                      · {TimeAgo(props.post.created_at)}
+                    </Text>
                   </View>
                 </View>
                 <View className="flex flex-row w-full justify-between">
@@ -274,7 +288,7 @@ function Post(props) {
                       <View>
                         {spoiler ? (
                           <View className="flex flex-1 pr-1  rounded-lg">
-                            <Text className="text-white text-xs">
+                            <Text className="dark:text-white text-xs">
                               {content}
                             </Text>
                             {spoilerBlur && (
@@ -290,19 +304,19 @@ function Post(props) {
                             )}
                           </View>
                         ) : (
-                          <Text className="text-white text-xs pr-1 ">
+                          <Text className="dark:text-white text-xs pr-1 ">
                             {content}
                           </Text>
                         )}
                       </View>
                     )}
-                    <View className="flex flex-row space-x-5 mt-1">
+                    <View className="flex flex-row space-x-5 mt-2">
                       <TouchableOpacity onPress={handleCommentsModal}>
                         <IconButton
                           icon="comment"
                           size={20}
                           text={comments && comments?.length}
-                          color={"white"}
+                          color={colorScheme === "dark" ? "white" : "black"}
                         />
                       </TouchableOpacity>
                       {liked ? (
@@ -319,7 +333,7 @@ function Post(props) {
                             icon="favorite"
                             size={20}
                             text={likes && likes?.length}
-                            color={"white"}
+                            color={colorScheme === "dark" ? "white" : "black"}
                           />
                         </TouchableOpacity>
                       ) : (
@@ -337,7 +351,7 @@ function Post(props) {
                             icon="favorite-outline"
                             size={20}
                             text={likes && likes?.length}
-                            color={"white"}
+                            color={colorScheme === "dark" ? "white" : "black"}
                           />
                         </TouchableOpacity>
                       )}
@@ -345,7 +359,7 @@ function Post(props) {
                         <IconButton
                           icon="ios-share"
                           size={20}
-                          color={"white"}
+                          color={colorScheme === "dark" ? "white" : "black"}
                         />
                       </TouchableOpacity>
                       {props.post.author === session.user.id && (
@@ -353,7 +367,7 @@ function Post(props) {
                           <IconButton
                             icon="delete-outline"
                             size={20}
-                            color={"white"}
+                            color={colorScheme === "dark" ? "white" : "black"}
                           />
                         </TouchableOpacity>
                       )}
@@ -376,7 +390,10 @@ function Post(props) {
                   className="w-full h-[75vh] rounded-md"
                 />
               </Pressable>
-              <BlurView className="flex flex-row space-x-2 w-full absolute bottom-0 p-2 overflow-hidden rounded-md">
+              <BlurView
+                intensity={20}
+                className="flex flex-row space-x-2 w-full absolute bottom-0 p-2 overflow-hidden rounded-md bg-black/20"
+              >
                 {userpic && (
                   <View className="flex w-1/10">
                     <TouchableOpacity
@@ -397,16 +414,16 @@ function Post(props) {
                   </View>
                 )}
                 <View className="flex-1 w-8/10">
-                  <View className="flex flex-row justify-between">
+                  <View className="flex flex-row justify-between mb-1">
                     <View className="flex flex-row items-center">
                       <Text className="font-bold text-white">{username}</Text>
-                      <Text className="text-white text-xs">
-                        &nbsp;· {TimeAgo(props.post.created_at)}
-                      </Text>
                       <Text className="text-white text-xs">&nbsp;·&nbsp;</Text>
                       <View className="flex flex-row justify-center">
                         {stars}
                       </View>
+                      <Text className="text-white text-xs">
+                        · {TimeAgo(props.post.created_at)}
+                      </Text>
                     </View>
                   </View>
                   <View className="flex flex-row w-full justify-between">
@@ -437,7 +454,7 @@ function Post(props) {
                           )}
                         </View>
                       )}
-                      <View className="flex flex-row space-x-5 mt-1">
+                      <View className="flex flex-row space-x-5 mt-2">
                         <TouchableOpacity onPress={handleCommentsModal}>
                           <IconButton
                             icon="comment"
@@ -515,10 +532,14 @@ function Post(props) {
             left: heartPosition.x,
             opacity: opacityValue,
             transform: [{ scale: sizeValue }],
-            zIndex: 999,
+            zIndex: 9999,
           }}
         >
-          <IconButton icon={"favorite"} size={128} color={"white"} />
+          <IconButton
+            icon={"favorite"}
+            size={64}
+            color={colorScheme === "dark" ? "white" : "black"}
+          />
         </Animated.View>
       )}
     </View>

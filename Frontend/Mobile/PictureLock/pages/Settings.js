@@ -6,7 +6,6 @@ import {
   Image,
   Text,
   TextInput,
-  Button,
   Alert
 } from "react-native";
 import { useUser } from "../lib/UserContext";

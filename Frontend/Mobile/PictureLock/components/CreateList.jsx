@@ -15,6 +15,7 @@ import {
   handleCreateList,
 } from "../lib/supabaseUtils";
 import { useUser } from "../lib/UserContext";
+import Loading from "./Loading";
 
 function CreateList() {
   const { session, refreshUserData } = useUser();
@@ -23,6 +24,7 @@ function CreateList() {
   const [name, setName] = useState("");
   const [selectedMovies, setSelectedMovies] = useState([]);
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,6 +47,7 @@ function CreateList() {
   };
 
   const handleCreate = async () => {
+    await setLoading(true)
     const list = await handleCreateList(name, session.user.id, refreshUserData);
     for (const movie of selectedMovies) {
       await handleAddMovieToCollection(
@@ -56,7 +59,12 @@ function CreateList() {
       );
     }
     navigation.navigate("Profile");
+    await setLoading(false)
   };
+
+  if (loading){
+    return <Loading/>;
+  }
 
   return (
     <View className="ios:ios:mt-10 p-3 space-y-3 h-full">

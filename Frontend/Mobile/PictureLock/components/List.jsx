@@ -10,6 +10,7 @@ import Loading from "./Loading";
 import { useUser } from "../lib/UserContext";
 import IconButton from "./IconButton";
 import TimeAgo from "../functions/TimeAgo";
+import * as Haptics from "expo-haptics";
 
 function List(props) {
   const { session, refreshUserData } = useUser();
@@ -23,6 +24,7 @@ function List(props) {
   const [movienav, setMovienav] = useState();
   const [userpic, setUserpic] = useState();
   const [profilenav, setProfilenav] = useState();
+  const [deleted, setDeleted] = useState(false);
 
   const getRouteName = () => {
     if (route.name.includes("Profile")) {
@@ -65,6 +67,16 @@ function List(props) {
     getRouteName();
   }, [listid]);
 
+  const handleDelete = async () => {
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    await setDeleted(true);
+    await DeleteList(listid, refreshUserData);
+  };
+
+  if (deleted) {
+    return null;
+  }
+
   if (movies) {
     return (
       <TouchableOpacity
@@ -79,7 +91,7 @@ function List(props) {
         className="w-full bg-black/10 dark:bg-white/10 p-2 rounded-md space-y-2"
       >
         <View className="flex flex-row justify-between items-center">
-          <View className="flex-row space-x-2 items-center">
+          <View className="flex-row space-x-2">
             {userID === session.user.id ? (
               <TouchableOpacity
                 onPress={() => navigation.navigate("ProfileStackScreen")}
@@ -114,10 +126,7 @@ function List(props) {
             </View>
           </View>
           {session.user.id === userID && (
-            <TouchableOpacity
-              onPress={() => DeleteList(listid, refreshUserData)}
-              className="mr-2"
-            >
+            <TouchableOpacity onPress={handleDelete} className="mr-2">
               <IconButton icon="delete" size={18} />
             </TouchableOpacity>
           )}
