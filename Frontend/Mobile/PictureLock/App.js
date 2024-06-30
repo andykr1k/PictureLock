@@ -42,15 +42,15 @@ const LightTheme = {
 };
 
 function HomeTabs() {
-  const data = useUser();
+  const { session, user, pic, posts, followers, following, lists } = useUser();
 
   const Tab = createBottomTabNavigator();
 
-  if (!data.session) {
+  if (!session) {
     return <LogInScreen />;
   }
 
-  if (data.user.username === "") {
+  if (user?.username === null || user?.username === "") {
     return <CreateAccountScreen />;
   }
 
