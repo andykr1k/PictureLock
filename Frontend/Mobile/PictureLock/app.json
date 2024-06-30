@@ -22,7 +22,7 @@
       "supportsTablet": true,
       "CADisableMinimumFrameDurationOnPhone": true,
       "bundleIdentifier": "picturelockbeta",
-      "buildNumber": "11"
+      "buildNumber": "12"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

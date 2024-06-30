@@ -24,11 +24,17 @@ function Profile() {
   const navigation = useNavigation();
   const { session, user, pic, posts, followers, following, lists } = useUser();
   const [filteredPosts, setFilteredPosts] = useState([]);
+  const [textPosts, setTextPosts] = useState([]);
+  const [moviePosts, setMoviePosts] = useState([]);
 
   useEffect(() => {
     if (posts && session.user.id) {
       const filtered = posts?.filter((post) => post.author === session.user.id);
       setFilteredPosts(filtered);
+      const textPostsFiltered = filtered.filter((post) => !post.movie_poster);
+      setTextPosts(textPostsFiltered);
+      const moviePostsFiltered = filtered.filter((post) => post.movie_poster);
+      setMoviePosts(moviePostsFiltered);
     }
   }, [posts, session.user.id]);
 
@@ -91,7 +97,7 @@ function Profile() {
         <Text className="dark:text-white font-bold">Settings</Text>
       </TouchableOpacity>
       <View>
-        <ProfileTabs id={session.user.id} posts={filteredPosts} lists={lists} />
+        <ProfileTabs id={session.user.id} textPosts={textPosts} moviePosts={moviePosts} lists={lists} />
       </View>
     </View>
   );

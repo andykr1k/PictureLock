@@ -287,7 +287,7 @@ export async function getLastMessage(id) {
     .from("messages")
     .select("*")
     .eq("conversation_id", id)
-    .order("created_at", { ascending: true });
+    .order("created_at", { ascending: false });
 
   if (error) {
     console.log(error);

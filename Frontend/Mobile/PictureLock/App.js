@@ -1,5 +1,4 @@
 import * as React from "react";
-import "react-native-url-polyfill/auto";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -8,12 +7,11 @@ import {
   HomeStackScreen,
   SearchStackScreen,
   AIStackScreen,
-  NotificationStackScreen,
   ProfileStackScreen,
   LogInScreen,
   ChatStackScreen,
 } from "./pages";
-import { CreateAccountScreen } from "./components";
+import { CreateAccountScreen, Loading } from "./components";
 import { useColorScheme, StatusBar } from "react-native";
 import { UserProvider, useUser } from "./lib/UserContext";
 
@@ -42,9 +40,21 @@ const LightTheme = {
 };
 
 function HomeTabs() {
-  const { session, user, pic, posts, followers, following, lists } = useUser();
-
+  const { session, user } = useUser();
   const Tab = createBottomTabNavigator();
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   if (!session) {
     return <LogInScreen />;
@@ -115,10 +125,9 @@ function HomeTabs() {
 
 export default function App() {
   const Stack = createStackNavigator();
-
   const colorScheme = useColorScheme();
-
   const theme = colorScheme === "light" ? LightTheme : DarkTheme;
+
   return (
     <UserProvider>
       <NavigationContainer theme={theme}>

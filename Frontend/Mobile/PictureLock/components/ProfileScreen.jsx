@@ -25,6 +25,8 @@ function ProfileScreen() {
   const [posts, setPosts] = useState(null);
   const [nav, setNav] = useState(null);
   const [lists, setLists] = useState(null);
+  const [textPosts, setTextPosts] = useState([]);
+  const [moviePosts, setMoviePosts] = useState([]);
 
   const getRouteName = () => {
     if (route.name.includes("Profile")) {
@@ -53,7 +55,14 @@ function ProfileScreen() {
 
         const fetchedPosts = await getPosts(userID);
         setPosts(fetchedPosts);
-
+        const textPostsFiltered = fetchedPosts.filter(
+          (post) => !post.movie_poster
+        );
+        setTextPosts(textPostsFiltered);
+        const moviePostsFiltered = fetchedPosts.filter(
+          (post) => post.movie_poster
+        );
+        setMoviePosts(moviePostsFiltered);
         if (fetchedFollowers) {
           const followingIds = fetchedFollowers.map(
             (follower) => follower.following
@@ -118,12 +127,8 @@ function ProfileScreen() {
                 </Text>
                 <Text className="dark:text-white font-bold">Following</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                className="items-center"
-              >
-                <Text className="dark:text-white font-bold">
-                  0
-                </Text>
+              <TouchableOpacity className="items-center">
+                <Text className="dark:text-white font-bold">0</Text>
                 <Text className="dark:text-white font-bold">Badges</Text>
               </TouchableOpacity>
             </View>
@@ -155,7 +160,12 @@ function ProfileScreen() {
         </View>
       </View>
       <View>
-        <ProfileTabs id={userID} posts={posts} lists={lists} />
+        <ProfileTabs
+          id={userID}
+          moviePosts={moviePosts}
+          textPosts={textPosts}
+          lists={lists}
+        />
       </View>
     </View>
   );

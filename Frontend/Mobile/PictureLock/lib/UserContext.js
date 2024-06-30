@@ -16,6 +16,7 @@ import {
   getConversations,
   getCollections,
 } from "./supabaseUtils";
+
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
@@ -43,7 +44,9 @@ export const UserProvider = ({ children }) => {
     } else {
       setUser(data);
       setPic(await getProfilePictureUrl(userId));
-      setPosts(await fetchPosts());
+      const fetchedPosts = await fetchPosts();
+      setPosts(fetchedPosts);
+
       setFollowers(await getFollowers(userId));
       setFollowing(await getFollowing(userId));
       setConversations(await getConversations(userId));
@@ -107,7 +110,7 @@ export const UserProvider = ({ children }) => {
         following,
         notifications,
         conversations,
-        lists
+        lists,
       }}
     >
       {children}

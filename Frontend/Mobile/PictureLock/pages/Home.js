@@ -158,7 +158,7 @@ function HomeScreen() {
             className="mb-28 overflow-visible w-screen p-3 pt-0"
             data={filteredPosts}
             renderItem={({ item, index }) => (
-              <Post key={index} post={item} section={"profilescreen"} />
+              <Post key={index} post={item} />
             )}
             keyExtractor={(item, index) => `${item.id}-${index}`}
             showsVerticalScrollIndicator={false}
@@ -178,7 +178,7 @@ function HomeScreen() {
           className="mb-28 overflow-visible w-screen p-3 pt-0"
           data={posts}
           renderItem={({ item, index }) => (
-            <Post key={index} post={item} section={"profilescreen"} />
+            <Post key={index} post={item} />
           )}
           keyExtractor={(item, index) => `${item.id}-${index}`}
           showsVerticalScrollIndicator={false}

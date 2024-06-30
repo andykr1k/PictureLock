@@ -93,17 +93,9 @@ function Conversation() {
                     <View className="p-2 rounded-2xl bg-black/10 dark:bg-white/10 self-center">
                       <Text className="dark:text-white">{message.message}</Text>
                     </View>
-                    <Image
-                      source={{ uri: pic }}
-                      className="w-8 h-8 rounded-full ml-1"
-                    />
                   </View>
                 ) : (
                   <View className="flex-row">
-                    <Image
-                      source={{ uri: recipientpic }}
-                      className="w-8 h-8 rounded-full mr-1"
-                    />
                     <View className="p-2 rounded-2xl bg-black/10 dark:bg-white/10 items-center self-center">
                       <Text className="dark:text-white">{message.message}</Text>
                     </View>

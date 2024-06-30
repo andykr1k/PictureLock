@@ -7,12 +7,17 @@ import TimeAgo from "../functions/TimeAgo";
 
 function Notification(props) {
   const navigation = useNavigation();
-  const { session, refreshUserData } = useUser();
+  const { posts } = useUser();
   const [userID, setUserID] = useState("");
   const [username, setUsername] = useState("");
   const [userpic, setUserpic] = useState("");
+  const [item, setItem] = useState(null);
 
   useEffect(() => {
+    const foundPost = posts.find((post) => post.id === props.post_id);
+    if (foundPost) {
+      setItem(foundPost);
+    }
     const fetchUser = async () => {
       const user = await getUser(props.id);
       setUsername(user[0].username);
@@ -46,10 +51,20 @@ function Notification(props) {
           )}
         </View>
         <View className="flex flex-row items-basline ml-2">
-          <Text className="dark:text-white text-md font-bold">
-            {username}&nbsp;
-          </Text>
-          <Text className="dark:text-white text-md">liked your post</Text>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("UserScreenHome", { userID, userpic })
+            }
+          >
+            <Text className="dark:text-white text-md font-bold">
+              {username}&nbsp;
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("PostDetailsHome", { item })}
+          >
+            <Text className="dark:text-white text-md">liked your post</Text>
+          </TouchableOpacity>
           <Text className="dark:text-white text-xs">
             &nbsp; {TimeAgo(props.date)}
           </Text>
@@ -72,13 +87,22 @@ function Notification(props) {
         )}
       </View>
       <View className="flex flex-row items-basline ml-2">
-        <Text className="dark:text-white text-md font-bold">
-          {username}&nbsp;
-        </Text>
-        {/* <Text className="dark:text-white text-md ">
-          commented "{props.content}"
-        </Text> */}
-        <Text className="dark:text-white text-md ">commented on your post</Text>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("UserScreenHome", { userID, userpic })
+          }
+        >
+          <Text className="dark:text-white text-md font-bold">
+            {username}&nbsp;
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("PostDetailsHome", { item })}
+        >
+          <Text className="dark:text-white text-md ">
+            commented on your post
+          </Text>
+        </TouchableOpacity>
         <Text className="dark:text-white text-xs">
           &nbsp; {TimeAgo(props.date)}
         </Text>

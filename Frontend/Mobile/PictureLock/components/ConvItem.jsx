@@ -15,6 +15,7 @@ function ConvItem(props) {
   const [item, setItem] = useState(props.item);
   const [recipient, setRecipient] = useState();
   const [last, setLast] = useState();
+  const [lastUsername, setLastUsername] = useState();
   const [username, setUsername] = useState();
   const [pic, setPic] = useState();
   const { session, user, refreshUserData } = useUser();
@@ -68,7 +69,13 @@ function ConvItem(props) {
           </View>
           {last && (
             <View className="flex-row space-x-1">
-              <Text className="dark:text-white text-sm">{username}:</Text>
+              {last?.user_id !== session.user.id ? (
+                <Text className="dark:text-white text-sm">{username}:</Text>
+              ) : (
+                <Text className="dark:text-white text-sm">
+                  {user.username}:
+                </Text>
+              )}
               <Text className="dark:text-white text-sm">{last.message}</Text>
             </View>
           )}

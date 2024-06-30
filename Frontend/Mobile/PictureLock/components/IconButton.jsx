@@ -10,7 +10,7 @@ const IconButton = ({ icon, text, size, color }) => {
   
   if ( color !== undefined){
     return (
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <View className="flex-row items-center space-x-1">
         <MaterialIcons name={icon} size={size} color={color} />
         <Text style={{ fontSize: 10, color: color }}>{text}</Text>
       </View>
@@ -18,7 +18,7 @@ const IconButton = ({ icon, text, size, color }) => {
   }
 
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+    <View className="flex-row items-center space-x-1">
       <MaterialIcons name={icon} size={size} color={themeIconStyle} />
       <Text style={{ fontSize: 10, color: themeIconStyle }}>{text}</Text>
     </View>

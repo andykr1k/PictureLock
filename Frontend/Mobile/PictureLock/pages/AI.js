@@ -205,7 +205,7 @@ function AIScreen({ navigation }) {
             className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
             onChangeText={handleSearchValueChange}
           ></TextInput>
-          <View className="flex flex-row flex-wrap">
+          <View className="flex-row flex-wrap">
             {(suggestions !== null) & (search.length > 3)
               ? suggestions.map((item, index) => (
                   <TouchableOpacity
@@ -225,7 +225,7 @@ function AIScreen({ navigation }) {
                 ))
               : titles.slice(0, 8).map((movie, index) => (
                   <TouchableOpacity
-                    className="w-1/4"
+                    className="w-1/4 p-1"
                     key={index}
                     onPress={() => handleMovieNameChange(movie.title)}
                   >

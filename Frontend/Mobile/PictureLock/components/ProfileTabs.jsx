@@ -12,11 +12,12 @@ import {
 import { useUser } from "../lib/UserContext";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import List from "./List";
+import Post from "./Post";
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
 
-const ProfileTabs = ({ id, posts, lists }) => {
+const ProfileTabs = ({ id, textPosts, moviePosts, lists }) => {
   const [selectedTab, setSelectedTab] = useState("Reviews");
   const { session } = useUser();
   const navigation = useNavigation();
@@ -46,11 +47,14 @@ const ProfileTabs = ({ id, posts, lists }) => {
         case "Reviews":
           animateBorderPosition(0);
           break;
+        case "Posts":
+          animateBorderPosition(width / 4);
+          break;
         case "Collections":
-          animateBorderPosition(width / 3);
+          animateBorderPosition((width * 2) / 4);
           break;
         case "Badges":
-          animateBorderPosition((width * 2) / 3);
+          animateBorderPosition((width * 3) / 4);
           break;
         default:
           break;
@@ -67,12 +71,16 @@ const ProfileTabs = ({ id, posts, lists }) => {
         animateBorderPosition(0);
         break;
       case 1:
-        setSelectedTab("Collections");
-        animateBorderPosition(width / 3);
+        setSelectedTab("Posts");
+        animateBorderPosition(width / 4);
         break;
       case 2:
+        setSelectedTab("Collections");
+        animateBorderPosition((width * 2) / 4);
+        break;
+      case 3:
         setSelectedTab("Badges");
-        animateBorderPosition((width * 2) / 3);
+        animateBorderPosition((width * 3) / 4);
         break;
       default:
         break;
@@ -88,15 +96,16 @@ const ProfileTabs = ({ id, posts, lists }) => {
 
   return (
     <View className="mt-5 h-full">
-      <View className="flex flex-row justify-around">
+      <View className="flex flex-row">
         <TouchableOpacity
+          className="w-1/4"
           onPress={() => {
             setSelectedTab("Reviews");
             scrollViewRef.current.scrollTo({ x: 0, animated: true });
           }}
         >
           <Text
-            className={`font-bold ${
+            className={`font-bold text-center ${
               selectedTab === "Reviews" ? "text-orange-500" : "dark:text-white"
             }`}
           >
@@ -104,13 +113,29 @@ const ProfileTabs = ({ id, posts, lists }) => {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
+          className="w-1/4"
           onPress={() => {
-            setSelectedTab("Collections");
+            setSelectedTab("Posts");
             scrollViewRef.current.scrollTo({ x: width, animated: true });
           }}
         >
           <Text
-            className={`font-bold ${
+            className={`font-bold text-center ${
+              selectedTab === "Posts" ? "text-orange-500" : "dark:text-white"
+            }`}
+          >
+            Posts
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          className="w-1/4"
+          onPress={() => {
+            setSelectedTab("Collections");
+            scrollViewRef.current.scrollTo({ x: 2 * width, animated: true });
+          }}
+        >
+          <Text
+            className={`font-bold text-center ${
               selectedTab === "Collections"
                 ? "text-orange-500"
                 : "dark:text-white"
@@ -120,13 +145,14 @@ const ProfileTabs = ({ id, posts, lists }) => {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
+          className="w-1/4"
           onPress={() => {
             setSelectedTab("Badges");
-            scrollViewRef.current.scrollTo({ x: 2 * width, animated: true });
+            scrollViewRef.current.scrollTo({ x: 3 * width, animated: true });
           }}
         >
           <Text
-            className={`font-bold ${
+            className={`font-bold text-center ${
               selectedTab === "Badges" ? "text-orange-500" : "dark:text-white"
             }`}
           >
@@ -138,7 +164,7 @@ const ProfileTabs = ({ id, posts, lists }) => {
           style={{
             position: "absolute",
             bottom: -5,
-            width: width / 3,
+            width: width / 4,
             height: 2,
             backgroundColor: "#F97316",
             borderRadius: 2,
@@ -157,14 +183,14 @@ const ProfileTabs = ({ id, posts, lists }) => {
         onScroll={handleScroll}
         className="mt-1"
       >
-        {posts && posts.length > 0 ? (
+        {moviePosts && moviePosts.length > 0 ? (
           <ScrollView
             className="w-screen p-3"
             contentContainerStyle={{ paddingBottom: 350 }}
             showsVerticalScrollIndicator={false}
           >
             <View className="flex-row flex-wrap">
-              {posts.map((item) => {
+              {moviePosts.map((item) => {
                 return (
                   <TouchableOpacity
                     key={item.id}
@@ -187,6 +213,35 @@ const ProfileTabs = ({ id, posts, lists }) => {
           <View className="flex items-center space-y-3 w-screen p-3">
             <Text className="dark:text-white font-bold">
               User has not reviewed any films.
+            </Text>
+          </View>
+        )}
+        {textPosts && textPosts.length > 0 ? (
+          <ScrollView
+            className="w-screen p-3"
+            contentContainerStyle={{ paddingBottom: 350 }}
+            showsVerticalScrollIndicator={false}
+          >
+            <View className="">
+              {textPosts.map((item) => {
+                return (
+                  <TouchableOpacity
+                    key={item.id}
+                    onPress={() => {
+                      navigation.navigate(nav, { item });
+                    }}
+                  >
+                    <Post key={item.id} post={item} />
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+            <View className="pb-28"></View>
+          </ScrollView>
+        ) : (
+          <View className="flex items-center space-y-3 w-screen p-3">
+            <Text className="dark:text-white font-bold">
+              User has not posted.
             </Text>
           </View>
         )}
