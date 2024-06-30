@@ -34,8 +34,6 @@ export default function LogInScreen() {
       });
       if (error) {
         Alert.alert(error.message);
-      } else {
-        navigation.navigate("SetUpAccount");
       }
     } else {
       Alert.alert("Please make sure your passwords match!");

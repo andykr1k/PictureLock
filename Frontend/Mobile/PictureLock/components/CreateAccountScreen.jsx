@@ -19,8 +19,8 @@ import * as ImagePicker from "expo-image-picker";
 function CreateAccountScreen() {
   const { session, user, refreshUserData } = useUser();
   const navigation = useNavigation();
-  const [name, setName] = useState(user.full_name);
-  const [username, setUsername] = useState(user.username);
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [profileImage, setProfileImage] = useState(null);
   const [profileImageBytes, setProfileImageBytes] = useState(null);
 
@@ -79,12 +79,14 @@ function CreateAccountScreen() {
         value={name}
         onChangeText={setName}
         className="w-full bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
+        placeholder="Full Name"
       />
       <Text className="dark:text-white font-bold text-xl">Username</Text>
       <TextInput
         value={username}
         onChangeText={setUsername}
         className="w-full bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
+        placeholder="Username"
       />
       <TouchableOpacity
         className="w-full bg-black/10 dark:bg-white/10 p-4 rounded-md mt-2"

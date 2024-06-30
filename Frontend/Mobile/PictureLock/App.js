@@ -50,6 +50,10 @@ function HomeTabs() {
     return <LogInScreen />;
   }
 
+  if (data.user.username === "") {
+    return <CreateAccountScreen />;
+  }
+
   return (
     <Tab.Navigator
       initialRouteName={"home"}
@@ -127,7 +131,6 @@ export default function App() {
           screenOptions={{ headerShown: false }}
         >
           <Stack.Screen name="HomeTabs" component={HomeTabs} />
-          <Stack.Screen name="SetUpAccount" component={CreateAccountScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </UserProvider>

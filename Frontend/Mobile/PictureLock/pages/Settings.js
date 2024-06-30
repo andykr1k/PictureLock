@@ -7,6 +7,7 @@ import {
   Text,
   TextInput,
   Button,
+  Alert
 } from "react-native";
 import { useUser } from "../lib/UserContext";
 import {
@@ -17,6 +18,7 @@ import {
 } from "../lib/supabaseUtils";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
+import { supabase } from "../lib/supabase";
 
 export default function SettingsScreen() {
   const { session, user, pic, refreshUserData } = useUser();
@@ -42,6 +44,33 @@ export default function SettingsScreen() {
     }
   };
 
+const deleteAccount = async () => {
+  try {
+    const { data, error } = await supabase.auth.admin.deleteUser(
+      session.user.id
+    );
+
+    if (error) {
+      console.error("Error deleting user:", error.message);
+      Alert.alert(
+        "Error",
+        "There was an error deleting your account. Please try again later."
+      );
+    } else {
+      console.log("User deleted successfully:", data);
+      Alert.alert("Success", "Your account has been successfully deleted.", [
+        { text: "OK", onPress: () => navigation.navigate("HomeTabs") },
+      ]);
+    }
+  } catch (error) {
+    console.error("Unexpected error:", error);
+    Alert.alert(
+      "Error",
+      "An unexpected error occurred. Please try again later."
+    );
+  }
+};
+
   return (
     <View className="p-3 space-y-3 mt-12">
       <Text className="dark:text-white font-bold text-3xl">Settings</Text>
@@ -59,8 +88,7 @@ export default function SettingsScreen() {
             />
           )}
           {!currentProfileImage && !profileImage && (
-            <View className="w-52 h-52 rounded-full bg-black/10 flex items-center justify-center">
-            </View>
+            <View className="w-52 h-52 rounded-full bg-black/10 flex items-center justify-center"></View>
           )}
           {!profileImage && (
             <TouchableOpacity
@@ -125,6 +153,12 @@ export default function SettingsScreen() {
           onPress={handleLogOut}
         >
           <Text className="font-bold text-center dark:text-white">Logout</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          className="w-full bg-black/10 dark:bg-white/10 p-4 rounded-md mt-2"
+          onPress={deleteAccount}
+        >
+          <Text className="font-bold text-center dark:text-white">Delete Account</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
