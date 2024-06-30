@@ -58,10 +58,21 @@ export default function SettingsScreen() {
               style={{ width: 200, height: 200, borderRadius: 100 }}
             />
           )}
-          <Button title="Change Picture" onPress={pickImage} />
+          {!currentProfileImage && !profileImage && (
+            <View className="w-52 h-52 rounded-full bg-black/10 flex items-center justify-center">
+            </View>
+          )}
+          {!profileImage && (
+            <TouchableOpacity
+              onPress={pickImage}
+              className="bg-black/10 dark:bg-white/10 p-3 mt-3 rounded-md"
+            >
+              <Text className="dark:text-white font-bold">Change Picture</Text>
+            </TouchableOpacity>
+          )}
           {profileImage && (
             <TouchableOpacity
-              className="w-1/4 bg-black/10 dark:bg-white/10 p-4 rounded-md"
+              className="bg-black/10 dark:bg-white/10 p-3 mt-3 rounded-md"
               onPress={() =>
                 handleUploadProfilePicture(
                   profileImage,

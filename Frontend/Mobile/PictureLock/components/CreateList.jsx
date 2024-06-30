@@ -47,7 +47,6 @@ function CreateList() {
   const handleCreate = async () => {
     const list = await handleCreateList(name, session.user.id, refreshUserData);
     for (const movie of selectedMovies) {
-      console.log(movie)
       await handleAddMovieToCollection(
         list.id,
         movie.poster,
@@ -56,7 +55,7 @@ function CreateList() {
         refreshUserData
       );
     }
-    navigation.navigate("profile");
+    navigation.navigate("Profile");
   };
 
   return (
@@ -69,24 +68,25 @@ function CreateList() {
         onChangeText={setName}
         className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
       />
-      <View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View className="flex-row">
-            {selectedMovies.map((selectedMovie) => (
-              <TouchableOpacity
-                key={selectedMovie.id}
-                onPress={() => handleMovie(selectedMovie)}
-                className="p-1"
-              >
-                <View className="border-2 rounded-md border-orange-500">
-                  <MoviePoster item={selectedMovie} size={"xs"} />
-                </View>
-              </TouchableOpacity>
-            ))}
+        {selectedMovies && selectedMovies.length > 0 && (
+          <View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View className="flex-row">
+              {selectedMovies.map((selectedMovie) => (
+                <TouchableOpacity
+                  key={selectedMovie.id}
+                  onPress={() => handleMovie(selectedMovie)}
+                  className="p-1"
+                >
+                  <View className="border-2 rounded-md border-orange-500">
+                    <MoviePoster item={selectedMovie} size={"xs"} />
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
           </View>
-        </ScrollView>
-      </View>
-
+        )}
       <TextInput
         placeholder="Search for films"
         onChangeText={setSearch}

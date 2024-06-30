@@ -9,33 +9,20 @@ import {
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
   CreateList,
-  IconButton,
   PostDetails,
   ProfileTabs,
   MovieDetails,
   ListScreen,
-  CreateAccountScreen,
   FollowScreen,
   ProfileScreen,
 } from "../components";
 import { useUser } from "../lib/UserContext";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import SettingsScreen from "./Settings";
 
 function Profile() {
   const navigation = useNavigation();
-  const [nav, setNav] = useState();
-  const route = useRoute();
-  const getRouteName = () => {
-    if (route.name.includes("Profile")) {
-      setNav("UserScreenProfile");
-    } else if (route.name.includes("Search")) {
-      setNav("UserScreenSearch");
-    } else if (route.name.includes("Home")) {
-      setNav("UserScreenHome");
-    }
-  };
-  const { session, user, pic, posts, followers, following } = useUser();
+  const { session, user, pic, posts, followers, following, lists } = useUser();
   const [filteredPosts, setFilteredPosts] = useState([]);
 
   useEffect(() => {
@@ -43,31 +30,24 @@ function Profile() {
       const filtered = posts?.filter((post) => post.author === session.user.id);
       setFilteredPosts(filtered);
     }
-    getRouteName();
   }, [posts, session.user.id]);
 
   return (
-    <View className="ios:mt-10">
-      <View className="flex flex-row items-center justify-between p-3">
-        <Text className="dark:text-white font-bold text-3xl mb-2">
-          {user?.username}
-        </Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("SettingsProfile")}
-        >
-          <IconButton icon="settings" size={28} />
-        </TouchableOpacity>
-        {/* <TouchableOpacity onPress={() => navigation.navigate("SetUpAccount")}>
-          <IconButton icon="settings" size={28} />
-        </TouchableOpacity> */}
-      </View>
-      <View className="flex flex-row justify-around mt-3">
+    <View className="ios:mt-16 items-center">
+      <View className="flex items-center justify-center">
         <View className="flex items-center">
-          {pic && (
+          {pic ? (
             <Image source={{ uri: pic }} className="w-24 h-24 rounded-full" />
+          ) : (
+            <View className="w-24 h-24 rounded-full bg-black/10 flex items-center justify-center"></View>
           )}
         </View>
-        <View className="flex flex-row space-x-5 justify-around items-center">
+        {user && (
+          <Text className="dark:text-white font-bold text-2xl p-3">
+            @{user.username}
+          </Text>
+        )}
+        <View className="flex-row justify-center space-x-10">
           <View className="items-center">
             {filteredPosts && (
               <Text className="dark:text-white font-bold">
@@ -78,7 +58,7 @@ function Profile() {
           </View>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate(nav, { followers });
+              navigation.navigate("FollowScreenProfile", { followers });
             }}
             className="items-center"
           >
@@ -89,7 +69,7 @@ function Profile() {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate(nav, { following });
+              navigation.navigate("FollowScreenProfile", { following });
             }}
             className="items-center"
           >
@@ -98,10 +78,20 @@ function Profile() {
             </Text>
             <Text className="dark:text-white font-bold">Following</Text>
           </TouchableOpacity>
+          <TouchableOpacity className="items-center">
+            <Text className="dark:text-white font-bold">0</Text>
+            <Text className="dark:text-white font-bold">Badges</Text>
+          </TouchableOpacity>
         </View>
       </View>
-      <View className="mt-3">
-        <ProfileTabs id={session.user.id} posts={filteredPosts} />
+      <TouchableOpacity
+        onPress={() => navigation.navigate("SettingsProfile")}
+        className="bg-black/10 dark:bg-white/10 mt-4 p-2 rounded-md flex items-center w-1/2 justify-center"
+      >
+        <Text className="dark:text-white font-bold">Settings</Text>
+      </TouchableOpacity>
+      <View>
+        <ProfileTabs id={session.user.id} posts={filteredPosts} lists={lists} />
       </View>
     </View>
   );
@@ -115,7 +105,7 @@ export default function ProfileStackScreen() {
   return (
     <ProfileStack.Navigator
       screenOptions={{
-        headerTintColor: "#FFB54F",
+        headerTintColor: "#F97316",
         headerTitleStyle: { color: colorScheme === "dark" ? "white" : "black" },
       }}
     >
@@ -147,11 +137,6 @@ export default function ProfileStackScreen() {
       <ProfileStack.Screen
         name="ListScreenProfile"
         component={ListScreen}
-        options={{ headerShown: false }}
-      />
-      <ProfileStack.Screen
-        name="SetUpAccountProfile"
-        component={CreateAccountScreen}
         options={{ headerShown: false }}
       />
       <ProfileStack.Screen

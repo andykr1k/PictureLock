@@ -7,7 +7,6 @@ import {
   Animated,
   ScrollView,
   Dimensions,
-  LayoutAnimation,
   UIManager,
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -19,6 +18,9 @@ import {
   ProfileSearchComponent,
   ProfileScreen,
   FollowScreen,
+  ListScreen,
+  List,
+  PostDetails,
 } from "../components";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -28,7 +30,11 @@ import {
   SearchMovie,
 } from "../lib/api";
 import { useUser } from "../lib/UserContext";
-import { getFriends } from "../lib/supabaseUtils";
+import {
+  getAllCollections,
+  getCollectionsSearch,
+  getFriends,
+} from "../lib/supabaseUtils";
 import { IconButton } from "../components";
 
 UIManager.setLayoutAnimationEnabledExperimental &&
@@ -45,11 +51,13 @@ function SearchScreen() {
   const [popularLoading, setPopularLoading] = useState(true);
   const [topratedLoading, setTopratedLoading] = useState(true);
   const [upcomingLoading, setUpcomingLoading] = useState(true);
-  const searchtypes = ["Films", "People"];
-  const searchtypeicons = ["local-movies", "people"];
+  const searchtypes = ["Films", "People", "Collections"];
+  const searchtypeicons = ["local-movies", "people", "apps"];
   const [selectedTypeIndex, setSelectedTypeIndex] = useState(0);
   const [friendsearch, setFriendsearch] = useState("");
   const [friends, setFriends] = useState([]);
+  const [collections, setCollections] = useState([]);
+  const [listsearch, setListsearch] = useState("");
   const scrollX = useRef(new Animated.Value(0)).current;
   const width = Dimensions.get("window").width;
   const scrollViewRef = useRef(null);
@@ -68,10 +76,23 @@ function SearchScreen() {
 
   useEffect(() => {
     const fetchData = async () => {
-      setSuggestions(await SearchMovie(search, 10));
+      if (search) {
+        setSuggestions(await SearchMovie(search, 10));
+      }
     };
     fetchData();
   }, [search]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (listsearch) {
+        setCollections(await getCollectionsSearch(listsearch));
+      } else {
+        setCollections(await getAllCollections());
+      }
+    };
+    fetchData();
+  }, [listsearch]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,6 +102,7 @@ function SearchScreen() {
       setTopratedLoading(false);
       setPopular(await getPopularMovies());
       setPopularLoading(false);
+      setCollections(await getAllCollections());
     };
     fetchData();
   }, []);
@@ -133,7 +155,7 @@ function SearchScreen() {
                   paddingHorizontal: 8,
                   borderRadius: 20,
                   borderColor:
-                    selectedTypeIndex === index ? "#FFB54F" : "transparent",
+                    selectedTypeIndex === index ? "#F97316" : "transparent",
                   borderWidth: 2,
                 }}
               >
@@ -167,11 +189,11 @@ function SearchScreen() {
             onChangeText={handleSearchValueChange}
             className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
           />
-          {search.length > 0 ? (
+          {search && search.length > 0 ? (
             <ScrollView showsVerticalScrollIndicator={false} className="flex">
-              {suggestions && (
-                <View className="flex-row flex-wrap">
-                  {suggestions.map((item) => {
+              <View className="flex-row flex-wrap">
+                {suggestions &&
+                  suggestions.map((item) => {
                     return (
                       <TouchableOpacity
                         className="w-1/4 p-1"
@@ -184,9 +206,7 @@ function SearchScreen() {
                       </TouchableOpacity>
                     );
                   })}
-                </View>
-              )}
-              <View className="p-20"></View>
+              </View>
             </ScrollView>
           ) : (
             <ScrollView
@@ -200,19 +220,20 @@ function SearchScreen() {
                 <Loading />
               ) : (
                 <View className="flex-row flex-wrap">
-                  {upcoming.slice(0, 8).map((item) => {
-                    return (
-                      <TouchableOpacity
-                        className="w-1/4 p-1"
-                        key={item.id}
-                        onPress={() =>
-                          navigation.navigate("DetailsSearch", { item })
-                        }
-                      >
-                        <MoviePoster item={item} size={"small"} />
-                      </TouchableOpacity>
-                    );
-                  })}
+                  {upcoming &&
+                    upcoming.slice(0, 8).map((item) => {
+                      return (
+                        <TouchableOpacity
+                          className="w-1/4 p-1"
+                          key={item.id}
+                          onPress={() =>
+                            navigation.navigate("DetailsSearch", { item })
+                          }
+                        >
+                          <MoviePoster item={item} size={"small"} />
+                        </TouchableOpacity>
+                      );
+                    })}
                 </View>
               )}
               <Text className="dark:text-white font-bold text-xl">
@@ -222,19 +243,20 @@ function SearchScreen() {
                 <Loading />
               ) : (
                 <View className="flex-row flex-wrap">
-                  {toprated.slice(0, 8).map((item) => {
-                    return (
-                      <TouchableOpacity
-                        className="w-1/4 p-1"
-                        key={item.id}
-                        onPress={() =>
-                          navigation.navigate("DetailsSearch", { item })
-                        }
-                      >
-                        <MoviePoster item={item} size={"small"} />
-                      </TouchableOpacity>
-                    );
-                  })}
+                  {toprated &&
+                    toprated.slice(0, 8).map((item) => {
+                      return (
+                        <TouchableOpacity
+                          className="w-1/4 p-1"
+                          key={item.id}
+                          onPress={() =>
+                            navigation.navigate("DetailsSearch", { item })
+                          }
+                        >
+                          <MoviePoster item={item} size={"small"} />
+                        </TouchableOpacity>
+                      );
+                    })}
                 </View>
               )}
               <Text className="dark:text-white font-bold text-xl">
@@ -244,22 +266,23 @@ function SearchScreen() {
                 <Loading />
               ) : (
                 <View className="flex-row flex-wrap">
-                  {popular.slice(0, 8).map((item) => {
-                    return (
-                      <TouchableOpacity
-                        className="w-1/4 p-1"
-                        key={item.id}
-                        onPress={() =>
-                          navigation.navigate("DetailsSearch", { item })
-                        }
-                      >
-                        <MoviePoster item={item} size={"small"} />
-                      </TouchableOpacity>
-                    );
-                  })}
+                  {popular &&
+                    popular.slice(0, 8).map((item) => {
+                      return (
+                        <TouchableOpacity
+                          className="w-1/4 p-1"
+                          key={item.id}
+                          onPress={() =>
+                            navigation.navigate("DetailsSearch", { item })
+                          }
+                        >
+                          <MoviePoster item={item} size={"small"} />
+                        </TouchableOpacity>
+                      );
+                    })}
                 </View>
               )}
-              <View className="p-40"></View>
+              <View className="p-20"></View>
             </ScrollView>
           )}
         </View>
@@ -272,18 +295,43 @@ function SearchScreen() {
           />
           <ScrollView
             className="space-y-2 mt-3 h-full"
+            contentContainerStyle={{ paddingBottom: 250 }}
             showsVerticalScrollIndicator={false}
           >
             {friends &&
               friends.map((item, index) => (
                 <View key={item.id}>
-                  <ProfileSearchComponent
-                    id={item.id}
-                    nav={"UserScreenSearch"}
+                  <ProfileSearchComponent id={item.id} />
+                </View>
+              ))}
+            <View className="p-20"></View>
+          </ScrollView>
+        </View>
+        <View className="w-screen p-3 pt-0">
+          <TextInput
+            placeholder="Search for collections"
+            value={listsearch}
+            onChangeText={setListsearch}
+            className="text-white bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md"
+          />
+          <ScrollView
+            className="space-y-2 mt-3 h-full"
+            contentContainerStyle={{ paddingBottom: 250 }}
+            showsVerticalScrollIndicator={false}
+          >
+            {collections &&
+              collections.map((list) => (
+                <View key={list.id}>
+                  <List
+                    key={list.id}
+                    list_id={list.id}
+                    name={list.name}
+                    user_id={list.user_id}
+                    created_at={list.created_at}
                   />
                 </View>
               ))}
-            <View className="mb-40"></View>
+            <View className="p-20"></View>
           </ScrollView>
         </View>
       </Animated.ScrollView>
@@ -298,7 +346,7 @@ export default function SearchStackScreen() {
   return (
     <SearchStack.Navigator
       screenOptions={{
-        headerTintColor: "#FFB54F",
+        headerTintColor: "#F97316",
         headerTitleStyle: { color: colorScheme === "dark" ? "white" : "black" },
         headerStyle: {
           backgroundColor: colorScheme === "dark" ? "#1c1c1c" : "white",
@@ -323,6 +371,16 @@ export default function SearchStackScreen() {
       <SearchStack.Screen
         name="FollowScreenSearch"
         component={FollowScreen}
+        options={{ headerShown: false }}
+      />
+      <SearchStack.Screen
+        name="ListScreenSearch"
+        component={ListScreen}
+        options={{ headerShown: false }}
+      />
+      <SearchStack.Screen
+        name="PostDetailsSearch"
+        component={PostDetails}
         options={{ headerShown: false }}
       />
     </SearchStack.Navigator>

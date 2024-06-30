@@ -1,10 +1,10 @@
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { memo } from "react";
+import { memo, useState, useEffect } from "react";
 
 function ListScreen() {
   const route = useRoute();
-  const { listname, movies } = route.params;
+  const { listname, movies, userpic, userID } = route.params;
   const navigation = useNavigation();
   const [nav, setNav] = useState();
 
@@ -18,18 +18,26 @@ function ListScreen() {
     }
   };
 
-  getRouteName();
+  useEffect(() => {
+    getRouteName();
+  }, [route.name]);
+
   return (
     <View className="ios:ios:mt-10 p-3 space-y-3 h-full">
-      <Text className="dark:text-white font-bold text-3xl">{listname}</Text>
+      <View className="flex-row space-x-3 items-center">
+        {userpic && (
+          <Image source={{ uri: userpic }} className="w-10 h-10 rounded-full" />
+        )}
+        <Text className="dark:text-white font-bold text-3xl">{listname}</Text>
+      </View>
       <ScrollView>
         <View className="flex flex-row flex-wrap mt-2">
-          {movies.map((item) => (
+          {movies?.map((item) => (
             <TouchableOpacity
               key={item.id}
               className="w-1/4 p-1"
               onPress={() => {
-                  navigation.navigate(nav, { item });
+                navigation.navigate(nav, { item });
               }}
             >
               <Image

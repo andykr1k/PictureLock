@@ -2,12 +2,12 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   getUser,
-  getProfilePictureUrl,
   getFollowers,
   getFollowing,
   handleFollow,
   handleUnfollow,
   getPosts,
+  getCollections,
 } from "../lib/supabaseUtils";
 import { useEffect, useState, memo } from "react";
 import { useUser } from "../lib/UserContext";
@@ -18,12 +18,13 @@ function ProfileScreen() {
   const navigation = useNavigation();
   const route = useRoute();
   const { userID, userpic } = route.params;
-  const [user, setUser] = useState();
-  const [followers, setFollowers] = useState();
-  const [followings, setFollowings] = useState();
-  const [isFollowing, setIsFollowing] = useState();
-  const [posts, setPosts] = useState();
-  const [nav, setNav] = useState()
+  const [user, setUser] = useState(null);
+  const [followers, setFollowers] = useState(null);
+  const [followings, setFollowings] = useState(null);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [posts, setPosts] = useState(null);
+  const [nav, setNav] = useState(null);
+  const [lists, setLists] = useState(null);
 
   const getRouteName = () => {
     if (route.name.includes("Profile")) {
@@ -37,22 +38,30 @@ function ProfileScreen() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const user = await getUser(userID);
-      setUser(user[0]);
-      const fetchedFollowers = await getFollowers(userID);
-      setFollowers(fetchedFollowers);
+      try {
+        const user = await getUser(userID);
+        setUser(user[0]);
 
-      const fetchedFollowing = await getFollowing(userID);
-      setFollowings(fetchedFollowing);
+        const fetchedLists = await getCollections(userID);
+        setLists(fetchedLists);
 
-      const fetchedPosts = await getPosts(userID);
-      setPosts(fetchedPosts);
+        const fetchedFollowers = await getFollowers(userID);
+        setFollowers(fetchedFollowers);
 
-      if (fetchedFollowers) {
-        const followingIds = fetchedFollowers.map(
-          (follower) => follower.following
-        );
-        setIsFollowing(followingIds.includes(session.user.id));
+        const fetchedFollowing = await getFollowing(userID);
+        setFollowings(fetchedFollowing);
+
+        const fetchedPosts = await getPosts(userID);
+        setPosts(fetchedPosts);
+
+        if (fetchedFollowers) {
+          const followingIds = fetchedFollowers.map(
+            (follower) => follower.following
+          );
+          setIsFollowing(followingIds.includes(session.user.id));
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -61,13 +70,8 @@ function ProfileScreen() {
   }, [userID, following]);
 
   return (
-    <View className="ios:mt-10 space-y-5">
-      {user && (
-        <Text className="dark:text-white font-bold text-3xl p-3">
-          {user.username}
-        </Text>
-      )}
-      <View className="flex flex-row items-center justify-around">
+    <View className="ios:mt-16">
+      <View className="flex items-center">
         <View>
           <View className="flex justify-center items-center">
             {userpic && (
@@ -78,9 +82,14 @@ function ProfileScreen() {
             )}
           </View>
         </View>
-        <View>
+        {user && (
+          <Text className="dark:text-white font-bold text-2xl p-3">
+            @{user.username}
+          </Text>
+        )}
+        <View className="w-full">
           {followers && followings && posts && (
-            <View className="flex flex-row space-x-5 justify-around items-center mt-3">
+            <View className="flex-row justify-center space-x-10">
               <View className="items-center">
                 <Text className="dark:text-white font-bold">
                   {posts.length}
@@ -109,16 +118,25 @@ function ProfileScreen() {
                 </Text>
                 <Text className="dark:text-white font-bold">Following</Text>
               </TouchableOpacity>
+              <TouchableOpacity
+                className="items-center"
+              >
+                <Text className="dark:text-white font-bold">
+                  0
+                </Text>
+                <Text className="dark:text-white font-bold">Badges</Text>
+              </TouchableOpacity>
             </View>
           )}
+
           {session.user.id !== userID && (
-            <View>
+            <View className="items-center">
               {isFollowing ? (
                 <TouchableOpacity
                   onPress={() =>
                     handleUnfollow(session.user.id, userID, refreshUserData)
                   }
-                  className="bg-black/10 dark:bg-white/10 mt-4 p-2 rounded-md flex items-center"
+                  className="bg-black/10 dark:bg-white/10 mt-4 p-2 rounded-md flex items-center w-1/2"
                 >
                   <Text className="dark:text-white font-bold">Unfollow</Text>
                 </TouchableOpacity>
@@ -127,7 +145,7 @@ function ProfileScreen() {
                   onPress={() =>
                     handleFollow(session.user.id, userID, refreshUserData)
                   }
-                  className="bg-black/10 dark:bg-white/10 mt-4 p-2 rounded-md flex items-center"
+                  className="bg-black/10 dark:bg-white/10 mt-4 p-2 rounded-md flex items-center w-1/2"
                 >
                   <Text className="dark:text-white font-bold">Follow</Text>
                 </TouchableOpacity>
@@ -136,8 +154,8 @@ function ProfileScreen() {
           )}
         </View>
       </View>
-      <View className="mt-3">
-        <ProfileTabs id={userID} posts={posts} section={"profilescreen"} />
+      <View>
+        <ProfileTabs id={userID} posts={posts} lists={lists} />
       </View>
     </View>
   );

@@ -1,7 +1,6 @@
 import { View, ScrollView, Text } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Notification } from "../components";
-import { useNavigation } from "@react-navigation/native";
 import { useUser } from "../lib/UserContext";
 
 function NotificationsScreen() {
@@ -10,20 +9,27 @@ function NotificationsScreen() {
   return (
     <View className="ios:mt-10 p-3 space-y-3">
       <Text className="dark:text-white font-bold text-3xl">Notifications</Text>
-      <ScrollView showsVerticalScrollIndicator={false} className="h-full max-w-full">
-        {notifications.map((item, index) => {
-          return (
-            <Notification
-              key={index}
-              id={item.user_id}
-              content={item?.comment}
-              post_id={item.post_id}
-              date={item.created_at}
-              status={item.type}
-            />
-          );
-        })}
-      </ScrollView>
+      {notifications && notifications.length > 0 ? (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          className="h-full max-w-full"
+        >
+          {notifications.map((item, index) => {
+            return (
+              <Notification
+                key={index}
+                id={item.user_id}
+                content={item?.comment}
+                post_id={item.post_id}
+                date={item.created_at}
+                status={item.type}
+              />
+            );
+          })}
+        </ScrollView>
+      ) : (
+        <Text className="dark:text-white font-bold">No notifications yet!</Text>
+      )}
     </View>
   );
 }
@@ -34,7 +40,7 @@ export default function NotificationStackScreen() {
   return (
     <NotificationsStack.Navigator
       screenOptions={{
-        headerTintColor: "#FFB54F",
+        headerTintColor: "#F97316",
         headerTitleStyle: { color: "white" },
       }}
     >

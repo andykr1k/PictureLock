@@ -9,10 +9,12 @@ export async function getProfilePictureUrl(id) {
 
   if (error) {
     console.error("Error fetching profile picture:", error);
+    return null;
   }
 
-  if (data.length === 0) {
+  if (!data || data.length === 0) {
     console.error("Error fetching profile picture.");
+    return null;
   }
 
   return data.publicUrl;
@@ -26,10 +28,12 @@ export async function getUsername(id) {
 
   if (error) {
     console.error("Error fetching profile username:", error);
+    return null;
   }
 
-  if (data.length === 0) {
-    console.error("Error fetching profile username.");
+  if (!data || data.length === 0) {
+    console.error("No data found for profile with ID:", id);
+    return null;
   }
 
   return data[0].username;
@@ -68,7 +72,6 @@ export async function handleUploadProfilePicture(
       if (error) {
         console.error("Error uploading file:", error);
       } else {
-        Alert.alert("Profile picture updated.");
         refreshUserData();
       }
     } else {
@@ -106,7 +109,6 @@ export async function handleUsernameUpdate(username, id, refreshUserData) {
 }
 
 export async function handleLogOut() {
-
   const { error } = await supabase.auth.signOut();
   if (error) {
     console.log(error);
@@ -125,7 +127,6 @@ export async function handleCreatePost(
   refreshUserData,
   spoiler
 ) {
-
   const { error } = await supabase
     .from("posts")
     .insert({
@@ -135,7 +136,7 @@ export async function handleCreatePost(
       movie_id: film_id,
       content: review,
       stars: stars,
-      spoiler: spoiler
+      spoiler: spoiler,
     })
     .select();
 
@@ -146,14 +147,20 @@ export async function handleCreatePost(
   }
 }
 
-export async function handleComment(post_id, user_id, comment, refreshUserData, author){
+export async function handleComment(
+  post_id,
+  user_id,
+  comment,
+  refreshUserData,
+  author
+) {
   const { error } = await supabase
     .from("comments")
     .insert({
       post_id: post_id,
       user_id: user_id,
       comment: comment,
-      author_id: author
+      author_id: author,
     })
     .select();
 
@@ -183,7 +190,7 @@ export async function handleLike(post_id, user_id, refreshUserData, author) {
     .insert({
       post_id: post_id,
       user_id: user_id,
-      author_id: author
+      author_id: author,
     })
     .select();
 
@@ -195,7 +202,6 @@ export async function handleLike(post_id, user_id, refreshUserData, author) {
 }
 
 export async function handleUnlike(post_id, user_id, refreshUserData) {
-
   const { error } = await supabase
     .from("likes")
     .delete()
@@ -223,10 +229,7 @@ export async function fetchPosts() {
 }
 
 export async function handleDeletePost(post_id, refreshUserData) {
-  const { error } = await supabase
-    .from("posts")
-    .delete()
-    .eq("id", post_id)
+  const { error } = await supabase.from("posts").delete().eq("id", post_id);
 
   if (error) {
     console.log(error);
@@ -250,7 +253,6 @@ export async function getConversation(id1, id2) {
 
   return data[0];
 }
-
 
 export async function getConversations(id) {
   const { data, error } = await supabase
@@ -308,6 +310,19 @@ export async function getFriends(search, user) {
   return data;
 }
 
+export async function DeleteConversation(conv_id, refreshUserData) {
+  const { error } = await supabase
+    .from("conversations")
+    .delete()
+    .eq("id", conv_id);
+
+  if (error) {
+    console.log(error);
+  } else {
+    refreshUserData();
+  }
+}
+
 export async function handleConversation(user1, user2) {
   const { error } = await supabase
     .from("conversations")
@@ -329,7 +344,7 @@ export async function handleMessage(conv_id, user_id, message, post_id) {
       conversation_id: conv_id,
       user_id: user_id,
       message: message,
-      post_id: post_id
+      post_id: post_id,
     })
     .select();
 
@@ -403,7 +418,7 @@ export async function getComments(id) {
   const { data, error } = await supabase
     .from("comments")
     .select("*")
-    .eq("post_id", id)
+    .eq("post_id", id);
 
   if (error) {
     console.log(error);
@@ -499,17 +514,32 @@ export async function handleCreateList(name, user_id, refreshUserData) {
     refreshUserData();
   }
 
-  return data[0]
+  return data[0];
 }
 
-export async function handleAddMovieToCollection(list_id, movie_poster, movie_name, movie_id, refreshUserData) {
+export async function DeleteList(list_id, refreshUserData) {
+  const { error } = await supabase.from("lists").delete().eq("id", list_id);
+  if (error) {
+    console.log(error);
+  } else {
+    refreshUserData();
+  }
+}
+
+export async function handleAddMovieToCollection(
+  list_id,
+  movie_poster,
+  movie_name,
+  movie_id,
+  refreshUserData
+) {
   const { error } = await supabase
     .from("listobjects")
     .insert({
       list_id: list_id,
       movie_poster: movie_poster,
       movie_id: movie_id,
-      movie_name: movie_name
+      movie_name: movie_name,
     })
     .select();
 
@@ -518,6 +548,33 @@ export async function handleAddMovieToCollection(list_id, movie_poster, movie_na
   } else {
     refreshUserData();
   }
+}
+
+export async function getAllCollections() {
+  const { data, error } = await supabase
+    .from("lists")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data;
+}
+
+export async function getCollectionsSearch(name) {
+  const { data, error } = await supabase
+    .from("lists")
+    .select("*")
+    .ilike("name", `%${name}%`)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data;
 }
 
 export async function getCollections(id) {
@@ -539,7 +596,7 @@ export async function getCollectionMovies(id) {
     .from("listobjects")
     .select("*")
     .eq("list_id", id)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: true });
 
   if (error) {
     console.log(error);

@@ -1,16 +1,8 @@
 import React, { useState } from "react";
-import {
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  Alert,
-} from "react-native";
+import { Text, View, TextInput, TouchableOpacity, Alert } from "react-native";
 import { supabase } from "../lib/supabase";
 import { IconButton } from "../components";
 import { useNavigation } from "@react-navigation/native";
-
 
 export default function LogInScreen() {
   const [email, setEmail] = useState("");
@@ -21,6 +13,7 @@ export default function LogInScreen() {
   const logintypes = ["Log In", "Sign Up"];
   const logintypeicons = ["people", "public"];
   const [selectedTypeIndex, setSelectedTypeIndex] = React.useState(0);
+  const navigation = useNavigation();
 
   async function signInWithEmail() {
     const { error } = await supabase.auth.signInWithPassword({
@@ -42,7 +35,7 @@ export default function LogInScreen() {
       if (error) {
         Alert.alert(error.message);
       } else {
-        navigation.navigate("SetUpAccountProfile");
+        navigation.navigate("SetUpAccount");
       }
     } else {
       Alert.alert("Please make sure your passwords match!");
@@ -51,9 +44,10 @@ export default function LogInScreen() {
 
   return (
     <View className="flex-1 p-3 space-y-5 mt-10">
-      {/* <View className="flex justify-center items-center">
+      <Text className="dark:text-white font-bold text-3xl">Picturelock</Text>
+      {/* <View className="flex">
         <Image
-          className="w-28 h-28 justify-center items-center"
+          className="w-28 h-28"
           style={{ transform: [{ scale: 1.5 }] }}
           source={require("../assets/logo_outline.png")}
           resizeMode="contain"
@@ -74,32 +68,18 @@ export default function LogInScreen() {
             >
               <View className="flex-row items-center space-x-2">
                 <IconButton icon={logintypeicons[index]} size={24} />
-                {selectedTypeIndex === index && (
-                  <Text className="font-bold dark:text-white">{type}</Text>
-                )}
+                <Text className="font-bold dark:text-white">{type}</Text>
               </View>
             </View>
           </TouchableOpacity>
         ))}
       </View>
-      {/* {!login && (
-        <View className="space-y-1">
-          <Text className="font-bold dark:text-white">Full Name</Text>
-          <TextInput
-            className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
-            onChangeText={setName}
-            placeholder="Enter your full name"
-            placeholderTextColor="rgba(255, 255, 255, 0.6)"
-          />
-        </View>
-      )} */}
       <View className="space-y-1">
         <Text className="font-bold dark:text-white">Email</Text>
         <TextInput
           className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white"
           onChangeText={setEmail}
           placeholder="Enter your email"
-          placeholderTextColor="rgba(255, 255, 255, 0.6)"
         />
       </View>
       <View className="space-y-1">
@@ -109,7 +89,6 @@ export default function LogInScreen() {
           secureTextEntry={true}
           onChangeText={setPassword}
           placeholder="Enter your password"
-          placeholderTextColor="rgba(255, 255, 255, 0.6)"
         ></TextInput>
       </View>
       {selectedTypeIndex === 1 && (
@@ -120,21 +99,22 @@ export default function LogInScreen() {
             secureTextEntry={true}
             onChangeText={setConfirm}
             placeholder="Enter your password"
-            placeholderTextColor="rgba(255, 255, 255, 0.6)"
           ></TextInput>
         </View>
       )}
-      <View className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white justify-center items-center">
-        {selectedTypeIndex === 1 ? (
-          <TouchableOpacity onPress={signUpWithEmail}>
+      {selectedTypeIndex === 1 ? (
+        <TouchableOpacity onPress={signUpWithEmail}>
+          <View className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white justify-center items-center">
             <Text className="font-bold dark:text-white text-lg">Sign up</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity onPress={signInWithEmail}>
+          </View>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity onPress={signInWithEmail}>
+          <View className="bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md dark:text-white justify-center items-center">
             <Text className="font-bold dark:text-white text-lg">Log in</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

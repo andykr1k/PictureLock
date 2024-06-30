@@ -4,16 +4,14 @@ import {
   Text,
   Image,
   TextInput,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
 } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import { getMessages, handleMessage } from "../lib/supabaseUtils";
 import { useUser } from "../lib/UserContext";
 import { getProfilePictureUrl, getUsername } from "../lib/supabaseUtils";
-import IconButton from "./IconButton";
 
 function Conversation() {
   const [messages, setMessages] = useState([]);
@@ -72,7 +70,7 @@ function Conversation() {
       className="flex-1 mb-20 ios:mt-10 p-3 h-full"
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <View className="flex-row items-center space-x-2">
+      <View className="flex-row items-center space-x-2 mb-2">
         {recipientpic && (
           <Image
             source={{ uri: recipientpic }}
@@ -97,7 +95,7 @@ function Conversation() {
                     </View>
                     <Image
                       source={{ uri: pic }}
-                      className="w-10 h-10 rounded-full ml-1"
+                      className="w-8 h-8 rounded-full ml-1"
                     />
                   </View>
                 ) : (

@@ -1,21 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  Button,
   FlatList,
-  ScrollView,
 } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import { useUser } from "../lib/UserContext";
 import { RefreshControl } from "react-native-gesture-handler";
 import ProfileSearchComponent from "./ProfileSearchComponent";
 
 function FollowScreen() {
-  const navigation = useNavigation();
   const route = useRoute();
   const { followers, following } = route.params;
   const { refreshUserData } = useUser();
@@ -35,39 +29,51 @@ function FollowScreen() {
       {followers && (
         <View>
           <Text className="dark:text-white font-bold text-3xl">Followers</Text>
-          <FlatList
-            className="space-y-2 mt-3 h-full"
-            data={followers}
-            renderItem={({ item, index }) => (
-              <View key={item.id} className="mb-2">
-                <ProfileSearchComponent id={item.following} />
-              </View>
-            )}
-            keyExtractor={(item, index) => `${item.id}-${index}`}
-            showsVerticalScrollIndicator={false}
-            refreshControl={
-              <RefreshControl refreshing={false} onRefresh={refresh} />
-            }
-          />
+          {followers.length > 0 ? (
+            <FlatList
+              className="space-y-2 mt-3 h-full"
+              data={followers}
+              renderItem={({ item, index }) => (
+                <View key={item.id} className="mb-2">
+                  <ProfileSearchComponent id={item.following} />
+                </View>
+              )}
+              keyExtractor={(item, index) => `${item.id}-${index}`}
+              showsVerticalScrollIndicator={false}
+              refreshControl={
+                <RefreshControl refreshing={false} onRefresh={refresh} />
+              }
+            />
+          ) : (
+            <Text className="dark:text-white font-bold mt-3">
+              No followers yet!
+            </Text>
+          )}
         </View>
       )}
       {following && (
         <View>
           <Text className="dark:text-white font-bold text-3xl">Following</Text>
-          <FlatList
-            className="space-y-2 mt-3 h-full"
-            data={following}
-            renderItem={({ item, index }) => (
-              <View key={item.id} className="mb-2">
-                <ProfileSearchComponent id={item.id} />
-              </View>
-            )}
-            keyExtractor={(item, index) => `${item.id}-${index}`}
-            showsVerticalScrollIndicator={false}
-            refreshControl={
-              <RefreshControl refreshing={false} onRefresh={refresh} />
-            }
-          />
+          {following.length > 0 ? (
+            <FlatList
+              className="space-y-2 mt-3 h-full"
+              data={following}
+              renderItem={({ item, index }) => (
+                <View key={item.id} className="mb-2">
+                  <ProfileSearchComponent id={item.id} />
+                </View>
+              )}
+              keyExtractor={(item, index) => `${item.id}-${index}`}
+              showsVerticalScrollIndicator={false}
+              refreshControl={
+                <RefreshControl refreshing={false} onRefresh={refresh} />
+              }
+            />
+          ) : (
+            <Text className="dark:text-white font-bold mt-3">
+              No following yet!
+            </Text>
+          )}
         </View>
       )}
     </View>

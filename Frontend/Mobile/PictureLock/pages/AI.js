@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import {
   View,
-  useColorScheme,
   Image,
   ScrollView,
   Text,
   TouchableOpacity,
-  Button,
   TextInput,
 } from "react-native";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
@@ -14,7 +12,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Recommend from "../functions/Recommendation";
 import GetMovieDetails from "../functions/GetMovieDetails";
 import titles from "../assets/titles_and_ids.json";
-import { MoviePoster } from "../components";
+import { MovieDetails, MoviePoster } from "../components";
 
 function AIScreen({ navigation }) {
   const filmtypes = ["TV Show", "Movie"];
@@ -46,7 +44,7 @@ function AIScreen({ navigation }) {
       image: require("../assets/hbo_logo.png"),
     },
   ];
-  
+
   const genres = ["Action", "Drama", "Comedy", "Romance", "Thriller", "Horror"];
   const [recommends, setRecommends] = useState(null);
   const [movieName, setMovieName] = useState("");
@@ -80,16 +78,19 @@ function AIScreen({ navigation }) {
 
   const handleRecommendation = async () => {
     try {
-      genre = "Drama";
+      const genre = genres[selectedGenreIndexes[0]];
       const recommendationsData = await Recommend(movieName, genre);
       if (recommendationsData !== null) {
-        await setRecommendations(recommendationsData);
+        setRecommendations(recommendationsData);
         const movieDetails = await GetMovieDetails(recommendationsData);
         if (movieDetails !== null) {
-          await setMovies(movieDetails);
+          setMovies(movieDetails);
+          navigation.navigate("Recommendations", {
+            movies: movieDetails,
+            recommendations: recommendationsData,
+          });
         }
       }
-      await navigation.navigate("Recommendations", { movies, recommendations });
     } catch (error) {
       console.error("Error fetching recommendations:", error);
     }
@@ -100,7 +101,7 @@ function AIScreen({ navigation }) {
     const filteredTitles = titles?.filter((movie) =>
       movie.title.toLowerCase().includes(search.toLowerCase())
     );
-    setSuggestions(filteredTitles.slice(0, 8));
+    setSuggestions(filteredTitles?.slice(0, 8));
   };
 
   const handleMovieNameChange = async (e) => {
@@ -128,7 +129,7 @@ function AIScreen({ navigation }) {
                 onPress={() => setSelectedTypeIndex(index)}
               >
                 <View
-                  className={`p-1 px-2 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
+                  className={`p-2 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
                     selectedTypeIndex === index
                       ? "border-orange-500"
                       : "border-transparent"
@@ -182,7 +183,7 @@ function AIScreen({ navigation }) {
                   onPress={() => toggleGenreSelection(index)}
                 >
                   <View
-                    className={`p-1 px-2 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
+                    className={`p-2 rounded-2xl bg-black/10 dark:bg-white/10 border-2 ${
                       selectedGenreIndexes.includes(index)
                         ? "border-orange-500"
                         : "border-transparent"
@@ -253,7 +254,7 @@ function AIScreen({ navigation }) {
   );
 }
 
-function DetailsScreen({ route, navigation }) {
+function RecommendationsScreen({ route, navigation }) {
   const { movies, recommendations } = route.params;
 
   return (
@@ -265,12 +266,20 @@ function DetailsScreen({ route, navigation }) {
         {movies && movies.length !== 0 ? (
           <View className="flex flex-row flex-wrap">
             {movies.map((item, index) => (
-              <View className="w-1/4 p-1" key={index}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("DetailsSlate", {
+                    item: { id: recommendations[index][1] },
+                  })
+                }
+                className="w-1/4 p-1"
+                key={index}
+              >
                 <Image
                   source={{ uri: item }}
                   className="w-full h-40 rounded-md"
                 />
-              </View>
+              </TouchableOpacity>
             ))}
           </View>
         ) : (
@@ -297,7 +306,12 @@ export default function AIStackScreen() {
       />
       <AIStack.Screen
         name="Recommendations"
-        component={DetailsScreen}
+        component={RecommendationsScreen}
+        options={{ headerShown: false }}
+      />
+      <AIStack.Screen
+        name="DetailsSlate"
+        component={MovieDetails}
         options={{ headerShown: false }}
       />
     </AIStack.Navigator>

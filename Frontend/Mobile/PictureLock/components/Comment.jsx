@@ -1,4 +1,4 @@
-import { Text, View, Image } from "react-native";
+import { Text, View, Image, TouchableOpacity } from "react-native";
 import TimeAgo from "../functions/TimeAgo";
 import { memo, useState, useEffect } from "react";
 import {
@@ -7,7 +7,6 @@ import {
   handleDeleteComment,
 } from "../lib/supabaseUtils";
 import { useUser } from "../lib/UserContext";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import IconButton from "./IconButton";
 
 function Comment(props) {
@@ -37,7 +36,7 @@ function Comment(props) {
     <View className="flex flex-row justify-between mb-2 max-w-full">
       <View className="flex flex-row items-center">
         {userpic && (
-          <Image source={{ uri: userpic }} className="w-8 h-8 rounded-lg" />
+          <Image source={{ uri: userpic }} className="w-8 h-8 rounded-full" />
         )}
         <View className="ml-2">
           <View className="flex flex-row">

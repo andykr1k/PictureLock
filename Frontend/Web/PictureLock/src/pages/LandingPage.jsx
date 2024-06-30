@@ -20,7 +20,7 @@ export default function LandingPage() {
               target="_blank"
               href="https://www.instagram.com/picturelockapp"
               title="Quicktoolz On Facebook"
-              className="md:w-32 tracking-wide text-white font-bold rounded border-2 border-orange-fruit hover:border-orange-fruit hover:bg-orange-fruit hover:text-white shadow-md py-2 px-4 inline-flex items-center"
+              className="md:w-32 tracking-wide text-white font-bold rounded border-2 border-orange-500 hover:border-orange-500 hover:bg-orange-500 hover:text-white shadow-md py-2 px-4 inline-flex items-center"
             >
               <span className="mx-auto">Instagram</span>
             </a>
@@ -31,7 +31,7 @@ export default function LandingPage() {
               target="_blank"
               href="https://www.github.com/andykr1k/picturelock"
               title="Quicktoolz On Facebook"
-              className="md:w-32 tracking-wide text-white font-bold rounded border-2 border-orange-fruit hover:border-orange-fruit hover:bg-orange-fruit hover:text-white shadow-md py-2 px-6 inline-flex items-center"
+              className="md:w-32 tracking-wide text-white font-bold rounded border-2 border-orange-500 hover:border-orange-500 hover:bg-orange-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center"
             >
               <span className="mx-auto">Github</span>
             </a>

@@ -71,7 +71,7 @@ export default function RecommendationPage() {
                 type="radio"
                 name="options"
                 data-title="action"
-                className="btn w-full rounded-full radio bg-orange-fruit selection:bg-orange-fruit checked:shadow-orange-fruit"
+                className="btn w-full rounded-full radio bg-orange-500 selection:bg-orange-500 checked:shadow-orange-500"
                 onChange={handleGenreChange}
                 checked={genre === "action"}
               />
@@ -84,7 +84,7 @@ export default function RecommendationPage() {
                 type="radio"
                 name="options"
                 data-title="comedy"
-                className="btn w-full rounded-full radio bg-orange-fruit"
+                className="btn w-full rounded-full radio bg-orange-500"
                 onChange={handleGenreChange}
                 checked={genre === "comedy"}
               />
@@ -97,7 +97,7 @@ export default function RecommendationPage() {
                 type="radio"
                 name="options"
                 data-title="drama"
-                className="btn w-full rounded-full radio bg-orange-fruit"
+                className="btn w-full rounded-full radio bg-orange-500"
                 onChange={handleGenreChange}
                 checked={genre === "drama"}
               />
@@ -110,7 +110,7 @@ export default function RecommendationPage() {
                 type="radio"
                 name="options"
                 data-title="thriller"
-                className="btn w-full rounded-full radio bg-orange-fruit text-white"
+                className="btn w-full rounded-full radio bg-orange-500 text-white"
                 onChange={handleGenreChange}
                 checked={genre === "thriller"}
               />
@@ -121,7 +121,7 @@ export default function RecommendationPage() {
           Enter a movie title similar to what you’re seeking to watch.
         </h3>
         <div className="space-y-1">
-          <label className="input input-bordered flex items-center gap-2 z-50 bg-orange-fruit">
+          <label className="input input-bordered flex items-center gap-2 z-50 bg-orange-500">
             <input
               type="text"
               className="grow border-0 outline-0 z-50 placeholder:text-white text-white border-transparent focus:border-0 focus:ring-0 pl-0"
@@ -137,7 +137,7 @@ export default function RecommendationPage() {
             </button>
           </label>
           {suggestions.length < 5 && suggestionclicked === false && (
-            <ul className="absolute w-full max-w-sm md:max-w-md bg-orange-fruit shadow-md z-50 rounded-md text-white">
+            <ul className="absolute w-full max-w-sm md:max-w-md bg-orange-500 shadow-md z-50 rounded-md text-white">
               {suggestions.map((suggestion, index) => (
                 <li
                   key={index}

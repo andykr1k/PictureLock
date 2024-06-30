@@ -1,7 +1,6 @@
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { memo, useState } from "react";
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import IconButton from "./IconButton";
+import { Button, Text, View } from "react-native";
 
 function RecordScreen() {
   const [facing, setFacing] = useState("back");

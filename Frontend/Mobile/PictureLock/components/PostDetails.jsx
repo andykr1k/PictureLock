@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import Post from "./Post";
 import { memo } from "react";
 

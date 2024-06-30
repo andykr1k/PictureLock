@@ -1,17 +1,24 @@
-import { Image, View, Text } from "react-native";
-import { getProfilePictureUrl, getUser } from "../lib/supabaseUtils";
+import { Image, View, Text, TouchableOpacity } from "react-native";
+import {
+  getProfilePictureUrl,
+  getUser,
+  handleFollow,
+  handleUnfollow,
+} from "../lib/supabaseUtils";
 import { memo, useEffect, useState } from "react";
 import Loading from "./Loading";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useUser } from "../lib/UserContext";
 
 function ProfileSearchComponent(props) {
+  const { session, following, refreshUserData } = useUser();
   const navigation = useNavigation();
   const userID = props.id;
   const route = useRoute();
   const [userpic, setUserpic] = useState();
   const [user, setUser] = useState();
   const [nav, setNav] = useState();
+  const [followed, setFollowed] = useState();
 
   const getRouteName = () => {
     if (route.name.includes("Profile")) {
@@ -30,25 +37,61 @@ function ProfileSearchComponent(props) {
       setUser(users[0]);
     };
 
+    if (following) {
+      const followingIds = following.map((follower) => follower.id);
+      setFollowed(followingIds.includes(userID));
+    }
+
     fetchUser();
     getRouteName();
   }, [userID]);
 
+  useEffect(() => {
+    if (following) {
+      const followingIds = following.map((follower) => follower.id);
+      setFollowed(followingIds.includes(userID));
+    }
+  }, [following]);
+
+  const unfollow = () => {
+    handleUnfollow(session.user.id, userID, refreshUserData);
+  };
+
+  const follow = () => {
+    handleFollow(session.user.id, userID, refreshUserData);
+  };
+
   if (userpic && user)
     return (
       <TouchableOpacity
-        className="p-3 bg-black/10 dark:bg-white/10 rounded-md"
+        className="p-3 bg-black/10 dark:bg-white/10 rounded-md flex-row items-center justify-between"
         onPress={() => navigation.navigate(nav, { userID, userpic })}
       >
         <View className="flex-row space-x-3">
           <Image source={{ uri: userpic }} className="w-8 h-8 rounded-full" />
-
           <View className="flex-row">
             <Text className="dark:text-white font-bold text-xl">
               {user.username}
             </Text>
             {/* <Text className="dark:text-white text-sm">{user.full_name}</Text> */}
           </View>
+        </View>
+        <View>
+          {followed ? (
+            <TouchableOpacity
+              onPress={unfollow}
+              className="bg-black/10 dark:bg-white/10 p-2 rounded-md flex items-center"
+            >
+              <Text className="dark:text-white font-bold">Unfollow</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={follow}
+              className="bg-black/10 dark:bg-white/10 p-2 rounded-md flex items-center"
+            >
+              <Text className="dark:text-white font-bold">Follow</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </TouchableOpacity>
     );

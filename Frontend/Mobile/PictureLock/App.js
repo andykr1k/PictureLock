@@ -13,13 +13,14 @@ import {
   LogInScreen,
   ChatStackScreen,
 } from "./pages";
+import { CreateAccountScreen } from "./components";
 import { useColorScheme, StatusBar } from "react-native";
 import { UserProvider, useUser } from "./lib/UserContext";
 
 const DarkTheme = {
   dark: true,
   colors: {
-    primary: "rgb(255, 45, 85)",
+    primary: "rgb(249, 115, 22)",
     background: "#1A1A1A",
     card: "#1A1A1A",
     text: "white",
@@ -31,7 +32,7 @@ const DarkTheme = {
 const LightTheme = {
   dark: false,
   colors: {
-    primary: "rgb(255, 45, 85)",
+    primary: "rgb(249, 115, 22)",
     background: "#EDEDED",
     card: "#EDEDED",
     text: "black",
@@ -66,7 +67,7 @@ function HomeTabs() {
           }
           return <Feathericons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "#FFB54F",
+        tabBarActiveTintColor: "#F97316",
         tabBarInactiveTintColor: "gray",
         tabBarLabelStyle: {
           display: "none",
@@ -116,20 +117,19 @@ export default function App() {
   const theme = colorScheme === "light" ? LightTheme : DarkTheme;
   return (
     <UserProvider>
-        <NavigationContainer theme={theme}>
-          <StatusBar
-            barStyle={
-              colorScheme === "light" ? "dark-content" : "light-content"
-            }
-            backgroundColor={theme.colors.background}
-          />
-          <Stack.Navigator
-            initialRouteName={"HomeTabs"}
-            screenOptions={{ headerShown: false }}
-          >
-            <Stack.Screen name="HomeTabs" component={HomeTabs} />
-          </Stack.Navigator>
-        </NavigationContainer>
+      <NavigationContainer theme={theme}>
+        <StatusBar
+          barStyle={colorScheme === "light" ? "dark-content" : "light-content"}
+          backgroundColor={theme.colors.background}
+        />
+        <Stack.Navigator
+          initialRouteName={"HomeTabs"}
+          screenOptions={{ headerShown: false }}
+        >
+          <Stack.Screen name="HomeTabs" component={HomeTabs} />
+          <Stack.Screen name="SetUpAccount" component={CreateAccountScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </UserProvider>
   );
 }

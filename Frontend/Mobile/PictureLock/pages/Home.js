@@ -5,9 +5,7 @@ import {
   Text,
   useColorScheme,
   FlatList,
-  ScrollView,
   Dimensions,
-  LayoutAnimation,
   UIManager,
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -20,6 +18,7 @@ import {
   RecordScreen,
   PostDetails,
   FollowScreen,
+  ListScreen,
 } from "../components";
 import { RefreshControl } from "react-native-gesture-handler";
 import React, { useState, useRef } from "react";
@@ -63,7 +62,7 @@ function HomeScreen() {
   const updateFilteredPosts = () => {
     const followingIds = getFollowingIds();
     setFilteredPosts(
-      posts.filter((post) => followingIds.includes(post.author))
+      posts?.filter((post) => followingIds.includes(post.author))
     );
   };
 
@@ -125,7 +124,7 @@ function HomeScreen() {
                     paddingHorizontal: 8,
                     borderRadius: 20,
                     borderColor:
-                      selectedTypeIndex === index ? "#FFB54F" : "transparent",
+                      selectedTypeIndex === index ? "#F97316" : "transparent",
                     borderWidth: 2,
                   }}
                 >
@@ -154,30 +153,27 @@ function HomeScreen() {
         )}
         scrollEventThrottle={16}
       >
-        <FlatList
-          className="mb-28 overflow-visible w-screen p-3 pt-0"
-          data={filteredPosts}
-          renderItem={({ item, index }) => (
-            <Post key={index} post={item} section={"profilescreen"} />
-          )}
-          keyExtractor={(item, index) => `${item.id}-${index}`}
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl refreshing={false} onRefresh={refresh} />
-          }
-        />
-        <FlatList
-          className="mb-28 overflow-visible w-screen p-3 pt-0"
-          data={posts}
-          renderItem={({ item, index }) => (
-            <Post key={index} post={item} section={"profilescreen"} />
-          )}
-          keyExtractor={(item, index) => `${item.id}-${index}`}
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl refreshing={false} onRefresh={refresh} />
-          }
-        />
+        {filteredPosts && filteredPosts.length > 0 ? (
+          <FlatList
+            className="mb-28 overflow-visible w-screen p-3 pt-0"
+            data={filteredPosts}
+            renderItem={({ item, index }) => (
+              <Post key={index} post={item} section={"profilescreen"} />
+            )}
+            keyExtractor={(item, index) => `${item.id}-${index}`}
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl refreshing={false} onRefresh={refresh} />
+            }
+          />
+        ) : (
+          <View className="flex items-center space-y-3 w-screen p-3">
+            <Text className="dark:text-white font-bold">
+              Follow people to see posts here!
+            </Text>
+          </View>
+        )}
+
         <FlatList
           className="mb-28 overflow-visible w-screen p-3 pt-0"
           data={posts}
@@ -190,13 +186,18 @@ function HomeScreen() {
             <RefreshControl refreshing={false} onRefresh={refresh} />
           }
         />
+        <View className="overflow-visible w-screen">
+          <Text className="dark:text-white font-bold text-center">
+            Trending coming soon!
+          </Text>
+        </View>
       </Animated.ScrollView>
       <TouchableOpacity
         className="absolute bottom-0 right-0 p-5 mb-28"
         onPress={() => navigation.navigate("CreateHome")}
       >
         <BlurView className="w-12 h-12 rounded-full dark:bg-black/80 flex items-center justify-center overflow-hidden">
-          <Text className="dark:text-white font-light text-xl text-orange-fruit align-middle text-center">
+          <Text className="dark:text-white font-light text-xl text-orange-500 align-middle text-center">
             +
           </Text>
         </BlurView>
@@ -212,12 +213,12 @@ export default function HomeStackScreen() {
   return (
     <HomeStack.Navigator
       screenOptions={{
-        headerTintColor: "#FFB54F",
+        headerTintColor: "#F97316",
         headerTitleStyle: { color: colorScheme === "dark" ? "white" : "black" },
       }}
     >
       <HomeStack.Screen
-        name="PictureLock"
+        name="PictureLockHome"
         component={HomeScreen}
         options={{ headerShown: false }}
       />
@@ -254,6 +255,11 @@ export default function HomeStackScreen() {
       <HomeStack.Screen
         name="FollowScreenHome"
         component={FollowScreen}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="ListScreenHome"
+        component={ListScreen}
         options={{ headerShown: false }}
       />
     </HomeStack.Navigator>

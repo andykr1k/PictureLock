@@ -30,7 +30,7 @@ function Notification(props) {
 
   if (props.status === "like") {
     return (
-      <View className="flex flex-row items-basline mb-3 max-w-full">
+      <View className="flex flex-row items-center mb-3 max-w-full">
         <View>
           {userpic && (
             <TouchableOpacity

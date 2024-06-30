@@ -18,7 +18,7 @@ function ProfilePicture(props) {
 
   if (pic) {
     return (
-      <View>
+      <View className="flex items-center">
         <Image
           source={{ uri: pic }}
           className={`w-16 h-16 rounded-full border-2 ${

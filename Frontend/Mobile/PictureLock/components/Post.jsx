@@ -2,10 +2,8 @@ import {
   Text,
   View,
   Image,
-  Modal,
   ScrollView,
   TextInput,
-  Animated,
   TouchableWithoutFeedback,
   Pressable,
   Linking,
@@ -22,22 +20,18 @@ import {
   handleComment,
   handleDeletePost,
 } from "../lib/supabaseUtils";
-import { useState, useEffect, memo, useRef } from "react";
+import { useState, useEffect, memo } from "react";
 import { useUser } from "../lib/UserContext";
 import Comment from "./Comment";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import {
-  TouchableOpacity,
-  PanGestureHandler,
-  State,
-} from "react-native-gesture-handler";
+import { TouchableOpacity, State } from "react-native-gesture-handler";
 import * as Haptics from "expo-haptics";
 import { BlurView } from "expo-blur";
+import Modal from "react-native-modal";
 
 function Post(props) {
   const navigation = useNavigation();
   const { session, refreshUserData } = useUser();
-  const [menuVisible, setMenuVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [username, setUsername] = useState("");
   const [userpic, setUserpic] = useState("");
@@ -47,10 +41,12 @@ function Post(props) {
   const [text, setText] = useState("");
   const [item, setItem] = useState({ id: props.post.movie_id });
   const [spoilerBlur, setSpoilerBlur] = useState(true);
+  const [spoiler, setSpoiler] = useState(props.post.spoiler);
+  const [content, setContent] = useState(props.post.content);
   const [userID, setuserID] = useState(props.post.author);
-  const translateY = useRef(new Animated.Value(0)).current;
   const [nav, setNav] = useState();
   const route = useRoute();
+
   const getRouteName = () => {
     if (route.name.includes("Profile")) {
       setNav("DetailsProfile");
@@ -63,57 +59,49 @@ function Post(props) {
 
   useEffect(() => {
     const fetchUsername = async () => {
-      const username = await getUsername(props.post.author);
-      setUsername(username);
+      try {
+        const username = await getUsername(props.post.author);
+        setUsername(username);
+      } catch (error) {
+        console.error("Error fetching username:", error);
+      }
     };
 
     const fetchUserPicture = async () => {
-      const pic = await getProfilePictureUrl(props.post.author);
-      setUserpic(pic);
+      try {
+        const pic = await getProfilePictureUrl(props.post.author);
+        setUserpic(pic);
+      } catch (error) {
+        console.error("Error fetching user picture:", error);
+      }
     };
 
     const fetchComments = async () => {
-      const comments = await getComments(props.post.id);
-      setComments(comments);
-      props.post.comments = comments;
+      try {
+        const comments = await getComments(props.post.id);
+        setComments(comments);
+        props.post.comments = comments;
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
     };
 
     const fetchLikes = async () => {
-      const likes = await getLikes(props.post.id);
-      setLikes(likes);
-      props.post.likes = likes;
-      setLiked(likes.some((like) => like.user_id === session.user.id));
+      try {
+        const likes = await getLikes(props.post.id);
+        setLikes(likes);
+        setLiked(likes?.some((like) => like.user_id === session.user.id));
+      } catch (error) {
+        console.error("Error fetching likes:", error);
+      }
     };
 
     fetchUsername();
     fetchUserPicture();
     fetchComments();
     fetchLikes();
+    getRouteName();
   }, [props.post]);
-
-  const handleGesture = Animated.event(
-    [{ nativeEvent: { translationY: translateY } }],
-    { useNativeDriver: true }
-  );
-
-  const handleStateChange = ({ nativeEvent }) => {
-    if (nativeEvent.state === State.END) {
-      if (nativeEvent.translationY > 100) {
-        setModalVisible(false);
-      } else {
-        Animated.spring(translateY, {
-          toValue: 0,
-          useNativeDriver: true,
-        }).start();
-      }
-    }
-  };
-
-  const translateYClamped = translateY.interpolate({
-    inputRange: [0, 300],
-    outputRange: [0, 300],
-    extrapolate: "clamp",
-  });
 
   const stars = Array.from({ length: props.post.stars }, (_, index) => (
     <IconButton color={"white"} key={index} icon="star" size={14} />
@@ -150,81 +138,55 @@ function Post(props) {
 
   const handleDelete = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    await handleDeletePost(props.post.id, refreshUserData);
   };
 
-  return (
-    <TouchableWithoutFeedback>
-      <View className="w-full mb-3 pb-3">
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <PanGestureHandler
-            onGestureEvent={handleGesture}
-            onHandlerStateChange={handleStateChange}
+  if (props.post.movie_poster === "" || props.post.movie_poster === null) {
+    return (
+      <TouchableWithoutFeedback>
+        <View className="w-full pb-3">
+          <Modal
+            backdropOpacity={0.2}
+            useNativeDriverForBackdrop
+            avoidKeyboard
+            isVisible={modalVisible}
+            onBackdropPress={() => setModalVisible(!modalVisible)}
+            onSwipeComplete={() => setModalVisible(!modalVisible)}
+            swipeDirection={["down"]}
+            className="rounded-lg m-0"
           >
-            <Animated.View
-              className="bg-white/90 dark:bg-black/90"
-              style={{
-                transform: [{ translateY: translateYClamped }],
-                position: "absolute",
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: "75%",
-                padding: 16,
-                borderTopLeftRadius: 20,
-                borderTopRightRadius: 20,
-              }}
-            >
-              <View className="flex flex-row justify-center">
+            <View className="bg-white/90 dark:bg-black/90 absolute bottom-0 left-0 right-0 rounded-md">
+              <View className="flex flex-row justify-center p-3 pb-1">
                 <TouchableOpacity
                   className="h-2 bg-black/10 dark:bg-white/10 w-20 rounded-md"
                   onPress={handleCommentsModal}
                 />
               </View>
-              <View className="flex flex-row mt-3 justify-between">
-                <TextInput
-                  placeholder="Comment"
-                  value={text}
-                  onChangeText={setText}
-                  className="text-white bg-black/10 dark:bg-white/10 p-3 font-bold rounded-md w-[85%]"
-                />
-                <TouchableOpacity
-                  onPress={handleCommentSubmit}
-                  className="bg-black/10 dark:bg-white/10 p-4 rounded-md"
-                >
-                  <IconButton icon="upload" size={20} />
-                </TouchableOpacity>
-              </View>
-              <ScrollView showsVerticalScrollIndicator={false} className="mt-2">
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ flexGrow: 1 }}
+                className="mt-2 p-3 pt-0 pb-1"
+                keyboardShouldPersistTaps="handled"
+              >
                 {comments &&
                   comments.map((item, index) => (
                     <Comment key={index} post={item} />
                   ))}
               </ScrollView>
-            </Animated.View>
-          </PanGestureHandler>
-        </Modal>
-        <View className="">
-          {props.post.movie_poster && (
-            <Pressable
-              onPress={() => {
-                  navigation.navigate(nav, { item });
-              }}
-            >
-              <Image
-                source={{ uri: props.post.movie_poster }}
-                className="w-full h-[75vh] rounded-md"
-              />
-            </Pressable>
-          )}
-          <BlurView className="flex flex-row space-x-2 w-full absolute bottom-0 p-2 overflow-hidden rounded-md">
+              <View className="flex-row space-x-2 p-3 pt-0 pb-5">
+                <TextInput
+                  placeholder="Comment"
+                  value={text}
+                  onChangeText={setText}
+                  onSubmitEditing={handleCommentSubmit}
+                  autoCorrect={false}
+                  autoComplete="off"
+                  className="bg-black/10 dark:bg-white/10 p-3 rounded-md dark:text-white flex-1"
+                />
+              </View>
+            </View>
+          </Modal>
+          <BlurView className="flex flex-row space-x-2 w-full p-2 overflow-hidden rounded-md bg-black/10 dark:bg-white/10">
             {userpic && (
               <View className="flex w-1/10">
                 {userID === session.user.id ? (
@@ -233,18 +195,21 @@ function Post(props) {
                   >
                     <Image
                       source={{ uri: userpic }}
-                      className="w-8 h-8 rounded-md"
+                      className="w-8 h-8 rounded-full"
                     />
                   </TouchableOpacity>
                 ) : (
                   <TouchableOpacity
                     onPress={() =>
-                      navigation.navigate("UserScreenHome", { userID, userpic })
+                      navigation.navigate("UserScreenHome", {
+                        userID,
+                        userpic,
+                      })
                     }
                   >
                     <Image
                       source={{ uri: userpic }}
-                      className="w-8 h-8 rounded-md"
+                      className="w-8 h-8 rounded-full"
                     />
                   </TouchableOpacity>
                 )}
@@ -263,29 +228,31 @@ function Post(props) {
               </View>
               <View className="flex flex-row w-full justify-between">
                 <View className="flex justify-between">
-                  {props.post.spoiler ? (
-                    <View className="flex flex-1 pr-1">
-                      <Text className="text-white text-xs">
-                        {props.post.content}
-                      </Text>
-                      {spoilerBlur && (
-                        <BlurView className="w-full h-full flex flex-row justify-center absolute rounded-md items-center overflow-hidden">
-                          <TouchableOpacity
-                            onPress={() => setSpoilerBlur(false)}
-                          >
-                            <Text className="text-white/70 font-bold">
-                              Spoiler!
-                            </Text>
-                          </TouchableOpacity>
-                        </BlurView>
+                  {content.length > 0 && (
+                    <View>
+                      {spoiler ? (
+                        <View className="flex flex-1 pr-1 mb-2">
+                          <Text className="text-white text-xs">{content}</Text>
+                          {spoilerBlur && (
+                            <BlurView className="w-full h-full flex flex-row justify-center absolute rounded-md items-center overflow-hidden">
+                              <TouchableOpacity
+                                onPress={() => setSpoilerBlur(false)}
+                              >
+                                <Text className="text-white/70 font-bold">
+                                  Spoiler!
+                                </Text>
+                              </TouchableOpacity>
+                            </BlurView>
+                          )}
+                        </View>
+                      ) : (
+                        <Text className="text-white text-xs pr-1 mb-2">
+                          {content}
+                        </Text>
                       )}
                     </View>
-                  ) : (
-                    <Text className="text-white text-xs pr-1">
-                      {props.post.content}
-                    </Text>
                   )}
-                  <View className="flex flex-row space-x-5 mt-2">
+                  <View className="flex flex-row space-x-5">
                     <TouchableOpacity onPress={handleCommentsModal}>
                       <IconButton
                         icon="comment"
@@ -334,11 +301,196 @@ function Post(props) {
                       <IconButton icon="ios-share" size={20} color={"white"} />
                     </TouchableOpacity>
                     {props.post.author === session.user.id && (
+                      <TouchableOpacity onPress={handleDelete}>
+                        <IconButton
+                          icon="delete-outline"
+                          size={20}
+                          color={"white"}
+                        />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                </View>
+              </View>
+            </View>
+          </BlurView>
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  }
+  return (
+    <TouchableWithoutFeedback>
+      <View className="w-full pb-3">
+        <Modal
+          backdropOpacity={0.2}
+          useNativeDriverForBackdrop
+          avoidKeyboard
+          isVisible={modalVisible}
+          onBackdropPress={() => setModalVisible(!modalVisible)}
+          onSwipeComplete={() => setModalVisible(!modalVisible)}
+          swipeDirection={["down"]}
+          className="rounded-lg m-0"
+        >
+          <View className="bg-white/90 dark:bg-black/90 absolute bottom-0 left-0 right-0 rounded-md">
+            <View className="flex flex-row justify-center p-3 pb-1">
+              <TouchableOpacity
+                className="h-2 bg-black/10 dark:bg-white/10 w-20 rounded-md"
+                onPress={handleCommentsModal}
+              />
+            </View>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ flexGrow: 1 }}
+              className="mt-2 p-3 pt-0 pb-1"
+              keyboardShouldPersistTaps="handled"
+            >
+              {comments &&
+                comments.map((item, index) => (
+                  <Comment key={index} post={item} />
+                ))}
+            </ScrollView>
+            <View className="flex-row space-x-2 p-3 pt-0 pb-5">
+              <TextInput
+                placeholder="Comment"
+                value={text}
+                onChangeText={setText}
+                onSubmitEditing={handleCommentSubmit}
+                autoCorrect={false}
+                autoComplete="off"
+                className="bg-black/10 dark:bg-white/10 p-3 rounded-md dark:text-white flex-1"
+              />
+            </View>
+          </View>
+        </Modal>
+        <View className="">
+          {props.post.movie_poster !== "" && (
+            <Pressable
+              onPress={() => {
+                navigation.navigate(nav, { item });
+              }}
+            >
+              <Image
+                source={{ uri: props.post.movie_poster }}
+                className="w-full h-[75vh] rounded-md"
+              />
+            </Pressable>
+          )}
+          <BlurView className="flex flex-row space-x-2 w-full absolute bottom-0 p-2 overflow-hidden rounded-md">
+            {userpic && (
+              <View className="flex w-1/10">
+                {userID === session.user.id ? (
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("ProfileStackScreen")}
+                  >
+                    <Image
+                      source={{ uri: userpic }}
+                      className="w-8 h-8 rounded-full"
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("UserScreenHome", {
+                        userID,
+                        userpic,
+                      })
+                    }
+                  >
+                    <Image
+                      source={{ uri: userpic }}
+                      className="w-8 h-8 rounded-full"
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
+            <View className="flex-1 w-8/10">
+              <View className="flex flex-row justify-between mb-1">
+                <View className="flex flex-row items-center">
+                  <Text className="font-bold text-white">{username}</Text>
+                  <Text className="text-white text-xs">
+                    &nbsp;· {TimeAgo(props.post.created_at)}
+                  </Text>
+                  <Text className="text-white text-xs">&nbsp;·&nbsp;</Text>
+                  <View className="flex flex-row justify-center">{stars}</View>
+                </View>
+              </View>
+              <View className="flex flex-row w-full justify-between">
+                <View className="flex justify-between">
+                  {content.length > 0 && (
+                    <View>
+                      {spoiler ? (
+                        <View className="flex flex-1 pr-1 mb-2">
+                          <Text className="text-white text-xs">{content}</Text>
+                          {spoilerBlur && (
+                            <BlurView className="w-full h-full flex flex-row justify-center absolute rounded-md items-center overflow-hidden">
+                              <TouchableOpacity
+                                onPress={() => setSpoilerBlur(false)}
+                              >
+                                <Text className="text-white/70 font-bold">
+                                  Spoiler!
+                                </Text>
+                              </TouchableOpacity>
+                            </BlurView>
+                          )}
+                        </View>
+                      ) : (
+                        <Text className="text-white text-xs pr-1 mb-2">
+                          {content}
+                        </Text>
+                      )}
+                    </View>
+                  )}
+                  <View className="flex flex-row space-x-5">
+                    <TouchableOpacity onPress={handleCommentsModal}>
+                      <IconButton
+                        icon="comment"
+                        size={20}
+                        text={comments && comments?.length}
+                        color={"white"}
+                      />
+                    </TouchableOpacity>
+                    {liked ? (
                       <TouchableOpacity
                         onPress={() =>
-                          handleDeletePost(props.post.id, refreshUserData)
+                          handleUnlike(
+                            props.post.id,
+                            session.user.id,
+                            refreshUserData
+                          )
                         }
                       >
+                        <IconButton
+                          icon="favorite"
+                          size={20}
+                          text={likes && likes?.length}
+                          color={"white"}
+                        />
+                      </TouchableOpacity>
+                    ) : (
+                      <TouchableOpacity
+                        onPress={() =>
+                          handleLike(
+                            props.post.id,
+                            session.user.id,
+                            refreshUserData,
+                            props.post.author
+                          )
+                        }
+                      >
+                        <IconButton
+                          icon="favorite-outline"
+                          size={20}
+                          text={likes && likes?.length}
+                          color={"white"}
+                        />
+                      </TouchableOpacity>
+                    )}
+                    <TouchableOpacity onPress={handleShare}>
+                      <IconButton icon="ios-share" size={20} color={"white"} />
+                    </TouchableOpacity>
+                    {props.post.author === session.user.id && (
+                      <TouchableOpacity onPress={handleDelete}>
                         <IconButton
                           icon="delete-outline"
                           size={20}

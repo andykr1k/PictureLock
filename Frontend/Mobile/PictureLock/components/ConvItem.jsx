@@ -1,14 +1,15 @@
-import { View, Text, Image } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { useUser } from "../lib/UserContext";
 import {
+  DeleteConversation,
   getLastMessage,
   getProfilePictureUrl,
   getUsername,
 } from "../lib/supabaseUtils";
 import { useState, useEffect, memo } from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import TimeAgo from "../functions/TimeAgo";
+import IconButton from "./IconButton";
 
 function ConvItem(props) {
   const [item, setItem] = useState(props.item);
@@ -16,7 +17,7 @@ function ConvItem(props) {
   const [last, setLast] = useState();
   const [username, setUsername] = useState();
   const [pic, setPic] = useState();
-  const { session, user } = useUser();
+  const { session, user, refreshUserData } = useUser();
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -50,32 +51,34 @@ function ConvItem(props) {
       onPress={() => navigation.navigate("ConversationChat", { item })}
       className="p-2 pl-0 bg-black/10 dark:bg-white/10 rounded-md mb-2"
     >
-      <View className="flex-row space-x-2 ml-2">
+      <View className="flex-row items-center ml-2">
         {pic && (
-          <Image source={{ uri: pic }} className="w-16 h-16 rounded-full" />
+          <Image source={{ uri: pic }} className="w-12 h-12 rounded-full" />
         )}
-        <View>
+        <View className="flex-1 ml-2">
           <View className="flex flex-row items-center">
             <Text className="dark:text-white font-bold text-lg">
               {username}
             </Text>
             {last && (
               <Text className="dark:text-white text-xs">
-                &nbsp;· {TimeAgo(last.created_at)}
+                &nbsp; · {TimeAgo(last.created_at)}
               </Text>
             )}
           </View>
           {last && (
             <View className="flex-row space-x-1">
-              {session.user.id === last.user_id ? (
-                <Text className="dark:text-white text-md">{user.username}:</Text>
-              ) : (
-                <Text className="dark:text-white text-md">{username}:</Text>
-              )}
-              <Text className="dark:text-white text-md">{last.message}</Text>
+              <Text className="dark:text-white text-sm">{username}:</Text>
+              <Text className="dark:text-white text-sm">{last.message}</Text>
             </View>
           )}
         </View>
+        <TouchableOpacity
+          onPress={() => DeleteConversation(item.id, refreshUserData)}
+          className="mr-2"
+        >
+          <IconButton icon="delete" size={18} />
+        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );

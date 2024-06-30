@@ -17,13 +17,12 @@ import {
 import * as ImagePicker from "expo-image-picker";
 
 function CreateAccountScreen() {
-  const { session, user, refreshUserData, pic } = useUser();
+  const { session, user, refreshUserData } = useUser();
   const navigation = useNavigation();
   const [name, setName] = useState(user.full_name);
   const [username, setUsername] = useState(user.username);
   const [profileImage, setProfileImage] = useState(null);
   const [profileImageBytes, setProfileImageBytes] = useState(null);
-  const [currentProfileImage, setCurrentProfileImage] = useState(pic);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -52,25 +51,28 @@ function CreateAccountScreen() {
     );
     await handleUsernameUpdate(username, session.user.id, refreshUserData);
     await handleNameUpdate(name, session.user.id, refreshUserData);
-    navigation.navigate("PictureLockHome");
+    setProfileImage(null);
+    setName(null);
+    setUsername(null);
+    navigation.navigate("HomeTabs");
   };
 
   return (
     <View className="ios:ios:mt-10 space-y-5 h-full p-3">
       <Text className="dark:text-white font-bold text-3xl">Set Up Account</Text>
       <View className="flex w-full justify-center items-center mb-4">
-        {currentProfileImage && !profileImage ? (
-          <Image
-            source={{ uri: currentProfileImage }}
-            style={{ width: 200, height: 200, borderRadius: 100 }}
-          />
+        {profileImage ? (
+          <TouchableOpacity onPress={pickImage}>
+            <Image
+              source={{ uri: profileImage }}
+              style={{ width: 200, height: 200, borderRadius: 100 }}
+            />
+          </TouchableOpacity>
         ) : (
-          <Image
-            source={{ uri: profileImage }}
-            style={{ width: 200, height: 200, borderRadius: 100 }}
-          />
+          <View className="w-52 h-52 rounded-full bg-black/10 flex items-center justify-center">
+            <Button title="Upload Picture" onPress={pickImage} />
+          </View>
         )}
-        <Button title="Upload Picture" onPress={pickImage} />
       </View>
       <Text className="dark:text-white font-bold text-xl">Full Name</Text>
       <TextInput

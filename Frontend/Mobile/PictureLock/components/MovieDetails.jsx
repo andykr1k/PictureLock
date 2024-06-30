@@ -25,6 +25,8 @@ function MovieDetails() {
       setNav("DetailsSearch");
     } else if (route.name.includes("Home")) {
       setNav("DetailsHome");
+    } else if (route.name.includes("Slate")) {
+      setNav("DetailsSlate");
     }
   };
 
